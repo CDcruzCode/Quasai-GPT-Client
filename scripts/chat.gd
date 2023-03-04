@@ -7,6 +7,7 @@ var openai
 @onready var loading = $vbox/hbox/loading
 @onready var chat_scroll:ScrollContainer = $vbox/scon
 @onready var chat_label = $vbox/PanelContainer/hbox2/chat_label
+@onready var clear_chat_button = $vbox/PanelContainer/hbox2/clear_chat
 
 @onready var config_popup = $config_popup
 @onready var config_button = $vbox/PanelContainer/hbox2/config
@@ -43,13 +44,14 @@ func _ready():
 	
 	config_button.pressed.connect(func(): config_popup.popup_centered())
 	config_popup.confirmed.connect(save_config)
+	clear_chat_button.pressed.connect(clear_chat)
 	
 	prompt_types = list_folders_in_directory("res://scripts/prompts/")
 	
 	for p in prompt_types:
 		prompt_options.add_item(p)
 	
-	prompt_options.item_selected.connect(func(_i): chat_label.text = "Chat Type: " + prompt_options.get_item_text(prompt_options.selected))
+	prompt_options.item_selected.connect(func(_i): clear_chat(); chat_label.text = "Chat Type: " + prompt_options.get_item_text(prompt_options.selected))
 	chat_label.text = "Chat Type: " + prompt_options.get_item_text(prompt_options.selected)
 	
 	
@@ -70,8 +72,9 @@ func connect_openai():
 func _on_openai_request_success(data):
 	print("Request succeeded:", data)
 	#print(data.choices[0].message.content)
-	var reply:String = data.choices[0].message.content.strip_edges()
+	var reply:String = data.choices[0].message.content
 	reply = reply.replace("&amp;", "&")
+	reply = remove_after_phrase(reply, "<USER>").strip_edges()
 	
 	
 	var new_msg:PanelContainer = message_box.instantiate()
@@ -181,6 +184,20 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 
 
+func clear_chat():
+	delete_all_children(chat_log)
+	chat_memory.clear()
+
+
+
+
+
+
+
+
+
+
+
 func load_file_as_string(path):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var content : String
@@ -205,3 +222,15 @@ func list_folders_in_directory(path):
 				files.append(file)
 		dir.list_dir_end()
 	return files
+
+func delete_all_children(node):
+	for n in node.get_children():
+		n.queue_free()
+
+func remove_after_phrase(my_string:String, phrase:String):
+	var position = my_string.find(phrase);
+
+	if (position != -1):
+		return my_string.left(position);
+	
+	return my_string
