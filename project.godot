@@ -12,6 +12,8 @@ config_version=5
 
 config/name="ChatGPT_client"
 run/main_scene="res://main_chat.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="chatgpt_client"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 

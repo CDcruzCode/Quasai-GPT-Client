@@ -73,14 +73,21 @@ layout_mode = 2
 text = "Regen"
 
 [node name="config_popup" type="AcceptDialog" parent="."]
-size = Vector2i(400, 326)
+size = Vector2i(400, 361)
 visible = true
+borderless = true
 
 [node name="vbox" type="VBoxContainer" parent="config_popup"]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 392.0
-offset_bottom = 275.0
+offset_bottom = 310.0
+
+[node name="api_key" type="LineEdit" parent="config_popup/vbox"]
+layout_mode = 2
+placeholder_text = "API Key"
+secret = true
+middle_mouse_paste_enabled = false
 
 [node name="prompt_text" type="Label" parent="config_popup/vbox"]
 layout_mode = 2
@@ -95,9 +102,10 @@ text = "Max Tokens"
 
 [node name="max_tokens" type="SpinBox" parent="config_popup/vbox"]
 layout_mode = 2
-max_value = 10000.0
+min_value = 5.0
+max_value = 1000.0
 step = 5.0
-value = 4095.0
+value = 1000.0
 allow_greater = true
 
 [node name="temperature_text" type="Label" parent="config_popup/vbox"]
