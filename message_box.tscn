@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://dufgj34v5fdh4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_roovv"]
+
+[node name="spacer" type="PanelContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_roovv")
+
+[node name="message_box" type="PanelContainer" parent="."]
+self_modulate = Color(0.941176, 0.360784, 0, 1)
+custom_minimum_size = Vector2(700, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="msg" type="RichTextLabel" parent="message_box"]
+layout_mode = 2
+text = "test dsfh sdfh sfhdfss sdfhs "
+fit_content = true
