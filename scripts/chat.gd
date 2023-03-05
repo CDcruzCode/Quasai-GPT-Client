@@ -49,10 +49,10 @@ func _ready():
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
 	regen_button.pressed.connect(regen_message)
-	$config_popup/vbox/processor_folder.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://prompts")
-))
-	prompt_types = list_folders_in_directory("user://prompts/")
+	$config_popup/vbox/processor_folder.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://prompts")))
 	
+	await get_tree().process_frame
+	prompt_types = list_folders_in_directory("user://prompts/")
 	for p in prompt_types:
 		prompt_options.add_item(p)
 	
@@ -171,7 +171,7 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 #	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
 #	for m in chat_memory:
 #		pre_msg += m + "\n"
-	chat_array.append({"role": "system", "content": load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))})
+	chat_array.append({"role": "system", "content": load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))})
 	for m in chat_memory:
 		if(m.strip_edges().begins_with("<USER>")):
 			chat_array.append({"role": "user", "content": m.strip_edges()})
