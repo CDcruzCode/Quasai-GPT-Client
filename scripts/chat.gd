@@ -8,6 +8,7 @@ var openai
 @onready var chat_scroll:ScrollContainer = $vbox/scon
 @onready var chat_label = $vbox/PanelContainer/hbox2/chat_label
 @onready var clear_chat_button = $vbox/PanelContainer/hbox2/clear_chat
+@onready var regen_button = $vbox/hbox/regen
 
 @onready var config_popup = $config_popup
 @onready var config_button = $vbox/PanelContainer/hbox2/config
@@ -45,6 +46,7 @@ func _ready():
 	config_button.pressed.connect(func(): config_popup.popup_centered())
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
+	regen_button.pressed.connect(regen_message)
 	
 	prompt_types = list_folders_in_directory("res://scripts/prompts/")
 	
@@ -174,6 +176,7 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 	"temperature": TEMPERATURE,
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
+	"stop": "<USER>",
 	"stream": false
 	}
 	print(data)
@@ -188,6 +191,27 @@ func clear_chat():
 	delete_all_children(chat_log)
 	chat_memory.clear()
 
+func regen_message(role:String = "user", model:String = "gpt-3.5-turbo"):
+	bot_thinking = true
+	loading.show()
+	chat_memory.remove_at(chat_memory.size()-1)
+	chat_log.get_child(chat_log.get_child_count() - 1).queue_free()
+	
+	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
+	for m in chat_memory:
+		pre_msg += m + "\n"
+	
+	var data = {
+	"model": model,
+	"messages": [{"role": role, "content": pre_msg}],
+	"max_tokens": MAX_TOKENS,
+	"temperature": TEMPERATURE,
+	"presence_penalty": PRESENCE,
+	"frequency_penalty": FREQUENCY,
+	"stop": "<USER>",
+	"stream": false
+	}
+	openai.make_request("completions", HTTPClient.METHOD_POST, data)
 
 
 
