@@ -39,6 +39,8 @@ var user_color:Color = Color("5D8EAC")
 var prompt_types:PackedStringArray = []
 
 func _ready():
+	copy_prompts_folder()
+	
 	user_input.gui_input.connect(user_gui)
 	loading.hide()
 	config_popup.hide()
@@ -47,8 +49,9 @@ func _ready():
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
 	regen_button.pressed.connect(regen_message)
-	
-	prompt_types = list_folders_in_directory("res://scripts/prompts/")
+	$config_popup/vbox/processor_folder.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://prompts")
+))
+	prompt_types = list_folders_in_directory("user://prompts/")
 	
 	for p in prompt_types:
 		prompt_options.add_item(p)
@@ -153,6 +156,7 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 	bot_thinking = true
 	loading.show()
 	print("USER MSG: "+msg)
+	var chat_array:Array = []
 	
 	chat_memory.append("\n<USER> "+msg)
 	
@@ -164,14 +168,19 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 	chat_log.add_child(new_msg)
 	
 	
-	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
+#	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
+#	for m in chat_memory:
+#		pre_msg += m + "\n"
+	chat_array.append({"role": "system", "content": load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))})
 	for m in chat_memory:
-		pre_msg += m + "\n"
-	
+		if(m.strip_edges().begins_with("<USER>")):
+			chat_array.append({"role": "user", "content": m.strip_edges()})
+		else:
+			chat_array.append({"role": "assistant", "content": m.strip_edges()})
 	
 	var data = {
 	"model": model,
-	"messages": [{"role": role, "content": pre_msg}],
+	"messages": chat_array,
 	"max_tokens": MAX_TOKENS,
 	"temperature": TEMPERATURE,
 	"presence_penalty": PRESENCE,
@@ -179,8 +188,7 @@ func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turb
 	"stop": "<USER>",
 	"stream": false
 	}
-	print(data)
-	print(pre_msg)
+	print(chat_array)
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
 	
 	await get_tree().process_frame
@@ -197,7 +205,7 @@ func regen_message(role:String = "user", model:String = "gpt-3.5-turbo"):
 	chat_memory.remove_at(chat_memory.size()-1)
 	chat_log.get_child(chat_log.get_child_count() - 1).queue_free()
 	
-	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
+	var pre_msg = load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))
 	for m in chat_memory:
 		pre_msg += m + "\n"
 	
@@ -258,3 +266,19 @@ func remove_after_phrase(my_string:String, phrase:String):
 		return my_string.left(position);
 	
 	return my_string
+
+
+func copy_prompts_folder():
+	var file_list = list_folders_in_directory("res://scripts/prompts")
+	
+	var dir = DirAccess.open("user://")
+	var destination_folder_path = "user://prompts/"
+	await get_tree().process_frame
+	dir.make_dir("user://prompts")
+	for f in file_list:
+		var success = dir.copy("res://scripts/prompts/"+f, destination_folder_path+f)
+#		if success == OK:
+#			print("Folder copied successfully!")
+#		else:
+#			print("Error copying folder.")
+
