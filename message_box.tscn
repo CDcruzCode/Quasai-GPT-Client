@@ -15,15 +15,15 @@ grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_roovv")
 
 [node name="message_box" type="PanelContainer" parent="."]
-self_modulate = Color(0.941176, 0.360784, 0, 1)
-custom_minimum_size = Vector2(700, 30)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0
 mouse_default_cursor_shape = 2
 script = ExtResource("1_jmfhu")
 
 [node name="msg" type="RichTextLabel" parent="message_box"]
+custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 mouse_filter = 2
 text = "test dsfh sdfh sfhdfss sdfhs "
 fit_content = true
+scroll_active = false

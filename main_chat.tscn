@@ -23,7 +23,7 @@ layout_mode = 2
 self_modulate = Color(0.105882, 0.105882, 0.133333, 1)
 layout_mode = 2
 
-[node name="hbox2" type="HBoxContainer" parent="vbox/PanelContainer"]
+[node name="hbox2" type="HFlowContainer" parent="vbox/PanelContainer"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 alignment = 2
@@ -84,6 +84,7 @@ color = Color(0.960784, 0.317647, 0.372549, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter your message"
+drag_and_drop_selection_enabled = false
 wrap_mode = 1
 scroll_fit_content_height = true
 

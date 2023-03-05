@@ -97,12 +97,16 @@ func _on_openai_request_success(data):
 	reply = reply.replace("&amp;", "&")
 	reply = remove_after_phrase(reply, "<USER>").strip_edges()
 	
+	var reply_array:PackedStringArray = reply.split("\n\n")
 	
-	var new_msg:PanelContainer = message_box.instantiate()
-	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	new_msg.get_node("message_box/msg").text = reply
-	new_msg.get_node("message_box").self_modulate = bot_color
-	chat_log.add_child(new_msg)
+	for msg in reply_array:
+		var new_msg:PanelContainer = message_box.instantiate()
+		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		new_msg.get_node("message_box/msg").text = msg
+		new_msg.get_node("message_box").self_modulate = bot_color
+		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+		chat_log.add_child(new_msg)
+	
 	loading.hide()
 	await get_tree().process_frame
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
@@ -137,13 +141,13 @@ func save_config():
 	config.set_value("Settings", "FREQUENCY", frequency_penalty_slider.value)
 	config.save("user://settings.cfg")
 	
-	if(openai == null):
-		API_KEY = api_key_input.text
-		MAX_TOKENS = max_tokens_input.value
-		TEMPERATURE = temperature_slider.value
-		PRESENCE = presence_penalty_slider.value
-		FREQUENCY = frequency_penalty_slider.value
-		connect_openai()
+	API_KEY = api_key_input.text
+	MAX_TOKENS = max_tokens_input.value
+	TEMPERATURE = temperature_slider.value
+	PRESENCE = presence_penalty_slider.value
+	FREQUENCY = frequency_penalty_slider.value
+	
+	connect_openai()
 
 
 
@@ -178,6 +182,14 @@ func user_gui(event:InputEvent):
 
 
 func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
+	if(API_KEY == "" || API_KEY == null):
+		var new_msg:PanelContainer = message_box.instantiate()
+		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		new_msg.get_node("message_box/msg").text = "You have not provided an API key. Please open the config menu and add one. For more information and to generate your API key visit openai.com."
+		new_msg.get_node("message_box").self_modulate = Color.DARK_RED
+		chat_log.add_child(new_msg)
+		return
+	
 	bot_thinking = true
 	loading.show()
 	print("USER MSG: "+msg)
@@ -293,6 +305,7 @@ func set_button_by_text(option_button:OptionButton, text:String):
 
 func load_saved_chat(id:int):
 	if(id == 0):
+		clear_chat()
 		return
 	
 	bot_thinking = true
@@ -307,18 +320,22 @@ func load_saved_chat(id:int):
 	
 	for msg in chat_memory:
 		print(msg)
-		var new_msg = message_box.instantiate()
 		
 		if(msg.strip_edges().begins_with("<USER>")):
+			var new_msg = message_box.instantiate()
 			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
 			new_msg.get_node("message_box/msg").text = msg.strip_edges().trim_prefix("<USER> ")
 			new_msg.get_node("message_box").self_modulate = user_color
 			chat_log.add_child(new_msg)
 		else:
-			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-			new_msg.get_node("message_box/msg").text = msg
-			new_msg.get_node("message_box").self_modulate = bot_color
-			chat_log.add_child(new_msg)
+			var reply_array:PackedStringArray = msg.split("\n\n")
+			
+			for line in reply_array:
+				var new_msg:PanelContainer = message_box.instantiate()
+				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				new_msg.get_node("message_box/msg").text = line
+				new_msg.get_node("message_box").self_modulate = bot_color
+				chat_log.add_child(new_msg)
 	
 	await get_tree().process_frame
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
