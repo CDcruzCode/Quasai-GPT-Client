@@ -29,8 +29,24 @@ layout_mode = 2
 alignment = 2
 metadata/_edit_lock_ = true
 
+[node name="saved_chats_list" type="OptionButton" parent="vbox/PanelContainer/hbox2"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="save_chat_button" type="Button" parent="vbox/PanelContainer/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Save New Chat"
+
+[node name="session_tokens" type="Label" parent="vbox/PanelContainer/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Session Tokens: 0"
+
 [node name="chat_label" type="Label" parent="vbox/PanelContainer/hbox2"]
 layout_mode = 2
+text = "Chat Type"
 horizontal_alignment = 2
 
 [node name="clear_chat" type="Button" parent="vbox/PanelContainer/hbox2"]
@@ -68,6 +84,7 @@ color = Color(0.960784, 0.317647, 0.372549, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter your message"
+wrap_mode = 1
 scroll_fit_content_height = true
 
 [node name="regen" type="Button" parent="vbox/hbox"]
@@ -76,7 +93,6 @@ text = "Regen"
 
 [node name="config_popup" type="AcceptDialog" parent="."]
 size = Vector2i(350, 465)
-visible = true
 borderless = true
 
 [node name="vbox" type="VBoxContainer" parent="config_popup"]
@@ -155,3 +171,24 @@ self_modulate = Color(0.835294, 0, 0.839216, 1)
 layout_mode = 2
 disabled = true
 text = "Clear Memory"
+
+[node name="save_chat_popup" type="ConfirmationDialog" parent="."]
+initial_position = 2
+title = "New Chat Name"
+size = Vector2i(350, 100)
+always_on_top = true
+ok_button_text = "Save"
+
+[node name="save_chat_name" type="LineEdit" parent="save_chat_popup"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 342.0
+offset_bottom = 49.0
+placeholder_text = "enter name"
+
+[node name="quit_popup" type="ConfirmationDialog" parent="."]
+initial_position = 2
+title = "Save & Quit?"
+size = Vector2i(200, 82)
+ok_button_text = "Save & Quit"
+cancel_button_text = "Quit"

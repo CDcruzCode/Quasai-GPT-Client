@@ -9,6 +9,11 @@ var openai
 @onready var chat_label = $vbox/PanelContainer/hbox2/chat_label
 @onready var clear_chat_button = $vbox/PanelContainer/hbox2/clear_chat
 @onready var regen_button = $vbox/hbox/regen
+@onready var session_tokens_display = $vbox/PanelContainer/hbox2/session_tokens
+@onready var save_chat_popup = $save_chat_popup
+@onready var save_chat_name = $save_chat_popup/save_chat_name
+@onready var save_chat_button = $vbox/PanelContainer/hbox2/save_chat_button
+@onready var saved_chats_list:OptionButton = $vbox/PanelContainer/hbox2/saved_chats_list
 
 @onready var config_popup = $config_popup
 @onready var config_button = $vbox/PanelContainer/hbox2/config
@@ -28,6 +33,7 @@ var MAX_TOKENS:int = 1000
 var TEMPERATURE:float = 1.4
 var PRESENCE:float = 0.4
 var FREQUENCY:float = 1.0
+var session_token_total:int = 0
 
 var bot_thinking:bool = false
 var chat_memory:PackedStringArray = []
@@ -40,16 +46,24 @@ var prompt_types:PackedStringArray = []
 
 func _ready():
 	copy_prompts_folder()
+	var dir = DirAccess.open("user://")
+	dir.make_dir("user://saved_conversations")
 	
 	user_input.gui_input.connect(user_gui)
 	loading.hide()
 	config_popup.hide()
+	reload_chats_list()
+	saved_chats_list.item_selected.connect(load_saved_chat)
 	
 	config_button.pressed.connect(func(): config_popup.popup_centered())
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
 	regen_button.pressed.connect(regen_message)
+	save_chat_button.pressed.connect(func(): save_chat_popup.popup_centered())
+	save_chat_popup.confirmed.connect(save_new_chat)
 	$config_popup/vbox/processor_folder.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://prompts")))
+	$quit_popup.confirmed.connect(on_save_quit)
+	$quit_popup.canceled.connect(func(): get_tree().quit())
 	
 	await get_tree().process_frame
 	prompt_types = list_folders_in_directory("user://prompts/")
@@ -76,6 +90,8 @@ func connect_openai():
 
 func _on_openai_request_success(data):
 	print("Request succeeded:", data)
+	session_token_total += data.usage.total_tokens
+	session_tokens_display.text = "Session Tokens: "+str(session_token_total)
 	#print(data.choices[0].message.content)
 	var reply:String = data.choices[0].message.content
 	reply = reply.replace("&amp;", "&")
@@ -144,21 +160,30 @@ func _on_openai_request_error(error_code):
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 
 #On ENTER pressed, send message instead of adding a new line.
+var CTRL_KEY:bool = false
 func user_gui(event:InputEvent):
 	if event is InputEventKey:
-		if event.keycode == KEY_ENTER && event.is_pressed() && !bot_thinking:
+		if event.keycode == KEY_CTRL:
+			if event.pressed:
+				print("Ctrl key is held down")
+				CTRL_KEY = true
+			else:
+				print("Ctrl key is released")
+				CTRL_KEY = false
+		
+		if !CTRL_KEY && event.keycode == KEY_ENTER && event.is_pressed() && !bot_thinking:
 			send_message(user_input.text)
 			await get_tree().process_frame
 			user_input.text = ""
 
 
-func send_message(msg:String, role:String = "user", model:String = "gpt-3.5-turbo" ):
+func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	bot_thinking = true
 	loading.show()
 	print("USER MSG: "+msg)
 	var chat_array:Array = []
 	
-	chat_memory.append("\n<USER> "+msg)
+	chat_memory.append("<USER> "+msg)
 	
 	
 	var new_msg = message_box.instantiate()
@@ -200,6 +225,9 @@ func clear_chat():
 	chat_memory.clear()
 
 func regen_message(role:String = "user", model:String = "gpt-3.5-turbo"):
+	if(bot_thinking || chat_memory.is_empty()):
+		return
+	
 	bot_thinking = true
 	loading.show()
 	chat_memory.remove_at(chat_memory.size()-1)
@@ -222,14 +250,118 @@ func regen_message(role:String = "user", model:String = "gpt-3.5-turbo"):
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
 
 
+func save_new_chat():
+	var chat_name:String = save_chat_name.text.strip_edges()
+	if(chat_name.is_empty() || !chat_name.is_valid_filename()):
+		return
+	
+	if(chat_memory.is_empty()):
+		return
+	
+	var dir = DirAccess.open("user://saved_conversations")
+	if(dir.file_exists("user://saved_conversations"+chat_name)):
+		return
+	
+	var file:FileAccess = FileAccess.open("user://saved_conversations/"+chat_name, FileAccess.WRITE)
+	if(file != null):
+		file.store_var(chat_memory, true)
+	else:
+		printerr("Chat did not save")
+	
+	reload_chats_list(chat_name)
+
+func reload_chats_list(new_select:String = "<none>"):
+	var dir = DirAccess.open("user://saved_conversations")
+	if(!dir.dir_exists("user://saved_conversations")):
+		return
+	
+	var chat_list:PackedStringArray = list_folders_in_directory("user://saved_conversations")
+	
+	saved_chats_list.clear()
+	saved_chats_list.add_item("<none>", 0)
+	for a in chat_list:
+		saved_chats_list.add_item(a)
+	
+	set_button_by_text(saved_chats_list, new_select)
+
+func set_button_by_text(option_button:OptionButton, text:String):
+	for i in range(option_button.get_item_count()):
+		var item_text = option_button.get_item_text(i)
+		if item_text == text:
+			option_button.select(i)
+			break
+
+func load_saved_chat(id:int):
+	if(id == 0):
+		return
+	
+	bot_thinking = true
+	loading.show()
+	
+	var selected_name:String = saved_chats_list.get_item_text(id)
+	clear_chat()
+	var file = FileAccess.open("user://saved_conversations/"+selected_name, FileAccess.READ)
+	if(file.get_error() != OK):
+		return
+	chat_memory = file.get_var(true)
+	
+	for msg in chat_memory:
+		print(msg)
+		var new_msg = message_box.instantiate()
+		
+		if(msg.strip_edges().begins_with("<USER>")):
+			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
+			new_msg.get_node("message_box/msg").text = msg.strip_edges().trim_prefix("<USER> ")
+			new_msg.get_node("message_box").self_modulate = user_color
+			chat_log.add_child(new_msg)
+		else:
+			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			new_msg.get_node("message_box/msg").text = msg
+			new_msg.get_node("message_box").self_modulate = bot_color
+			chat_log.add_child(new_msg)
+	
+	await get_tree().process_frame
+	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
+	
+	bot_thinking = false
+	loading.hide()
 
 
 
+#########################
+#QUITTING CODE
+#########################
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		if(saved_chats_list.selected == 0):
+			get_tree().quit()
+			return
+		
+		$quit_popup.popup_centered()
+
+
+func on_save_quit():
+	if(chat_memory.is_empty()):
+		get_tree().quit()
+		return
+	print("save quit")
+	var chat_name:String = saved_chats_list.get_item_text(saved_chats_list.selected)
+	var dir = DirAccess.open("user://saved_conversations")
+	if(!dir.file_exists("user://saved_conversations/"+chat_name)):
+		return
+	
+	var file:FileAccess = FileAccess.open("user://saved_conversations/"+chat_name, FileAccess.WRITE)
+	if(file != null):
+		file.store_var(chat_memory, true)
+	else:
+		printerr("Chat did not save")
+	get_tree().quit()
 
 
 
-
-
+#########################
+#CODE SNIPPETS
+#########################
 func load_file_as_string(path):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var content : String
@@ -276,7 +408,7 @@ func copy_prompts_folder():
 	await get_tree().process_frame
 	dir.make_dir("user://prompts")
 	for f in file_list:
-		var success = dir.copy("res://scripts/prompts/"+f, destination_folder_path+f)
+		dir.copy("res://scripts/prompts/"+f, destination_folder_path+f)
 #		if success == OK:
 #			print("Folder copied successfully!")
 #		else:

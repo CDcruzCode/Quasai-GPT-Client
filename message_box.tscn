@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dufgj34v5fdh4"]
+[gd_scene load_steps=3 format=3 uid="uid://dufgj34v5fdh4"]
+
+[ext_resource type="Script" path="res://scripts/message_box.gd" id="1_jmfhu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_roovv"]
 
@@ -17,8 +19,11 @@ self_modulate = Color(0.941176, 0.360784, 0, 1)
 custom_minimum_size = Vector2(700, 30)
 layout_mode = 2
 size_flags_horizontal = 8
+mouse_default_cursor_shape = 2
+script = ExtResource("1_jmfhu")
 
 [node name="msg" type="RichTextLabel" parent="message_box"]
 layout_mode = 2
+mouse_filter = 2
 text = "test dsfh sdfh sfhdfss sdfhs "
 fit_content = true
