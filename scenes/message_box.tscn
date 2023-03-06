@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4kqfmceq7lpe"]
+
+[ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_c8she"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_roovv"]
+
+[node name="spacer" type="PanelContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_roovv")
+
+[node name="message_box" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_c8she")
+
+[node name="msg" type="RichTextLabel" parent="message_box"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+mouse_filter = 2
+text = "test dsfh sdfh sfhdfss sdfhs "
+fit_content = true
+scroll_active = false

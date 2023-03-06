@@ -1,0 +1,80 @@
+[gd_scene load_steps=6 format=3 uid="uid://blva642k3pj3o"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_rp27l"]
+[ext_resource type="Theme" uid="uid://d4lj4laus1ki2" path="res://themes/display_panels.tres" id="2_6feae"]
+[ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_gh7c0"]
+[ext_resource type="Script" path="res://scripts/start_screen/mode_button.gd" id="4_0mt6f"]
+[ext_resource type="PackedScene" uid="uid://ctqr2g7wujk0t" path="res://scenes/main_chat.tscn" id="5_gidvh"]
+
+[node name="start_screen" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_rp27l")
+script = ExtResource("2_gh7c0")
+
+[node name="mcon" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="vbox" type="VBoxContainer" parent="mcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "GPT Playground"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+text = "Select the mode you would like to use."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scon" type="ScrollContainer" parent="mcon/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="chat_modes" type="GridContainer" parent="mcon/vbox/scon"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 5
+
+[node name="mode_button" type="PanelContainer" parent="mcon/vbox/scon/chat_modes"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("2_6feae")
+script = ExtResource("4_0mt6f")
+mode_display_name = "General Chatting"
+scene = ExtResource("5_gidvh")
+
+[node name="vbox" type="VBoxContainer" parent="mcon/vbox/scon/chat_modes/mode_button"]
+layout_mode = 2
+
+[node name="mode_image" type="TextureRect" parent="mcon/vbox/scon/chat_modes/mode_button/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+
+[node name="mode_name" type="Label" parent="mcon/vbox/scon/chat_modes/mode_button/vbox"]
+layout_mode = 2
+text = "text"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+text = "Version 0.1.1"

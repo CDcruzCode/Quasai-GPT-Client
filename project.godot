@@ -10,14 +10,18 @@ config_version=5
 
 [application]
 
-config/name="ChatGPT_client"
-run/main_scene="res://main_chat.tscn"
+config/name="GPT Playground"
+run/main_scene="res://scenes/api_walkthrough.tscn"
 config/use_custom_user_dir=true
-config/custom_user_dir_name="chatgpt_client"
+config/custom_user_dir_name="gpt_playground"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 config/auto_accept_quit=false
 config/quit_on_go_back=false
+
+[autoload]
+
+globals="*res://scripts/globals.gd"
 
 [dotnet]
 
