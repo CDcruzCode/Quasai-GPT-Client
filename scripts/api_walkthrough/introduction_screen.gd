@@ -20,7 +20,7 @@ func _ready():
 	dir.make_dir("user://saved_conversations")
 	
 	if(load_config()):
-		get_tree().change_scene_to_file("res://scenes/start_screen.tscn")
+		get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn")
 	
 	
 	continue_button.pressed.connect(connect_openai)
@@ -47,6 +47,7 @@ func load_config():
 	if err != OK:
 		printerr(err)
 		return false
+	globals.API_KEY = config.get_value("Settings", "API_KEY")
 	return true
 
 func save_config(data):
@@ -57,6 +58,8 @@ func save_config(data):
 	config.set_value("Settings", "PRESENCE", 0.0)
 	config.set_value("Settings", "FREQUENCY", 0.0)
 	config.save("user://settings.cfg")
+	
+	globals.API_KEY = api_key_input.text.strip_edges()
 	
 	get_tree().change_scene_to_file("res://scenes/start_screen.tscn")
 
@@ -88,14 +91,4 @@ func connect_openai():
 func req_err(error_code):
 	continue_button.disabled = false
 	api_error.show()
-	match error_code:
-		401:
-			api_error.text = "Error: " + str(error_code) + " - Invalid API key. Make sure you typed or copied it correctly."
-		400:
-			api_error.text = "Error: " + str(error_code) + " - Something was wrong with connecting to the servers. It could be a program issue..."
-		429:
-			api_error.text = "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exeeced your quota, check your billing details."
-		500:
-			api_error.text = "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
-		_:
-			api_error.text = "Unknown error: " + str(error_code)
+	api_error.text = globals.parse_api_error(error_code)

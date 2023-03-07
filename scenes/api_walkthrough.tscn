@@ -118,3 +118,15 @@ To avoid overspending, it is highly advised that you set a spending limit throug
 
 "
 fit_content = true
+
+[node name="Label8" type="Label" parent="mcon/vcon/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Is this different or better than ChatGPT Plus?"
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="mcon/vcon/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "GPT Playground offers all the typical features you would expect from ChatGPT, such as the option to save conversations and the ability to continue chatting during peak traffic periods. However, GPT Playground goes beyond ChatGPT by giving you more control over the AI's settings. Additionally, there are planned features for creating interface use cases, which will further expand GPT's capabilities.
+
+Moreover, GPT Playground may be a more cost-effective alternative to ChatGPT Plus since you only need to pay for the tokens that you use. If you don't use the program for an extended period, there are no costs incurred, meaning you only pay for what you use."
+fit_content = true

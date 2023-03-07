@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://blva642k3pj3o"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
+[ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
+[ext_resource type="PackedScene" uid="uid://cnxpk2l586uev" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
+[ext_resource type="PackedScene" uid="uid://w2bt0glmbwcu" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
+[ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
+
+[node name="start_screen" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_dmsys")
+script = ExtResource("2_ey057")
+
+[node name="mcon" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="vbox" type="VBoxContainer" parent="mcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "GPT Playground"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+text = "Select the mode you would like to use."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scon" type="ScrollContainer" parent="mcon/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="chat_modes" type="GridContainer" parent="mcon/vbox/scon"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 5
+
+[node name="mode_button" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+
+[node name="mode_button2" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("4_j6jgc")
+mode_display_name = "Proofreader"
+scene = ExtResource("4_4mch1")
+
+[node name="Label2" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+text = "Version 0.1.1"

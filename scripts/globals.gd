@@ -1,5 +1,7 @@
 extends Node
 
+var API_KEY:String
+
 #########################
 #CODE SNIPPETS
 #########################
@@ -50,3 +52,17 @@ func set_button_by_text(option_button:OptionButton, text:String):
 			return
 	
 	option_button.select(0)
+
+
+func parse_api_error(error_code:int):
+	match error_code:
+		401:
+			return "Error: " + str(error_code) + " - Invalid API key. Make sure you typed or copied it correctly."
+		400:
+			return "Error: " + str(error_code) + " - Something was wrong with connecting to the servers. It could be a program issue..."
+		429:
+			return "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exeeced your quota, check your billing details."
+		500:
+			return "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
+		_:
+			return "Unknown error: " + str(error_code)

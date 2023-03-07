@@ -28,12 +28,19 @@ var openai
 @onready var frequency_penalty_slider = $config_popup/vbox/frequency_penalty
 
 var config = ConfigFile.new()
-var API_KEY:String
 var MAX_TOKENS:int = 1000
 var TEMPERATURE:float = 1.4
 var PRESENCE:float = 0.4
 var FREQUENCY:float = 1.0
 var session_token_total:int = 0
+#USE THE LOGGIT BIAS TO REMOVE OR INCREASE THE PRESENSE OF CERTAIN WORDS. IT CAN EVEN BAN WORDS COMPLETELY FROM BEING GENERATED.
+var logit_bias:Dictionary = {
+	20185: -50, #AI
+	3303: -80, #language
+	2746: -80, #model
+	562: -20, #ass
+	10167: -80 #istant
+}
 
 var bot_thinking:bool = false
 var chat_memory:PackedStringArray = []
@@ -82,7 +89,7 @@ func _ready():
 
 func connect_openai():
 	await get_tree().process_frame
-	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", API_KEY)
+	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	#print("openai connected")
 	openai.connect("request_success", _on_openai_request_success)
 	openai.connect("request_error", _on_openai_request_error)
@@ -119,13 +126,13 @@ func load_config():
 	if err != OK:
 		return false
 	
-	API_KEY = config.get_value("Settings", "API_KEY")
+	globals.API_KEY = config.get_value("Settings", "API_KEY")
 	MAX_TOKENS = config.get_value("Settings", "MAX_TOKENS")
 	TEMPERATURE = config.get_value("Settings", "TEMPERATURE")
 	PRESENCE = config.get_value("Settings", "PRESENCE")
 	FREQUENCY = config.get_value("Settings", "FREQUENCY")
 	
-	api_key_input.text = API_KEY
+	api_key_input.text = globals.API_KEY
 	max_tokens_input.value = MAX_TOKENS
 	temperature_slider.value = TEMPERATURE
 	presence_penalty_slider.value = PRESENCE
@@ -141,7 +148,7 @@ func save_config():
 	config.set_value("Settings", "FREQUENCY", frequency_penalty_slider.value)
 	config.save("user://settings.cfg")
 	
-	API_KEY = api_key_input.text
+	globals.API_KEY = api_key_input.text
 	MAX_TOKENS = max_tokens_input.value
 	TEMPERATURE = temperature_slider.value
 	PRESENCE = presence_penalty_slider.value
@@ -156,7 +163,7 @@ func _on_openai_request_error(error_code):
 	bot_thinking = false
 	var new_msg:PanelContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	new_msg.get_node("message_box/msg").text = "An error occurred. Error Code: " + str(error_code)
+	new_msg.get_node("message_box/msg").text = globals.parse_api_error(error_code)
 	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
 	chat_log.add_child(new_msg)
 	loading.hide()
@@ -185,7 +192,7 @@ func user_gui(event:InputEvent):
 
 
 func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
-	if(API_KEY == "" || API_KEY == null):
+	if(globals.API_KEY == "" || globals.API_KEY == null):
 		var new_msg:PanelContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		new_msg.get_node("message_box/msg").text = "You have not provided an API key. Please open the config menu and add one. For more information and to generate your API key visit openai.com."
@@ -226,7 +233,8 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",
-	"stream": false
+	"stream": false,
+	"logit_bias": logit_bias
 	}
 	
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
@@ -269,7 +277,8 @@ func regen_message(model:String = "gpt-3.5-turbo"):
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",
-	"stream": false
+	"stream": false,
+	"logit_bias": logit_bias
 	}
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
 
