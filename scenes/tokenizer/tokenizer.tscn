@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ch6srj78talpt"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_n3upc"]
+[ext_resource type="Script" path="res://scenes/tokenizer/tokenizer.gd" id="2_vsjo8"]
+
+[node name="tokenizer" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_n3upc")
+script = ExtResource("2_vsjo8")

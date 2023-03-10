@@ -1,6 +1,16 @@
 extends Node
 
 var API_KEY:String
+const TOKENS_COST:float = 0.000002
+
+var CURRENT_THEME:Dictionary = {
+	"bg": "262730",
+	"container": "353642",
+	"banner": "1b1b22",
+	"user_bubble": "1982c4",
+	"bot_bubble": "E9006D",
+	"button": "white"
+}
 
 #########################
 #CODE SNIPPETS

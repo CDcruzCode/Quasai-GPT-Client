@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://blva642k3pj3o"]
+[gd_scene load_steps=8 format=3 uid="uid://blva642k3pj3o"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
 [ext_resource type="PackedScene" uid="uid://cnxpk2l586uev" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
 [ext_resource type="PackedScene" uid="uid://w2bt0glmbwcu" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
 [ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
+[ext_resource type="Texture2D" uid="uid://i7lgcofh557v" path="res://images/icons/image_prompter_icon.png" id="6_65mhf"]
+[ext_resource type="PackedScene" uid="uid://bicf8plck88h4" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
 
 [node name="start_screen" type="PanelContainer"]
 self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
@@ -25,6 +27,12 @@ theme_override_constants/margin_bottom = 10
 
 [node name="vbox" type="VBoxContainer" parent="mcon"]
 layout_mode = 2
+
+[node name="settings_button" type="Button" parent="mcon/vbox"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Settings"
 
 [node name="Label" type="Label" parent="mcon/vbox"]
 layout_mode = 2
@@ -60,6 +68,27 @@ icon = ExtResource("4_j6jgc")
 mode_display_name = "Proofreader"
 scene = ExtResource("4_4mch1")
 
-[node name="Label2" type="Label" parent="mcon/vbox"]
+[node name="mode_button3" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-text = "Version 0.1.1"
+icon = ExtResource("6_65mhf")
+mode_display_name = "Image Prompter"
+scene = ExtResource("6_rkqeg")
+
+[node name="mode_button4" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_display_name = "Recipe Creator"
+
+[node name="mode_button5" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_display_name = "Companion Bot"
+
+[node name="mode_button6" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_display_name = "Document Summarizer"
+
+[node name="version" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+text = "Version 0.1.3"

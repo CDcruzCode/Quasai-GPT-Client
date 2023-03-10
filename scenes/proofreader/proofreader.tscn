@@ -29,11 +29,11 @@ layout_mode = 2
 
 [node name="home_button" type="Button" parent="vbox/hcon"]
 layout_mode = 2
-text = "HOME"
+text = "Home"
 
 [node name="Label" type="Label" parent="vbox/hcon"]
 layout_mode = 2
-text = "Proofreader writing style:"
+text = "Writing Style:"
 vertical_alignment = 1
 
 [node name="writing_style_option" type="OptionButton" parent="vbox/hcon"]
@@ -42,18 +42,25 @@ layout_mode = 2
 
 [node name="proofread_button" type="Button" parent="vbox/hcon"]
 layout_mode = 2
-tooltip_text = "Fixes spelling & grammar of the provided text and will rewrite the text using the chosen writing style."
+tooltip_text = "Fixes spelling & grammar of the provided text
+and will rewrite the text using the chosen writing style."
 text = "Proofread"
 
 [node name="summarize_button" type="Button" parent="vbox/hcon"]
 layout_mode = 2
-tooltip_text = "Summarizes the provided text down to 1 paragraph if possible."
+tooltip_text = "Summarizes the provided text dow
+ to 1 paragraph if possible."
 text = "Summarize Text"
 
 [node name="sentiment_button" type="Button" parent="vbox/hcon"]
 layout_mode = 2
-tooltip_text = "Sentiment Analysis provides a brief description of the emotion that the provided text conveys. "
+tooltip_text = "Sentiment Analysis provides a brief description
+of the emotion that the provided text conveys. "
 text = "Sentiment Analysis"
+
+[node name="copy_text_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Copy Output"
 
 [node name="vsplit" type="VSplitContainer" parent="vbox"]
 layout_mode = 2
@@ -86,7 +93,23 @@ selection_enabled = true
 [node name="vbox" type="VBoxContainer" parent="vbox/vsplit"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="vbox/vsplit/vbox"]
+[node name="hcon" type="HFlowContainer" parent="vbox/vsplit/vbox"]
+layout_mode = 2
+
+[node name="token_estimation" type="Label" parent="vbox/vsplit/vbox/hcon"]
+layout_mode = 2
+tooltip_text = "Only calculates the tokens that will be used for the inputted text.
+It does not include the pre-processor text or the output text."
+mouse_filter = 1
+theme_override_font_sizes/font_size = 14
+text = "Changes made:"
+
+[node name="session_tokens_display" type="Label" parent="vbox/vsplit/vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "test"
+
+[node name="Label2" type="Label" parent="vbox/vsplit/vbox"]
 layout_mode = 2
 text = "Changes made:"
 

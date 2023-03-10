@@ -7,6 +7,8 @@ var api_org:String
 
 var http_request:HTTPRequest
 
+var streaming:bool = false
+
 func _init(tree_scene:SceneTree, api_base_url2:String, api_key2:String, api_org2:String = ""):
 	tree = tree_scene
 	http_request = HTTPRequest.new()
@@ -19,14 +21,18 @@ func _init(tree_scene:SceneTree, api_base_url2:String, api_key2:String, api_org2
 	self.api_org = api_org2
 
 func _on_request_completed(_result, response_code, _headers, body):
-	print("request completed")
+	print("[OpenAIAPI] Request completed.")
 	if response_code == 200:
-		var data = JSON.parse_string(body.get_string_from_utf8())
-		emit_signal("request_success", data)
+		if(streaming):
+			emit_signal("request_success_stream", body)
+		else:
+			var data = JSON.parse_string(body.get_string_from_utf8())
+			emit_signal("request_success", data)
 	else:
 		emit_signal("request_error", response_code)
 
 func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary):
+	streaming = false
 	#var headers = {"Authorization": "Bearer " + api_key}
 	var headers = [
 	"Content-Type: application/json",
@@ -35,8 +41,22 @@ func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary)
 	var url = api_base_url + endpoint
 
 	print( http_request.request(url, headers, method, JSON.stringify(data)) )
-	print("sent")
+	print("[OpenAIAPI] Sent msg.")
+
+
+func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary):
+	streaming = true
+	#var headers = {"Authorization": "Bearer " + api_key}
+	var headers = [
+	"Content-Type: application/json",
+	"Authorization: Bearer " + api_key,
+	"OpenAI-Organization: " + api_org]
+	var url = api_base_url + endpoint
+
+	print( http_request.request(url, headers, method, JSON.stringify(data)) )
+	print("[OpenAIAPI] Sent msg.")
 
 
 signal request_success(data)
+signal request_success_stream(data)
 signal request_error(error_code)

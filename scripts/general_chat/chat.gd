@@ -6,18 +6,18 @@ var openai
 @onready var chat_log = $vbox/scon/chat_log
 @onready var loading = $vbox/hbox/loading
 @onready var chat_scroll:ScrollContainer = $vbox/scon
-@onready var chat_label = $vbox/PanelContainer/hbox2/chat_label
-@onready var clear_chat_button = $vbox/PanelContainer/hbox2/clear_chat
+@onready var chat_label = $vbox/pcon/vbox/hbox/chat_label
+@onready var clear_chat_button = $vbox/pcon/vbox/hbox2/clear_chat
 @onready var regen_button = $vbox/hbox/regen
-@onready var session_tokens_display = $vbox/PanelContainer/hbox2/session_tokens
+@onready var session_tokens_display = $vbox/pcon/vbox/hbox/session_tokens
 @onready var save_chat_popup = $save_chat_popup
 @onready var save_chat_name = $save_chat_popup/save_chat_name
-@onready var save_chat_button = $vbox/PanelContainer/hbox2/save_chat_button
-@onready var saved_chats_list:OptionButton = $vbox/PanelContainer/hbox2/saved_chats_list
+@onready var save_chat_button = $vbox/pcon/vbox/hbox2/save_chat_button
+@onready var saved_chats_list:OptionButton = $vbox/pcon/vbox/hbox2/saved_chats_list
+@onready var home_button = $vbox/pcon/vbox/hbox2/home_button
 
 @onready var config_popup = $config_popup
-@onready var config_button = $vbox/PanelContainer/hbox2/config
-@onready var api_key_input = $config_popup/vbox/api_key
+@onready var config_button = $vbox/pcon/vbox/hbox2/config
 @onready var prompt_options = $config_popup/vbox/prompt_options
 @onready var max_tokens_input = $config_popup/vbox/max_tokens
 @onready var temperature_text = $config_popup/vbox/temperature_text
@@ -45,14 +45,16 @@ var logit_bias:Dictionary = {
 var bot_thinking:bool = false
 var chat_memory:PackedStringArray = []
 
-var bot_color:Color = Color("F5515F")
-var user_color:Color = Color("5D8EAC")
+var bot_color:Color = Color(globals.CURRENT_THEME.bot_bubble)
+var user_color:Color = Color(globals.CURRENT_THEME.user_bubble)
 
 
 var prompt_types:PackedStringArray = []
 
 func _ready():
+	bot_thinking = true
 	user_input.gui_input.connect(user_gui)
+	home_button.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn"))
 	loading.hide()
 	config_popup.hide()
 	reload_chats_list()
@@ -86,6 +88,7 @@ func _ready():
 		return
 	
 	connect_openai()
+	bot_thinking = false
 
 func connect_openai():
 	await get_tree().process_frame
@@ -98,7 +101,7 @@ func connect_openai():
 func _on_openai_request_success(data):
 	#print("Request succeeded:", data)
 	session_token_total += data.usage.total_tokens
-	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_token_total*0.002)
+	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_token_total*globals.TOKENS_COST)
 	#print(data.choices[0].message.content)
 	var reply:String = data.choices[0].message.content
 	reply = reply.replace("&amp;", "&")
@@ -132,7 +135,6 @@ func load_config():
 	PRESENCE = config.get_value("Settings", "PRESENCE")
 	FREQUENCY = config.get_value("Settings", "FREQUENCY")
 	
-	api_key_input.text = globals.API_KEY
 	max_tokens_input.value = MAX_TOKENS
 	temperature_slider.value = TEMPERATURE
 	presence_penalty_slider.value = PRESENCE
@@ -141,14 +143,13 @@ func load_config():
 	return true
 
 func save_config():
-	config.set_value("Settings", "API_KEY", api_key_input.text)
+	config.set_value("Settings", "API_KEY", globals.API_KEY)
 	config.set_value("Settings", "MAX_TOKENS", max_tokens_input.value)
 	config.set_value("Settings", "TEMPERATURE", temperature_slider.value)
 	config.set_value("Settings", "PRESENCE", presence_penalty_slider.value)
 	config.set_value("Settings", "FREQUENCY", frequency_penalty_slider.value)
 	config.save("user://settings.cfg")
 	
-	globals.API_KEY = api_key_input.text
 	MAX_TOKENS = max_tokens_input.value
 	TEMPERATURE = temperature_slider.value
 	PRESENCE = presence_penalty_slider.value
@@ -214,11 +215,18 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	new_msg.get_node("message_box").self_modulate = user_color
 	chat_log.add_child(new_msg)
 	
+	var temp_logit_bias = logit_bias
+	var preprocessor = globals.load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))
+	var err = JSON.parse_string(preprocessor)
+	if(err!=null):
+		print("OK")
+		chat_array.append({"role": "system", "content": preprocessor.prompt})
+		if(preprocessor.logit_bias):
+			logit_bias = preprocessor.logit_bias
+	else:
+		print("NOT JSON")
+		chat_array.append({"role": "system", "content": preprocessor})
 	
-#	var pre_msg = load_file_as_string("res://scripts/prompts/" + prompt_options.get_item_text(prompt_options.selected))
-#	for m in chat_memory:
-#		pre_msg += m + "\n"
-	chat_array.append({"role": "system", "content": globals.load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))})
 	for m in chat_memory:
 		if(m.strip_edges().begins_with("<USER>")):
 			chat_array.append({"role": "user", "content": m.strip_edges()})
@@ -234,7 +242,7 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",
 	"stream": false,
-	"logit_bias": logit_bias
+	"logit_bias": temp_logit_bias
 	}
 	
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
@@ -243,7 +251,9 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 
 
-func clear_chat():
+func clear_chat(set_none:bool = true):
+	if(set_none):
+		saved_chats_list.select(0)
 	globals.delete_all_children(chat_log)
 	chat_memory.clear()
 
@@ -313,14 +323,14 @@ func reload_chats_list(new_select:String = "<none>"):
 
 func load_saved_chat(id:int):
 	if(id == 0):
-		clear_chat()
+		clear_chat(false)
 		return
 	
 	bot_thinking = true
 	loading.show()
 	
 	var selected_name:String = saved_chats_list.get_item_text(id)
-	clear_chat()
+	clear_chat(false)
 	var file = FileAccess.open("user://saved_conversations/"+selected_name, FileAccess.READ)
 	if(file.get_error() != OK):
 		return

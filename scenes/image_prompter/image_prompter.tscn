@@ -1,0 +1,157 @@
+[gd_scene load_steps=6 format=3 uid="uid://bicf8plck88h4"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_prnr7"]
+[ext_resource type="Script" path="res://scripts/image_prompter/image_prompter.gd" id="2_34uvk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iy5jj"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 20
+border_width_top = 10
+border_width_right = 20
+border_width_bottom = 10
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nt82t"]
+bg_color = Color(0.160784, 0.164706, 0.2, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.160784, 0.164706, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8l630"]
+bg_color = Color(0.160784, 0.164706, 0.2, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.160784, 0.164706, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="image_prompter" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_prnr7")
+theme_override_styles/panel = SubResource("StyleBoxFlat_iy5jj")
+script = ExtResource("2_34uvk")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="hcon" type="HFlowContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Home"
+
+[node name="Label" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Image Prompter    "
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "An interface for creating prompts to be used in AI image generation software, such as DALL-E or Stable Diffusion."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="input_con" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="vbox/hbox/input_con"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+text = "Input Prompt"
+
+[node name="user_input" type="LineEdit" parent="vbox/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Describe the image you want to generate"
+
+[node name="generate_button" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Generate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="token_display" type="Label" parent="vbox/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "test"
+
+[node name="positive_con" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/positive_con"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox/positive_con/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/positive_con/vbox/hbox"]
+layout_mode = 2
+text = "Positive Prompts"
+
+[node name="copy_positive" type="Button" parent="vbox/positive_con/vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Copy"
+
+[node name="positive_display" type="RichTextLabel" parent="vbox/positive_con/vbox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_nt82t")
+
+[node name="negative_con" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/negative_con"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox/negative_con/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/negative_con/vbox/hbox"]
+layout_mode = 2
+text = "Negative Prompts"
+
+[node name="copy_negative" type="Button" parent="vbox/negative_con/vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Copy"
+
+[node name="negative_display" type="RichTextLabel" parent="vbox/negative_con/vbox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_8l630")

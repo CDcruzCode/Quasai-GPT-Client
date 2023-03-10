@@ -61,13 +61,16 @@ func save_config(data):
 	
 	globals.API_KEY = api_key_input.text.strip_edges()
 	
-	get_tree().change_scene_to_file("res://scenes/start_screen.tscn")
+	get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn")
 
 func connect_openai():
 	if(api_key_input.text.strip_edges().is_empty()):
 		api_error.text = "Error: API key input is empty."
 		api_error.show()
 		return
+	
+	api_error.text = "Verifying API Key..."
+	api_error.show()
 	
 	continue_button.disabled = true
 	await get_tree().process_frame
