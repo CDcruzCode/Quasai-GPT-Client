@@ -1,0 +1,9 @@
+TODO
+
+[General Chatting]
+
+- Allow messages to be deleted individually.
+
+[Summarizer]
+
+- Support .doc .docx .pdf
