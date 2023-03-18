@@ -1,0 +1,230 @@
+[gd_scene load_steps=4 format=3 uid="uid://dq40ax0n8dn6u"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_oglvc"]
+[ext_resource type="Script" path="res://scripts/companion/companion_start.gd" id="2_2qrna"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_etyor"]
+
+[node name="companion_start" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_oglvc")
+script = ExtResource("2_2qrna")
+
+[node name="mcon" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 20
+
+[node name="vbox" type="VBoxContainer" parent="mcon"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="home_button" type="Button" parent="mcon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Home"
+script = ExtResource("3_etyor")
+
+[node name="Label" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Your Companion"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="mcon/vbox"]
+layout_mode = 2
+text = "Your Companion is a specialized chat mode that aims to create a conversational experience and build a friendship with one AI personality over time. The goal is for the AI to gradually learn more about you and mature as a person as your conversations progress.
+Please note that as this is an experimental mode, your AI may sometimes break with updates and may also require many tokens to handle messages, create memories, and develop more traits.
+
+To begin, select the options below to personalize your companion's personality."
+fit_content = true
+
+[node name="Label2" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Your Companion's Basic Info"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="error_message" type="Label" parent="mcon/vbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.301961, 0.235294, 1)
+text = "Error:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scon" type="ScrollContainer" parent="mcon/vbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="mcon/vbox/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+text = "Companion's name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="name_box" type="HBoxContainer" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+
+[node name="ai_name" type="LineEdit" parent="mcon/vbox/scon/vbox/name_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter name"
+
+[node name="random_name_button" type="Button" parent="mcon/vbox/scon/vbox/name_box"]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+text = "Random"
+
+[node name="Label2" type="Label" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+text = "Age"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="age_box" type="HBoxContainer" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+
+[node name="age_young" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Young Adult
+(18 - 30)"
+
+[node name="age_adult" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Adult
+(31 - 60)"
+
+[node name="age_old" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Mature Adult
+(60+)"
+
+[node name="Label3" type="Label" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+text = "Sex"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="sex_box" type="HBoxContainer" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+
+[node name="sex_man" type="Button" parent="mcon/vbox/scon/vbox/sex_box"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Man"
+
+[node name="sex_woman" type="Button" parent="mcon/vbox/scon/vbox/sex_box"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Woman"
+
+[node name="Label4" type="Label" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+text = "General Personality"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="personality_options" type="OptionButton" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+disabled = true
+
+[node name="Label5" type="Label" parent="mcon/vbox/scon/vbox"]
+visible = false
+layout_mode = 2
+text = "Interests"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="interests_box" type="GridContainer" parent="mcon/vbox/scon/vbox"]
+visible = false
+layout_mode = 2
+columns = 3
+
+[node name="sports" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Sports"
+
+[node name="music" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Music"
+
+[node name="art" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Art"
+
+[node name="science" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Science"
+
+[node name="video_games" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Video Games"
+
+[node name="reading" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Reading"
+
+[node name="fashion" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Fashion"
+
+[node name="travelling" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Traveling"
+
+[node name="cinema" type="Button" parent="mcon/vbox/scon/vbox/interests_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Cinema"
+
+[node name="generate_button" type="Button" parent="mcon/vbox/scon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Generate your companion"

@@ -1,12 +1,34 @@
-[gd_scene load_steps=8 format=3 uid="uid://blva642k3pj3o"]
+[gd_scene load_steps=20 format=3 uid="uid://bxlati8s5o4hu"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_fpw51"]
 [ext_resource type="PackedScene" uid="uid://cnxpk2l586uev" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
 [ext_resource type="PackedScene" uid="uid://w2bt0glmbwcu" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
 [ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
+[ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_mf0nk"]
 [ext_resource type="Texture2D" uid="uid://i7lgcofh557v" path="res://images/icons/image_prompter_icon.png" id="6_65mhf"]
 [ext_resource type="PackedScene" uid="uid://bicf8plck88h4" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
+[ext_resource type="Texture2D" uid="uid://byrppiparamo2" path="res://images/icons/recipe_creator_icon.png" id="8_4inxh"]
+[ext_resource type="PackedScene" uid="uid://ddb33pybk7s8u" path="res://scenes/recipe_creator/recipe_creator.tscn" id="8_co8xd"]
+[ext_resource type="PackedScene" uid="uid://rv56lfhyhaps" path="res://scenes/greentext/greentext.tscn" id="9_yds3p"]
+[ext_resource type="Texture2D" uid="uid://nrgndkkhnjw5" path="res://images/icons/tokenizer_icon.png" id="11_dg22m"]
+[ext_resource type="PackedScene" uid="uid://ce5md6ndtklcv" path="res://scenes/tokenizer/tokenizer.tscn" id="11_xpwlf"]
+[ext_resource type="PackedScene" uid="uid://dq40ax0n8dn6u" path="res://scenes/companion/companion_start.tscn" id="13_f3v45"]
+[ext_resource type="Texture2D" uid="uid://by5ya06djwpgs" path="res://images/icons/translator_icon.png" id="14_aeaj1"]
+[ext_resource type="PackedScene" uid="uid://ch08crnhaa23j" path="res://scenes/translator/translator.tscn" id="14_qg75j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ian16"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 
 [node name="start_screen" type="PanelContainer"]
 self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
@@ -28,11 +50,35 @@ theme_override_constants/margin_bottom = 10
 [node name="vbox" type="VBoxContainer" parent="mcon"]
 layout_mode = 2
 
-[node name="settings_button" type="Button" parent="mcon/vbox"]
-visible = false
+[node name="hbox2" type="HBoxContainer" parent="mcon/vbox"]
+layout_mode = 2
+
+[node name="settings_button" type="Button" parent="mcon/vbox/hbox2"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Settings"
+
+[node name="ColorRect" type="ColorRect" parent="mcon/vbox/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(1, 1, 1, 0)
+
+[node name="openai_status" type="Button" parent="mcon/vbox/hbox2"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "OpenAI server status"
+flat = true
+alignment = 0
+
+[node name="status_icon" type="TextureRect" parent="mcon/vbox/hbox2"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+texture = ExtResource("3_fpw51")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="Label" type="Label" parent="mcon/vbox"]
 layout_mode = 2
@@ -51,44 +97,174 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="chat_modes" type="GridContainer" parent="mcon/vbox/scon"]
+[node name="VBoxContainer" type="VBoxContainer" parent="mcon/vbox/scon"]
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="mcon/vbox/scon/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Entertainment"
+
+[node name="entertainment_modes" type="GridContainer" parent="mcon/vbox/scon/VBoxContainer"]
+layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
 columns = 5
 
-[node name="mode_button" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+[node name="general_chatting" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
 
-[node name="mode_button2" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+[node name="your_companion" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("4_j6jgc")
-mode_display_name = "Proofreader"
-scene = ExtResource("4_4mch1")
+icon = ExtResource("5_mf0nk")
+mode_display_name = "Your Companion (Experimental)"
+scene = ExtResource("13_f3v45")
 
-[node name="mode_button3" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+[node name="image_prompter" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
 icon = ExtResource("6_65mhf")
 mode_display_name = "Image Prompter"
 scene = ExtResource("6_rkqeg")
 
-[node name="mode_button4" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
-visible = false
+[node name="greentexter" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
+icon = ExtResource("6_65mhf")
+mode_display_name = "Greentexter"
+scene = ExtResource("9_yds3p")
+
+[node name="Label2" type="Label" parent="mcon/vbox/scon/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Utilities"
+
+[node name="utility_modes" type="GridContainer" parent="mcon/vbox/scon/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 5
+
+[node name="proofreader" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("4_j6jgc")
+mode_display_name = "Proofreader"
+scene = ExtResource("4_4mch1")
+
+[node name="recipe_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("8_4inxh")
 mode_display_name = "Recipe Creator"
+scene = ExtResource("8_co8xd")
 
-[node name="mode_button5" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+[node name="tokenizer" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("11_dg22m")
+mode_display_name = "Tokenizer"
+scene = ExtResource("11_xpwlf")
+
+[node name="translator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("14_aeaj1")
+mode_display_name = "Translator"
+scene = ExtResource("14_qg75j")
+
+[node name="placeholder_generator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2
-mode_display_name = "Companion Bot"
+mode_display_name = "Placeholder Generator"
 
-[node name="mode_button6" parent="mcon/vbox/scon/chat_modes" instance=ExtResource("3_w1g0p")]
+[node name="post_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_display_name = "Post Creator"
+
+[node name="mode_button8" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_display_name = "Code Helper"
+
+[node name="mode_button6" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2
 mode_display_name = "Document Summarizer"
 
-[node name="version" type="Label" parent="mcon/vbox"]
+[node name="hbox" type="HBoxContainer" parent="mcon/vbox"]
 layout_mode = 2
-text = "Version 0.1.3"
+
+[node name="version" type="Label" parent="mcon/vbox/hbox"]
+layout_mode = 2
+text = "Version 0.1.6a"
+vertical_alignment = 1
+
+[node name="settings_popup" type="AcceptDialog" parent="."]
+initial_position = 1
+title = "Settings"
+size = Vector2i(300, 350)
+unresizable = true
+
+[node name="tabs" type="TabContainer" parent="settings_popup"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 292.0
+offset_bottom = 299.0
+
+[node name="Model Settings" type="ScrollContainer" parent="settings_popup/tabs"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_qoywm")
+
+[node name="vbox" type="VBoxContainer" parent="settings_popup/tabs/Model Settings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="language_model" type="Label" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+text = "Language Model"
+
+[node name="model_options_button" type="OptionButton" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+text = "OpenAI API Key"
+
+[node name="openai_api_key_input" type="LineEdit" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+placeholder_text = "API Key"
+
+[node name="model_blurb" type="RichTextLabel" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+fit_content = true
+shortcut_keys_enabled = false
+
+[node name="open_user_folder" type="Button" parent="settings_popup/tabs/Model Settings/vbox"]
+layout_mode = 2
+text = "Open User Data Folder"
+
+[node name="Stats" type="ScrollContainer" parent="settings_popup/tabs"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ian16")
+
+[node name="vbox" type="VBoxContainer" parent="settings_popup/tabs/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="total_tokens_display" type="Label" parent="settings_popup/tabs/Stats/vbox"]
+layout_mode = 2
+text = "Total Tokens Used: 0"
+
+[node name="total_cost_display" type="Label" parent="settings_popup/tabs/Stats/vbox"]
+layout_mode = 2
+text = "Total Tokens Cost: 0"
+
+[node name="clear_stats_button" type="Button" parent="settings_popup/tabs/Stats/vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+text = "Clear All Stats"

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bicf8plck88h4"]
+[gd_scene load_steps=7 format=3 uid="uid://bicf8plck88h4"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_prnr7"]
 [ext_resource type="Script" path="res://scripts/image_prompter/image_prompter.gd" id="2_34uvk"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_fujwm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iy5jj"]
 bg_color = Color(1, 1, 1, 1)
@@ -56,12 +57,16 @@ layout_mode = 2
 [node name="home_button" type="Button" parent="vbox/hcon"]
 layout_mode = 2
 text = "Home"
+script = ExtResource("3_fujwm")
 
 [node name="Label" type="Label" parent="vbox/hcon"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "    Image Prompter    "
+text = "    Image Prompter"
 vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
 
 [node name="Label2" type="Label" parent="vbox/hcon"]
 custom_minimum_size = Vector2(500, 0)

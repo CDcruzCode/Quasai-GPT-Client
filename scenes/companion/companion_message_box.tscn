@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4kqfmceq7lpe"]
+[gd_scene load_steps=2 format=3 uid="uid://b8tsyo1myyuk5"]
 
-[ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_c8she"]
+[ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_tjsj0"]
 
 [node name="spacer" type="MarginContainer"]
 anchors_preset = 2
@@ -17,7 +17,7 @@ theme_override_constants/margin_bottom = 5
 [node name="message_box" type="PanelContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
-script = ExtResource("1_c8she")
+script = ExtResource("1_tjsj0")
 
 [node name="vbox" type="VBoxContainer" parent="message_box"]
 layout_mode = 2

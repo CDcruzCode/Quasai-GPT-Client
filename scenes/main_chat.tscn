@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctqr2g7wujk0t"]
+[gd_scene load_steps=6 format=3 uid="uid://ctqr2g7wujk0t"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_u8umw"]
 [ext_resource type="Script" path="res://scripts/general_chat/chat.gd" id="2_ghubs"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_mq8eo"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_rb1qw"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ehkhm"]
 content_margin_bottom = 20.0
@@ -34,6 +36,8 @@ metadata/_edit_lock_ = true
 [node name="home_button" type="Button" parent="vbox/pcon/vbox/hbox2"]
 layout_mode = 2
 text = "Home"
+script = ExtResource("3_mq8eo")
+custom_save = true
 
 [node name="saved_chats_list" type="OptionButton" parent="vbox/pcon/vbox/hbox2"]
 custom_minimum_size = Vector2(350, 0)
@@ -58,6 +62,7 @@ layout_mode = 2
 
 [node name="chat_label" type="Label" parent="vbox/pcon/vbox/hbox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Chat Type"
 
 [node name="VSeparator" type="VSeparator" parent="vbox/pcon/vbox/hbox"]
@@ -66,6 +71,7 @@ layout_mode = 2
 [node name="session_tokens" type="Label" parent="vbox/pcon/vbox/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
 text = "Session Tokens: 0"
 
 [node name="scon" type="ScrollContainer" parent="vbox"]
@@ -84,12 +90,13 @@ alignment = 2
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="loading" type="ColorRect" parent="vbox/hbox"]
+[node name="loading" type="TextureRect" parent="vbox/hbox"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-color = Color(0.831373, 0.164706, 0.117647, 1)
+texture = ExtResource("3_rb1qw")
+expand_mode = 2
 
 [node name="user_input" type="TextEdit" parent="vbox/hbox"]
 layout_mode = 2
@@ -105,7 +112,7 @@ text = "Regen"
 
 [node name="config_popup" type="AcceptDialog" parent="."]
 size = Vector2i(350, 363)
-visible = true
+unresizable = true
 borderless = true
 
 [node name="vbox" type="VBoxContainer" parent="config_popup"]
@@ -173,6 +180,7 @@ step = 0.05
 initial_position = 2
 title = "New Chat Name"
 size = Vector2i(350, 100)
+unresizable = true
 always_on_top = true
 ok_button_text = "Save"
 
@@ -187,5 +195,6 @@ placeholder_text = "enter name"
 initial_position = 2
 title = "Save & Quit?"
 size = Vector2i(200, 82)
+unresizable = true
 ok_button_text = "Save & Quit"
 cancel_button_text = "Quit"

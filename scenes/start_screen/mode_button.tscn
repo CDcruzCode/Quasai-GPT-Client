@@ -19,7 +19,7 @@ layout_mode = 2
 [node name="mode_image" type="TextureRect" parent="vbox"]
 layout_mode = 2
 size_flags_vertical = 3
-expand_mode = 1
+expand_mode = 3
 stretch_mode = 5
 
 [node name="mode_name" type="Label" parent="vbox"]
@@ -27,3 +27,4 @@ layout_mode = 2
 text = "text"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3

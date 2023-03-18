@@ -1,0 +1,123 @@
+[gd_scene load_steps=6 format=3 uid="uid://ch08crnhaa23j"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_7ruw2"]
+[ext_resource type="Script" path="res://scripts/translator/translator.gd" id="2_wln3l"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_spf4f"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_kpnvj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fr2rx"]
+bg_color = Color(0.207843, 0.211765, 0.258824, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.207843, 0.211765, 0.258824, 1)
+
+[node name="translator" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7ruw2")
+script = ExtResource("2_wln3l")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HFlowContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Home"
+script = ExtResource("3_spf4f")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Translator"
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hcon"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "An easy to use translator. Please be aware that due to the nature of GPT the output is prone to errors and should not be used for anything critical without verifying."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="translate_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Translate"
+
+[node name="copy_output_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Copy Output"
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_kpnvj")
+expand_mode = 2
+
+[node name="hsplit" type="HSplitContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hsplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox/hsplit/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hsplit/vbox/hbox"]
+layout_mode = 2
+text = "Original Language"
+
+[node name="og_language_button" type="OptionButton" parent="vbox/hsplit/vbox/hbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="text_input" type="TextEdit" parent="vbox/hsplit/vbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "Enter your text here"
+wrap_mode = 1
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_tabs = true
+draw_spaces = true
+
+[node name="vbox2" type="VBoxContainer" parent="vbox/hsplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox/hsplit/vbox2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hsplit/vbox2/hbox"]
+layout_mode = 2
+text = "Translated Language"
+
+[node name="translated_language_button" type="OptionButton" parent="vbox/hsplit/vbox2/hbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="text_display" type="RichTextLabel" parent="vbox/hsplit/vbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
+text = "test"
+scroll_following = true
+selection_enabled = true

@@ -1,0 +1,193 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddb33pybk7s8u"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_r6g4o"]
+[ext_resource type="Script" path="res://scripts/recipe_creator/recipe_creator.gd" id="2_dym5b"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_0r46v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lfr3h"]
+bg_color = Color(0.160784, 0.164706, 0.2, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.160784, 0.164706, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="recipe_creator" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_r6g4o")
+script = ExtResource("2_dym5b")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hbox3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+text = "Home"
+script = ExtResource("3_0r46v")
+
+[node name="Label" type="Label" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Recipe Creator"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+text = "Instructions Style"
+
+[node name="writing_style_options" type="OptionButton" parent="VBoxContainer/hbox3"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="metric_toggle" type="CheckButton" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+button_pressed = true
+text = "Metric Units"
+flat = true
+
+[node name="vegan_toggle" type="CheckButton" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Vegan"
+flat = true
+
+[node name="save_button" type="Button" parent="VBoxContainer/hbox3"]
+layout_mode = 2
+text = "Save to .txt"
+
+[node name="hbox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="input_con" type="PanelContainer" parent="VBoxContainer/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/hbox/input_con"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+text = "Input Prompt"
+vertical_alignment = 1
+
+[node name="user_input" type="LineEdit" parent="VBoxContainer/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter the dish you want to create"
+
+[node name="input_con2" type="PanelContainer" parent="VBoxContainer/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/hbox/input_con2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/hbox/input_con2/VBoxContainer"]
+layout_mode = 2
+text = "Serving Size"
+vertical_alignment = 1
+
+[node name="serving_size" type="SpinBox" parent="VBoxContainer/hbox/input_con2/VBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 50.0
+value = 4.0
+
+[node name="generate_button" type="Button" parent="VBoxContainer/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Generate"
+
+[node name="hbox2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="token_display" type="Label" parent="VBoxContainer/hbox2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "test"
+vertical_alignment = 1
+
+[node name="hsplit" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ingredients_con" type="PanelContainer" parent="VBoxContainer/hsplit"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="VBoxContainer/hsplit/ingredients_con"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="VBoxContainer/hsplit/ingredients_con/vbox"]
+layout_mode = 2
+
+[node name="ingredients_toggle" type="Label" parent="VBoxContainer/hsplit/ingredients_con/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Ingredients"
+vertical_alignment = 1
+
+[node name="copy_ingredients" type="Button" parent="VBoxContainer/hsplit/ingredients_con/vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Copy"
+
+[node name="ingredients_display" type="RichTextLabel" parent="VBoxContainer/hsplit/ingredients_con/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_lfr3h")
+
+[node name="instructions_box" type="PanelContainer" parent="VBoxContainer/hsplit"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="VBoxContainer/hsplit/instructions_box"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="VBoxContainer/hsplit/instructions_box/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/hsplit/instructions_box/vbox/hbox"]
+layout_mode = 2
+text = "Instructions"
+vertical_alignment = 1
+
+[node name="copy_instructions" type="Button" parent="VBoxContainer/hsplit/instructions_box/vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Copy"
+
+[node name="instructions_display" type="RichTextLabel" parent="VBoxContainer/hsplit/instructions_box/vbox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_lfr3h")
+
+[node name="save_dialog" type="FileDialog" parent="."]
+initial_position = 1
+title = "Save Recipe"
+size = Vector2i(721, 361)
+always_on_top = true
+dialog_hide_on_ok = true
+access = 2
