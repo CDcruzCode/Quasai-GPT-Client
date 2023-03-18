@@ -1,0 +1,6 @@
+analyse the user text below and provide a list of any important information that would be good to know to understand the user and their personality more. The information should only include important information like biographic information, interests, likes, dislikes, calander events.
+If there is nothing important from the latest user text, return the previous list of notes. Do not say anything else.
+Do not add any headings or add any formatting. Only return the list of the users likes, dislikes and general details about themselves.
+Each item should be a few words.
+The assistant message is only included for added context.
+You will be provided a list of previous notes gathered about the user. If there are previous notes, include them in your new list.

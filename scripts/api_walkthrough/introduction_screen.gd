@@ -6,11 +6,6 @@ extends PanelContainer
 var config = ConfigFile.new()
 var openai:OpenAIAPI
 
-func _notification(what):
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		get_tree().quit()
-		return
-
 func _ready():
 	continue_button.disabled = false
 	api_error.hide()
@@ -34,6 +29,7 @@ func copy_prompts_folder():
 	var destination_folder_path = "user://prompts/"
 	await get_tree().process_frame
 	dir.make_dir("user://prompts")
+	dir.make_dir("user://companion")
 	for f in file_list:
 		dir.copy("res://scripts/prompts/"+f, destination_folder_path+f)
 #		if success == OK:
@@ -47,16 +43,26 @@ func load_config():
 	if err != OK:
 		printerr(err)
 		return false
-	globals.API_KEY = config.get_value("Settings", "API_KEY")
+	if(config.get_value("Settings", "MODEL") != null):
+		globals.API_KEY = config.get_value("Settings", "MODEL")
+	if(config.get_value("Settings", "API_KEY") != null):
+		globals.API_KEY = config.get_value("Settings", "API_KEY")
+	if(config.get_value("Stats", "TOTAL_TOKENS_COST") != null):
+		globals.TOTAL_TOKENS_COST = config.get_value("Stats", "TOTAL_TOKENS_COST")
+	if(config.get_value("Stats", "TOTAL_TOKENS_USED") != null):
+		globals.TOTAL_TOKENS_USED = config.get_value("Stats", "TOTAL_TOKENS_USED")
 	return true
 
 func save_config(data):
 	print(data)
 	config.set_value("Settings", "API_KEY", api_key_input.text.strip_edges())
+	config.set_value("Settings", "MODEL", "gpt-3.5-turbo")
 	config.set_value("Settings", "MAX_TOKENS", 1000)
 	config.set_value("Settings", "TEMPERATURE", 1.0)
 	config.set_value("Settings", "PRESENCE", 0.0)
 	config.set_value("Settings", "FREQUENCY", 0.0)
+	config.set_value("Stats", "TOTAL_TOKENS_USED", 0)
+	config.set_value("Stats", "TOTAL_TOKENS_COST", 0.0)
 	config.save("user://settings.cfg")
 	
 	globals.API_KEY = api_key_input.text.strip_edges()
@@ -79,7 +85,7 @@ func connect_openai():
 	openai.request_error.connect(req_err)
 	
 	var data = {
-	"model": "gpt-3.5-turbo",
+	"model": globals.AI_MODEL,
 	"messages": [{"role": "system", "content": "ping"}],
 	"max_tokens": 1,
 	"temperature": 0.0,

@@ -27,12 +27,20 @@ var openai
 @onready var frequency_text = $config_popup/vbox/frequency_text
 @onready var frequency_penalty_slider = $config_popup/vbox/frequency_penalty
 
+
+@onready var bad_status = preload("res://images/icons/bad_status.png")
+@onready var good_status = preload("res://images/icons/good_status.png")
+@onready var wait_status = preload("res://images/icons/wait_status.png")
+@onready var nil_status = preload("res://images/icons/nil_status.png")
+var wait_thread:Thread = Thread.new()
+
 var config = ConfigFile.new()
 var MAX_TOKENS:int = 1000
 var TEMPERATURE:float = 1.4
 var PRESENCE:float = 0.4
 var FREQUENCY:float = 1.0
 var session_token_total:int = 0
+var session_cost:float = 0.0
 #USE THE LOGGIT BIAS TO REMOVE OR INCREASE THE PRESENSE OF CERTAIN WORDS. IT CAN EVEN BAN WORDS COMPLETELY FROM BEING GENERATED.
 var logit_bias:Dictionary = {
 	20185: -50, #AI
@@ -54,13 +62,12 @@ var prompt_types:PackedStringArray = []
 func _ready():
 	bot_thinking = true
 	user_input.gui_input.connect(user_gui)
-	home_button.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn"))
-	loading.hide()
+	loading.texture = wait_status
 	config_popup.hide()
 	reload_chats_list()
 	saved_chats_list.item_selected.connect(load_saved_chat)
 	
-	config_button.pressed.connect(func(): config_popup.popup_centered())
+	config_button.pressed.connect(open_config)
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
 	regen_button.pressed.connect(regen_message)
@@ -89,6 +96,7 @@ func _ready():
 	
 	connect_openai()
 	bot_thinking = false
+	loading.texture = good_status
 
 func connect_openai():
 	await get_tree().process_frame
@@ -101,26 +109,32 @@ func connect_openai():
 func _on_openai_request_success(data):
 	#print("Request succeeded:", data)
 	session_token_total += data.usage.total_tokens
-	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_token_total*globals.TOKENS_COST)
+	session_cost += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
+	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
+	
 	#print(data.choices[0].message.content)
 	var reply:String = data.choices[0].message.content
 	reply = reply.replace("&amp;", "&")
 	reply = globals.remove_after_phrase(reply, "<USER>").strip_edges()
 	
 	var reply_array:PackedStringArray = reply.split("\n\n")
+	#var reply_array:PackedStringArray = reply.split("```")
+	
 	
 	for msg in reply_array:
-		var new_msg:PanelContainer = message_box.instantiate()
+		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		new_msg.get_node("message_box/msg").text = msg
+		new_msg.get_node("message_box/vbox/msg").text = msg
+		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").self_modulate = bot_color
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
 		chat_log.add_child(new_msg)
 	
-	loading.hide()
-	await get_tree().process_frame
-	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 	bot_thinking = false
+	await get_tree().process_frame
+	loading.texture = good_status
 	chat_memory.append(reply)
 
 func load_config():
@@ -130,16 +144,22 @@ func load_config():
 		return false
 	
 	globals.API_KEY = config.get_value("Settings", "API_KEY")
-	MAX_TOKENS = config.get_value("Settings", "MAX_TOKENS")
-	TEMPERATURE = config.get_value("Settings", "TEMPERATURE")
-	PRESENCE = config.get_value("Settings", "PRESENCE")
-	FREQUENCY = config.get_value("Settings", "FREQUENCY")
+	if(config.get_value("Settings", "MAX_TOKENS") != null):
+		MAX_TOKENS = config.get_value("Settings", "MAX_TOKENS")
+	if(config.get_value("Settings", "TEMPERATURE") != null):
+		TEMPERATURE = config.get_value("Settings", "TEMPERATURE")
+	if(config.get_value("Settings", "PRESENCE") != null):
+		PRESENCE = config.get_value("Settings", "PRESENCE")
+	if(config.get_value("Settings", "FREQUENCY") != null):
+		FREQUENCY = config.get_value("Settings", "FREQUENCY")
+		save_config()
 	
 	max_tokens_input.value = MAX_TOKENS
 	temperature_slider.value = TEMPERATURE
 	presence_penalty_slider.value = PRESENCE
 	frequency_penalty_slider.value = FREQUENCY
 	print("config loaded")
+	
 	return true
 
 func save_config():
@@ -164,10 +184,10 @@ func _on_openai_request_error(error_code):
 	bot_thinking = false
 	var new_msg:PanelContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	new_msg.get_node("message_box/msg").text = globals.parse_api_error(error_code)
+	new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
 	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
 	chat_log.add_child(new_msg)
-	loading.hide()
+	loading.texture = bad_status
 	await get_tree().process_frame
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 
@@ -192,17 +212,18 @@ func user_gui(event:InputEvent):
 			user_input.text = ""
 
 
-func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
+func send_message(msg:String):
 	if(globals.API_KEY == "" || globals.API_KEY == null):
-		var new_msg:PanelContainer = message_box.instantiate()
+		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		new_msg.get_node("message_box/msg").text = "You have not provided an API key. Please open the config menu and add one. For more information and to generate your API key visit openai.com."
+		new_msg.get_node("message_box/vbox/msg").text = "You have not provided an API key. Please open the config menu and add one. For more information and to generate your API key visit openai.com."
 		new_msg.get_node("message_box").self_modulate = Color.DARK_RED
 		chat_log.add_child(new_msg)
 		return
 	
 	bot_thinking = true
-	loading.show()
+	wait_thread = Thread.new()
+	wait_thread.start(wait_blink)
 	print("USER MSG: "+msg)
 	var chat_array:Array = []
 	
@@ -211,7 +232,8 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	
 	var new_msg = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
-	new_msg.get_node("message_box/msg").text = msg
+	new_msg.get_node("message_box/vbox/msg").text = msg
+	new_msg.get_node("message_box").message_list = chat_scroll
 	new_msg.get_node("message_box").self_modulate = user_color
 	chat_log.add_child(new_msg)
 	
@@ -219,12 +241,10 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	var preprocessor = globals.load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))
 	var err = JSON.parse_string(preprocessor)
 	if(err!=null):
-		print("OK")
 		chat_array.append({"role": "system", "content": preprocessor.prompt})
 		if(preprocessor.logit_bias):
 			logit_bias = preprocessor.logit_bias
-	else:
-		print("NOT JSON")
+	else: #NOT JSON PREPROCESSOR
 		chat_array.append({"role": "system", "content": preprocessor})
 	
 	for m in chat_memory:
@@ -234,7 +254,7 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 			chat_array.append({"role": "assistant", "content": m.strip_edges()})
 	
 	var data = {
-	"model": model,
+	"model": globals.AI_MODEL,
 	"messages": chat_array,
 	"max_tokens": MAX_TOKENS,
 	"temperature": TEMPERATURE,
@@ -246,9 +266,6 @@ func send_message(msg:String, model:String = "gpt-3.5-turbo" ):
 	}
 	
 	openai.make_request("completions", HTTPClient.METHOD_POST, data)
-	
-	await get_tree().process_frame
-	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 
 
 func clear_chat(set_none:bool = true):
@@ -257,12 +274,13 @@ func clear_chat(set_none:bool = true):
 	globals.delete_all_children(chat_log)
 	chat_memory.clear()
 
-func regen_message(model:String = "gpt-3.5-turbo"):
+func regen_message():
 	if(bot_thinking || chat_memory.is_empty()):
 		return
 	
 	bot_thinking = true
-	loading.show()
+	wait_thread = Thread.new()
+	wait_thread.start(wait_blink)
 	var reply_array:PackedStringArray = chat_memory[chat_memory.size()-1].split("\n\n")
 	chat_memory.remove_at(chat_memory.size()-1)
 	while(!reply_array.is_empty()):
@@ -280,7 +298,7 @@ func regen_message(model:String = "gpt-3.5-turbo"):
 			chat_array.append({"role": "assistant", "content": m.strip_edges()})
 	
 	var data = {
-	"model": model,
+	"model": globals.AI_MODEL,
 	"messages": chat_array,
 	"max_tokens": MAX_TOKENS,
 	"temperature": TEMPERATURE,
@@ -319,15 +337,19 @@ func reload_chats_list(new_select:String = "<none>"):
 	
 	globals.set_button_by_text(saved_chats_list, new_select)
 
-
+func open_config():
+	if(!bot_thinking):
+		config_popup.popup_centered()
 
 func load_saved_chat(id:int):
+	if(bot_thinking):
+		return
 	if(id == 0):
 		clear_chat(false)
 		return
 	
 	bot_thinking = true
-	loading.show()
+	loading.texture = wait_status
 	
 	var selected_name:String = saved_chats_list.get_item_text(id)
 	clear_chat(false)
@@ -346,16 +368,16 @@ func load_saved_chat(id:int):
 		if(msg.strip_edges().begins_with("<USER>")):
 			var new_msg = message_box.instantiate()
 			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
-			new_msg.get_node("message_box/msg").text = msg.strip_edges().trim_prefix("<USER> ")
+			new_msg.get_node("message_box/vbox/msg").text = msg.strip_edges().trim_prefix("<USER> ")
 			new_msg.get_node("message_box").self_modulate = user_color
 			chat_log.add_child(new_msg)
 		else:
 			var reply_array:PackedStringArray = msg.split("\n\n")
 			
 			for line in reply_array:
-				var new_msg:PanelContainer = message_box.instantiate()
+				var new_msg:MarginContainer = message_box.instantiate()
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-				new_msg.get_node("message_box/msg").text = line
+				new_msg.get_node("message_box/vbox/msg").text = line
 				new_msg.get_node("message_box").self_modulate = bot_color
 				chat_log.add_child(new_msg)
 	
@@ -363,8 +385,17 @@ func load_saved_chat(id:int):
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
 	
 	bot_thinking = false
-	loading.hide()
+	loading.texture = good_status
 
+
+func wait_blink():
+	while bot_thinking:
+		loading.texture = wait_status
+		await globals.delay(0.5)
+		if(!bot_thinking):
+			return
+		loading.texture = nil_status
+		await globals.delay(0.5)
 
 
 #########################
@@ -373,6 +404,7 @@ func load_saved_chat(id:int):
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if(saved_chats_list.selected == 0):
+			save_config()
 			get_tree().quit()
 			return
 		
@@ -380,6 +412,7 @@ func _notification(what):
 
 
 func on_save_quit():
+	save_config()
 	if(chat_memory.is_empty()):
 		get_tree().quit()
 		return

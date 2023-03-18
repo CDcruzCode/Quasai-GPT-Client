@@ -12,7 +12,8 @@ extends PanelContainer
 
 var openai:OpenAIAPI
 var bot_thinking:bool = false
-var session_token_total = 0
+var session_token_total:int = 0
+var session_cost:float = 0.0
 var logit_bias:Dictionary = {
 	20185: -50, #AI
 	3303: -80, #language
@@ -46,17 +47,13 @@ var logit_bias:Dictionary = {
 	8: -100, #close ) bracket
 	1: -100, #"
 	6: -100, #'
+	24561: -100, #positive
+	
 }
-
-func _notification(what):
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		get_tree().quit()
-		return
 
 
 func _ready():
 	generate_button.pressed.connect(generate_prompt)
-	home_button.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn"))
 	user_input.gui_input.connect(user_gui)
 	
 	copy_positive.pressed.connect(func(): copy_text(true))
@@ -74,8 +71,11 @@ func connect_openai():
 
 
 func _on_openai_request_success(data):
+	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
+	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
 	session_token_total += data.usage.total_tokens
-	token_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_token_total*globals.TOKENS_COST)
+	session_cost += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+	token_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
 	var reply:String = data.choices[0].message.content
 	print(reply)
 	reply = reply.replace("&amp;", "&")
@@ -114,12 +114,12 @@ func generate_prompt():
 	chat_array.append({"role": "user", "content": user_input.text})
 	print(chat_array)
 	var data = {
-	"model": "gpt-3.5-turbo",
+	"model": globals.AI_MODEL,
 	"messages": chat_array,
 	"temperature": 1.2,
 	"presence_penalty": 0.5,
 	"frequency_penalty": 0.5,
-	"max_tokens": 200,
+	"max_tokens": 500,
 	"logit_bias": logit_bias
 	}
 	

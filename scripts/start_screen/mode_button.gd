@@ -15,5 +15,4 @@ func _ready():
 
 func gui(event:InputEvent):
 	if(event is InputEventMouseButton && event.is_pressed() && event.button_index == 1):
-		print(event)
 		get_tree().change_scene_to_packed(scene)

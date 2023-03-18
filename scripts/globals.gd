@@ -1,7 +1,11 @@
 extends Node
 
 var API_KEY:String
-const TOKENS_COST:float = 0.000002
+var INPUT_TOKENS_COST:float = 0.000002 #PROMPT TOKENS COST
+var TOKENS_COST:float = 0.000002 #COMPLETION TOKENS COST
+var AI_MODEL:String = "gpt-3.5-turbo"
+var TOTAL_TOKENS_USED:int = 0
+var TOTAL_TOKENS_COST:float = 0.0
 
 var CURRENT_THEME:Dictionary = {
 	"bg": "262730",
@@ -12,9 +16,23 @@ var CURRENT_THEME:Dictionary = {
 	"button": "white"
 }
 
+const TEXT_EXTENSIONS:PackedStringArray = [
+	"txt"
+]
+
+
 #########################
 #CODE SNIPPETS
 #########################
+func save_text_file(filepath, content):
+	var file = FileAccess.open(filepath, FileAccess.WRITE);
+	if file != null:
+		file.store_string(content)
+		file = null
+		return true
+	else:
+		return false
+
 func load_file_as_string(path):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var content : String
@@ -40,6 +58,28 @@ func list_folders_in_directory(path):
 		dir.list_dir_end()
 	return files
 
+func delete_file(path: String) -> bool:
+	var file:DirAccess = DirAccess.open("user://")
+	if file.file_exists(path):
+		file.remove(path)
+		print("File deleted:", path)
+		return true
+	else:
+		print("File does not exist:", path)
+		return false
+
+func save_file(path: String, data: String) -> bool:
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	if file != null:
+		file.store_string(data)
+		file.close()
+		print("data saved to file:", path)
+		return true
+	else:
+		print("Failed to open file for writing:", path)
+		return false
+
+
 func delete_all_children(node):
 	for n in node.get_children():
 		n.queue_free()
@@ -52,7 +92,8 @@ func remove_after_phrase(my_string:String, phrase:String):
 	
 	return my_string
 
-
+func delay(time:float):
+	await get_tree().create_timer(time).timeout
 
 func set_button_by_text(option_button:OptionButton, text:String):
 	for i in range(option_button.get_item_count()):
@@ -76,3 +117,11 @@ func parse_api_error(error_code:int):
 			return "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
 		_:
 			return "Unknown error: " + str(error_code)
+
+
+var tokenizer_script = preload("res://scripts/tokenizer/tokenizer.cs")
+var token_api = tokenizer_script.new()
+func token_estimate(text:String):
+	var string_encoded:String = token_api.call("token_encoder", text)
+	var string_split:PackedStringArray = string_encoded.split(",")
+	return string_split.size()
