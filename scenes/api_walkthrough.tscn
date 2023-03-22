@@ -74,7 +74,7 @@ text = "What is an API key?"
 
 [node name="Label5" type="RichTextLabel" parent="mcon/vcon/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-text = "An API key is a unique identifier provided to users when they request access to an API or application programming interface. It serves as a secure way to authenticate requests and grant permission to certain features or information within the API. Essentially, it's a secret code or token that allows the user's application to interact with the API and retrieve information. Is that clearer for you?"
+text = "An API key is a unique identifier provided to users when they request access to an API or application programming interface. It serves as a secure way to authenticate requests and grant permission to certain features or information within the API. Essentially, it's a secret code or token that allows the user's application to interact with the API and retrieve information."
 fit_content = true
 
 [node name="Label6" type="Label" parent="mcon/vcon/ScrollContainer/VBoxContainer"]

@@ -156,7 +156,6 @@ vertical_alignment = 1
 
 [node name="personality_options" type="OptionButton" parent="mcon/vbox/scon/vbox"]
 layout_mode = 2
-disabled = true
 
 [node name="Label5" type="Label" parent="mcon/vbox/scon/vbox"]
 visible = false

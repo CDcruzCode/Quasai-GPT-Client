@@ -1,9 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://bxlati8s5o4hu"]
+[gd_scene load_steps=26 format=3 uid="uid://8vddpy0a4t32"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_fpw51"]
-[ext_resource type="PackedScene" uid="uid://cnxpk2l586uev" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
+[ext_resource type="PackedScene" uid="uid://bsf6ioty2h3oi" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
 [ext_resource type="PackedScene" uid="uid://w2bt0glmbwcu" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
 [ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
 [ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_mf0nk"]
@@ -11,12 +11,18 @@
 [ext_resource type="PackedScene" uid="uid://bicf8plck88h4" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
 [ext_resource type="Texture2D" uid="uid://byrppiparamo2" path="res://images/icons/recipe_creator_icon.png" id="8_4inxh"]
 [ext_resource type="PackedScene" uid="uid://ddb33pybk7s8u" path="res://scenes/recipe_creator/recipe_creator.tscn" id="8_co8xd"]
+[ext_resource type="Texture2D" uid="uid://can3i4gjfq45t" path="res://images/icons/greentext_icon.png" id="9_tkg5e"]
 [ext_resource type="PackedScene" uid="uid://rv56lfhyhaps" path="res://scenes/greentext/greentext.tscn" id="9_yds3p"]
 [ext_resource type="Texture2D" uid="uid://nrgndkkhnjw5" path="res://images/icons/tokenizer_icon.png" id="11_dg22m"]
 [ext_resource type="PackedScene" uid="uid://ce5md6ndtklcv" path="res://scenes/tokenizer/tokenizer.tscn" id="11_xpwlf"]
+[ext_resource type="PackedScene" uid="uid://m1iohg26nlg" path="res://scenes/meal_planner/meal_planner.tscn" id="13_70hv0"]
 [ext_resource type="PackedScene" uid="uid://dq40ax0n8dn6u" path="res://scenes/companion/companion_start.tscn" id="13_f3v45"]
+[ext_resource type="Texture2D" uid="uid://bl6t378ff1c3h" path="res://images/icons/meal_planner_icon.png" id="13_t70vr"]
 [ext_resource type="Texture2D" uid="uid://by5ya06djwpgs" path="res://images/icons/translator_icon.png" id="14_aeaj1"]
 [ext_resource type="PackedScene" uid="uid://ch08crnhaa23j" path="res://scenes/translator/translator.tscn" id="14_qg75j"]
+[ext_resource type="PackedScene" uid="uid://cfubylf2ssol0" path="res://scenes/wiki_search/wiki_search.tscn" id="17_d26w1"]
+[ext_resource type="PackedScene" uid="uid://bc2kl4vht8olt" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
+[ext_resource type="Texture2D" uid="uid://cyldiqo6n6nwj" path="res://images/icons/code_assistant.png" id="18_6tdaq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
 content_margin_left = 10.0
@@ -108,12 +114,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Entertainment"
 
-[node name="entertainment_modes" type="GridContainer" parent="mcon/vbox/scon/VBoxContainer"]
+[node name="entertainment_modes" type="HFlowContainer" parent="mcon/vbox/scon/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
-columns = 5
 
 [node name="general_chatting" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
@@ -132,8 +137,15 @@ scene = ExtResource("6_rkqeg")
 
 [node name="greentexter" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("6_65mhf")
+icon = ExtResource("9_tkg5e")
 mode_display_name = "Greentexter"
+scene = ExtResource("9_yds3p")
+
+[node name="story_writer" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+icon = ExtResource("9_tkg5e")
+mode_display_name = "Story Writer"
 scene = ExtResource("9_yds3p")
 
 [node name="Label2" type="Label" parent="mcon/vbox/scon/VBoxContainer"]
@@ -141,12 +153,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Utilities"
 
-[node name="utility_modes" type="GridContainer" parent="mcon/vbox/scon/VBoxContainer"]
+[node name="utility_modes" type="HFlowContainer" parent="mcon/vbox/scon/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
-columns = 5
 
 [node name="proofreader" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
@@ -154,23 +165,41 @@ icon = ExtResource("4_j6jgc")
 mode_display_name = "Proofreader"
 scene = ExtResource("4_4mch1")
 
+[node name="meal_planner" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("13_t70vr")
+mode_display_name = "Meal Planner"
+scene = ExtResource("13_70hv0")
+
 [node name="recipe_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
 icon = ExtResource("8_4inxh")
 mode_display_name = "Recipe Creator"
 scene = ExtResource("8_co8xd")
 
-[node name="tokenizer" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+[node name="wiki_search" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+visible = false
 layout_mode = 2
-icon = ExtResource("11_dg22m")
-mode_display_name = "Tokenizer"
-scene = ExtResource("11_xpwlf")
+mode_display_name = "Wiki Search"
+scene = ExtResource("17_d26w1")
 
 [node name="translator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
 icon = ExtResource("14_aeaj1")
 mode_display_name = "Translator"
 scene = ExtResource("14_qg75j")
+
+[node name="code_assistant" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("18_6tdaq")
+mode_display_name = "Code Assistant"
+scene = ExtResource("18_4txjr")
+
+[node name="tokenizer" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("11_dg22m")
+mode_display_name = "Tokenizer"
+scene = ExtResource("11_xpwlf")
 
 [node name="placeholder_generator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
@@ -182,11 +211,6 @@ visible = false
 layout_mode = 2
 mode_display_name = "Post Creator"
 
-[node name="mode_button8" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
-visible = false
-layout_mode = 2
-mode_display_name = "Code Helper"
-
 [node name="mode_button6" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2
@@ -197,7 +221,7 @@ layout_mode = 2
 
 [node name="version" type="Label" parent="mcon/vbox/hbox"]
 layout_mode = 2
-text = "Version 0.1.6a"
+text = "Version 0.1.8"
 vertical_alignment = 1
 
 [node name="settings_popup" type="AcceptDialog" parent="."]

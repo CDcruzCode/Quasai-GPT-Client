@@ -1,12 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://rv56lfhyhaps"]
+[gd_scene load_steps=10 format=3 uid="uid://cfubylf2ssol0"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_kus6q"]
-[ext_resource type="Script" path="res://scripts/greentext/greentext.gd" id="2_g3ri7"]
-[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_u2067"]
-[ext_resource type="Script" path="res://scripts/greentext/viewport_image.gd" id="3_x2yq4"]
-[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_n212a"]
-[ext_resource type="Script" path="res://scripts/greentext/greentext_text_display.gd" id="5_20djt"]
-[ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_b7ao4"]
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_ap4ol"]
+[ext_resource type="Script" path="res://scripts/greentext/greentext.gd" id="2_o0ij6"]
+[ext_resource type="Script" path="res://scripts/greentext/viewport_image.gd" id="3_smi5e"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="4_h5w4e"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="5_xa633"]
+[ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="6_3oash"]
+[ext_resource type="Script" path="res://scripts/greentext/greentext_text_display.gd" id="7_pq42y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a7uma"]
 bg_color = Color(0.901961, 0.85098, 0.819608, 1)
@@ -29,12 +29,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_kus6q")
-script = ExtResource("2_g3ri7")
+theme = ExtResource("1_ap4ol")
+script = ExtResource("2_o0ij6")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
-script = ExtResource("3_x2yq4")
+script = ExtResource("3_smi5e")
 
 [node name="hcon" type="HFlowContainer" parent="vbox"]
 layout_mode = 2
@@ -43,7 +43,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 4
 text = "Home"
-script = ExtResource("3_u2067")
+script = ExtResource("4_h5w4e")
 
 [node name="Label2" type="Label" parent="vbox/hcon"]
 layout_mode = 2
@@ -71,7 +71,7 @@ custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("4_n212a")
+texture = ExtResource("5_xa633")
 expand_mode = 2
 
 [node name="hbox" type="HBoxContainer" parent="vbox"]
@@ -140,7 +140,7 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
-texture = ExtResource("5_b7ao4")
+texture = ExtResource("6_3oash")
 expand_mode = 1
 stretch_mode = 6
 
@@ -167,7 +167,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
 drag_and_drop_selection_enabled = false
 wrap_mode = 1
 scroll_fit_content_height = true
-script = ExtResource("5_20djt")
+script = ExtResource("7_pq42y")
 
 [node name="text_display2" type="TextEdit" parent="vbox/greentext_panel/scon/vbox"]
 layout_mode = 2
@@ -178,4 +178,4 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
 drag_and_drop_selection_enabled = false
 wrap_mode = 1
 scroll_fit_content_height = true
-script = ExtResource("5_20djt")
+script = ExtResource("7_pq42y")

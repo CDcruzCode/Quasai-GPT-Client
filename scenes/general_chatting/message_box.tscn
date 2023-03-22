@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4kqfmceq7lpe"]
+
+[ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_8k4je"]
+
+[node name="spacer" type="MarginContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -33.0
+offset_right = 9043.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="message_box" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+script = ExtResource("1_8k4je")
+
+[node name="vbox" type="VBoxContainer" parent="message_box"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="msg" type="RichTextLabel" parent="message_box/vbox"]
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 2
+mouse_default_cursor_shape = 1
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+selection_enabled = true

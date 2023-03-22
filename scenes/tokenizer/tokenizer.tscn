@@ -73,6 +73,11 @@ text = "Input String"
 layout_mode = 2
 placeholder_text = "Enter the comma seperated string you want to tokenize"
 
+[node name="tokenizer_version_options" type="OptionButton" parent="vbox/hbox2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
 [node name="tokenize_button" type="Button" parent="vbox/hbox2"]
 layout_mode = 2
 mouse_default_cursor_shape = 2
