@@ -10,6 +10,7 @@ var token_element = preload("res://scenes/tokenizer/token_element.tscn")
 @onready var convert_button = $vbox/hbox3/convert_button
 @onready var array_display = $vbox/PanelContainer/hsplit/pcon/vcon/array_display
 @onready var copy_button = $vbox/PanelContainer/hsplit/pcon/vcon/hbox/copy_button
+@onready var tokenizer_version_options = $vbox/hbox2/tokenizer_version_options
 
 
 var tokens_array:Array = []
@@ -24,6 +25,9 @@ func _ready():
 	convert_button.pressed.connect(convert_tokens)
 	copy_button.pressed.connect(copy_output)
 	#print( token_api.call("text", "January 1st, 2000") )
+	tokenizer_version_options.add_item("GPT-3 and older")
+	tokenizer_version_options.add_item("GPT-3.5 and GPT-4")
+	tokenizer_version_options.set_item_disabled(1, true)
 
 func copy_output():
 	if(array_display.text.strip_edges().strip_escapes().is_empty()):
@@ -44,7 +48,14 @@ func tokenize_string():
 		if(current_txt.is_empty()):
 			continue
 		
-		var string_encoded:String = token_api.call("token_encoder", current_txt)
+		var string_encoded:String
+		match tokenizer_version_options.get_item_text(tokenizer_version_options.selected):
+			"GPT-3 and older":
+				string_encoded = token_api.call("token_encoder", current_txt)
+			_:
+				string_encoded = token_api.call("token_encoder", current_txt)
+		
+		
 		var string_split:PackedStringArray = string_encoded.split(",")
 		var int_encoded:Array = []
 		for s in string_split:

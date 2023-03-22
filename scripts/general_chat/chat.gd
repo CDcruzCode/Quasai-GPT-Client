@@ -1,7 +1,9 @@
 extends Node
 
 var openai
-@onready var message_box:PackedScene = preload("res://scenes/message_box.tscn")
+@onready var message_box:PackedScene = preload("res://scenes/general_chatting/message_box.tscn")
+@onready var code_message:PackedScene = preload("res://scenes/general_chatting/code_message.tscn")
+
 @onready var user_input:TextEdit = $vbox/hbox/user_input
 @onready var chat_log = $vbox/scon/chat_log
 @onready var loading = $vbox/hbox/loading
@@ -119,14 +121,37 @@ func _on_openai_request_success(data):
 	reply = reply.replace("&amp;", "&")
 	reply = globals.remove_after_phrase(reply, "<USER>").strip_edges()
 	
-	var reply_array:PackedStringArray = reply.split("\n\n")
-	#var reply_array:PackedStringArray = reply.split("```")
+	#var reply_array:PackedStringArray = reply.split("\n\n")
 	
-	
-	for msg in reply_array:
+	var reply_array:PackedStringArray = reply.split("```")
+	if(reply_array.size() > 1):
+		print(reply_array)
+		var is_code:bool = false
+		if(reply.strip_edges().begins_with("```")):
+			is_code = true
+		for line in reply_array:
+			if(is_code):
+				is_code = false
+				var new_msg:MarginContainer = code_message.instantiate()
+				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
+				new_msg.get_node("message_box").message_list = chat_scroll
+				new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.banner
+				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+				chat_log.add_child(new_msg)
+			else:
+				is_code = true
+				var new_msg:MarginContainer = message_box.instantiate()
+				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				new_msg.get_node("message_box/vbox/msg").text = line.strip_edges()
+				new_msg.get_node("message_box").message_list = chat_scroll
+				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+				chat_log.add_child(new_msg)
+	else:
 		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		new_msg.get_node("message_box/vbox/msg").text = msg
+		new_msg.get_node("message_box/vbox/msg").text = reply_array[0]
 		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").self_modulate = bot_color
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
@@ -182,7 +207,7 @@ func save_config():
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
 	bot_thinking = false
-	var new_msg:PanelContainer = message_box.instantiate()
+	var new_msg:MarginContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
 	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
@@ -290,7 +315,9 @@ func regen_message():
 	
 	print(chat_memory)
 	var chat_array:Array = []
+	chat_array.append({"role": "system", "content": "If you are writing code. Encapsulate the code with ``` and state the language of the code at the beginning in square brackets like [javascript]"})
 	chat_array.append({"role": "system", "content": globals.load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))})
+	
 	for m in chat_memory:
 		if(m.strip_edges().begins_with("<USER>")):
 			chat_array.append({"role": "user", "content": m.strip_edges()})

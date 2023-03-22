@@ -5,12 +5,12 @@ var message_list:ScrollContainer = null
 const MAX_SIZE:int = 700
 
 func _ready():
-	self.gui_input.connect(copy_text)
+#	self.gui_input.connect(copy_text)
 	max_size()
 
-func copy_text(event:InputEvent):
-	if event.is_pressed():
-		DisplayServer.clipboard_set(msg.text)
+#func copy_text(event:InputEvent):
+#	if event.is_pressed():
+#		DisplayServer.clipboard_set(msg.text)
 
 func max_size() -> void:
 	await get_tree().process_frame

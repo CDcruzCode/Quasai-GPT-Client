@@ -34,9 +34,6 @@ func _ready():
 	personality_options.add_item("Cheerful")
 	personality_options.add_item("Sassy")
 	personality_options.add_item("Shy")
-	personality_options.add_item("Depressed")
-	personality_options.add_item("Assertive")
-	personality_options.add_item("Humourous")
 	
 	age_young.pressed.connect(func(): select_multi_toggle(age_box, 0))
 	age_adult.pressed.connect(func(): select_multi_toggle(age_box, 1))
@@ -81,15 +78,6 @@ func generate_ai():
 		sex = "woman"
 	
 	
-	#var dir = DirAccess.open("user://saved_conversations")
-#	var file:FileAccess = FileAccess.open("user://companion/basic_info.json", FileAccess.WRITE)
-#	var info_json:Dictionary = {
-#			"name": ai_name.text.strip_edges(),
-#			"age": age,
-#			"sex": sex,
-#			"personality": personality_options.get_item_text(personality_options.selected)
-#		}
-#	file.store_string(JSON.stringify(info_json))
 	var info_json:Dictionary = {
 				"name": ai_name.text.strip_edges(),
 				"age": age,

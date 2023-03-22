@@ -91,6 +91,7 @@ func _on_openai_request_success(data):
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
+	positive_display.text = globals.parse_api_error(error_code)
 	bot_thinking = false
 	generate_button.disabled = false
 

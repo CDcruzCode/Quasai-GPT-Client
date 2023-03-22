@@ -201,7 +201,7 @@ func send_message(msg:String, system_msg:MSG_TYPE = MSG_TYPE.USER):
 	var thread_array:Array = []
 	if(!chat_log.is_empty()):
 		thread_array.append({"role": "system", "content": globals.load_file_as_string("res://scripts/companion/prompts/thread_analysis.txt") })
-		thread_array.append({"role": "assistant", "content": chat_log[chat_log.size()-2] })
+		#thread_array.append({"role": "assistant", "content": chat_log[chat_log.size()-2] })
 		thread_array.append({"role": "user", "content": chat_log[chat_log.size()-1] })
 	
 	
@@ -307,6 +307,10 @@ func get_personality(personality:String):
 	match personality:
 		"Cheerful":
 			return globals.load_file_as_string("res://scripts/companion/prompts/cheerful.txt")
+		"Sassy":
+			return globals.load_file_as_string("res://scripts/companion/prompts/sassy.txt")
+		"Shy":
+			return globals.load_file_as_string("res://scripts/companion/prompts/shy.txt")
 		_:
 			return
 

@@ -20,6 +20,20 @@ const TEXT_EXTENSIONS:PackedStringArray = [
 	"txt"
 ]
 
+const SCRIPT_EXTENSIONS:PackedStringArray = [
+	"js",
+	"gd",
+	"c",
+	"cpp",
+	"cs",
+	"ts",
+	"txt",
+	"json",
+	"py",
+	"rs",
+	"rlib"
+]
+
 
 #########################
 #CODE SNIPPETS
@@ -105,18 +119,35 @@ func set_button_by_text(option_button:OptionButton, text:String):
 	option_button.select(0)
 
 
-func parse_api_error(error_code:int):
-	match error_code:
-		401:
-			return "Error: " + str(error_code) + " - Invalid API key. Make sure you typed or copied it correctly."
-		400:
-			return "Error: " + str(error_code) + " - Something was wrong with connecting to the servers. It could be a program issue..."
-		429:
-			return "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exeeced your quota, check your billing details."
-		500:
-			return "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
-		_:
-			return "Unknown error: " + str(error_code)
+func parse_api_error(error_code:int, short_err:bool = false):
+	if(short_err):
+		match error_code:
+			401:
+				return "Invalid API Key"
+			400:
+				return "Program Issues"
+			429:
+				return "API Key Issues"
+			500:
+				return "Server Issues"
+			0:
+				return "Request timeout"
+			_:
+				return "Unknown error: " + str(error_code)
+	else:
+		match error_code:
+			401:
+				return "Error: " + str(error_code) + " - Invalid API key. Make sure you typed or copied it correctly."
+			400:
+				return "Error: " + str(error_code) + " - Something was wrong with connecting to the servers. It may be an API Key issue or a program issue..."
+			429:
+				return "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exeeced your quota, check your billing details."
+			500:
+				return "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
+			0:
+				return "Error: " + str(error_code) + " - Request timed out. Server took too long to respond."
+			_:
+				return "Unknown error: " + str(error_code)
 
 
 var tokenizer_script = preload("res://scripts/tokenizer/tokenizer.cs")

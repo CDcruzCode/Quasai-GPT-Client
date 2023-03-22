@@ -56,8 +56,7 @@ func _ready():
 	total_cost_display.text = "Total token cost: $" + str(globals.TOTAL_TOKENS_COST)
 	
 	await get_tree().process_frame
-	connect_openai()
-
+	await connect_openai()
 
 
 func connect_openai():
@@ -96,10 +95,7 @@ func _on_openai_request_success(data):
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
 	status_icon.texture = preload("res://images/icons/bad_status.png")
-	if(error_code == 500):
-		openai_status.text = "Server issues"
-	else:
-		openai_status.text = "API Key issues"
+	openai_status.text = globals.parse_api_error(error_code, true)
 
 func load_config():
 	var err = config.load("user://settings.cfg")
@@ -161,3 +157,4 @@ func ai_model_select(id:int):
 			globals.TOKENS_COST = 0.000002
 			model_blurb.text = "GPT 3.5 Turbo: The fastest and cheapest model to use. While GPT 4 can perform some tasks a lot better, GPT 3.5 should still work for 70% of tasks without the large cost.\nCosts $0.002 per 1k tokens."
 	print(globals.AI_MODEL)
+

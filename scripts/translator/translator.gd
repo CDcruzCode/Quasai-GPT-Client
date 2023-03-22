@@ -44,6 +44,7 @@ var fun_languages:PackedStringArray = [
 	"Binary - 01000010",
 	"Hexadecimal - 68 69",
 	"Pirate Speak",
+	"Shakespearean",
 	"UwU Furryspeak"
 ]
 
@@ -133,6 +134,7 @@ func _on_openai_request_success(data):
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
+	text_display.text = globals.parse_api_error(error_code)
 	bot_thinking = false
 	loading.texture = bad_status
 #	generate_button.disabled = false
