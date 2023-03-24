@@ -31,6 +31,7 @@ An .exe download is now available at my itch.io page https://cdcruz.itch.io/chat
     <li>Added a meal planner mode that generates a complete meal plan for your week, based on your preferred diet and a few other parameters. However, the AI can be unpredictable, so the process might take longer and encounter some issues.</li>
     <li>You can easily save your meal plan to a text file for later use.</li>
     <li>You can select text bubbles in general chatting to make it easier to copy AI responses.</li>
+    <li>API requests will now timeout if they take too long. The default time is 40 seconds but some modes have longer or shorter times depending on their use.</li>
 </ul>
 
 0.1.7:
