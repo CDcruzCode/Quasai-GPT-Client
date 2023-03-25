@@ -25,6 +25,13 @@ An .exe download is now available at my itch.io page https://cdcruz.itch.io/chat
 
 <h2>Changelog:</h2>
 
+0.2.0
+<ul>
+<li>I have decided on a new name for my program. It is now called "Quasai," a play on the word "quasi," which means something that is kind of like something else. In this case, it refers to AI trying to be kind of human.</li>
+<li>I fixed a major bug that caused problems under the hood and led to crashes. The bug was related to the API class being instanced too many times and not being deleted.</li>
+<li>I added a bare-bones implementation of the ElevenLabs API to enable text-to-speech generation. Currently, this implementation is very limited and only works in the General Chatting mode. You also need to supply your own Eleven Labs API in the settings menu.</li>
+</ul>
+
 0.1.8:
 
 <ul>
