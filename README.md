@@ -1,4 +1,4 @@
-# chatgpt_client
+# Quasai - GPT & LLM client
 <h1>A ChatGPT client using the OpenAI GPT-3.5 & GPT 4 API built in Godot 4.</h1>
 
 This is a project I'm doing for fun to explore ChatGPT's API and see what I can make it do. You can use this program to connect your own API Key and start chatting with your AI. I have a few features planned to help with context issues and consistency of the AI's output.
