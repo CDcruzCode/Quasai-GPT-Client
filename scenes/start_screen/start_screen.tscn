@@ -209,11 +209,6 @@ icon = ExtResource("11_dg22m")
 mode_display_name = "Tokenizer"
 scene = ExtResource("11_xpwlf")
 
-[node name="placeholder_generator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
-visible = false
-layout_mode = 2
-mode_display_name = "Placeholder Generator"
-
 [node name="post_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2

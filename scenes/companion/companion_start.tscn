@@ -89,7 +89,6 @@ placeholder_text = "Enter name"
 [node name="random_name_button" type="Button" parent="mcon/vbox/scon/vbox/name_box"]
 layout_mode = 2
 focus_mode = 0
-disabled = true
 text = "Random"
 
 [node name="Label2" type="Label" parent="mcon/vbox/scon/vbox"]
@@ -98,32 +97,12 @@ text = "Age"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="age_box" type="HBoxContainer" parent="mcon/vbox/scon/vbox"]
+[node name="age_input" type="SpinBox" parent="mcon/vbox/scon/vbox"]
 layout_mode = 2
-
-[node name="age_young" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Young Adult
-(18 - 30)"
-
-[node name="age_adult" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Adult
-(31 - 60)"
-
-[node name="age_old" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Mature Adult
-(60+)"
+size_flags_horizontal = 4
+min_value = 18.0
+value = 18.0
+allow_greater = true
 
 [node name="Label3" type="Label" parent="mcon/vbox/scon/vbox"]
 layout_mode = 2

@@ -5,9 +5,7 @@ extends PanelContainer
 @onready var random_name_button = $mcon/vbox/scon/vbox/name_box/random_name_button
 
 @onready var age_box = $mcon/vbox/scon/vbox/age_box
-@onready var age_young = $mcon/vbox/scon/vbox/age_box/age_young
-@onready var age_adult = $mcon/vbox/scon/vbox/age_box/age_adult
-@onready var age_old = $mcon/vbox/scon/vbox/age_box/age_old
+@onready var age_input = $mcon/vbox/scon/vbox/age_input
 
 @onready var sex_box = $mcon/vbox/scon/vbox/sex_box
 @onready var sex_man = $mcon/vbox/scon/vbox/sex_box/sex_man
@@ -31,13 +29,11 @@ func _ready():
 		get_tree().change_scene_to_file("res://scenes/companion/companion.tscn")
 		return
 	
+	random_name_button.pressed.connect(set_random_name)
+	
 	personality_options.add_item("Cheerful")
 	personality_options.add_item("Sassy")
 	personality_options.add_item("Shy")
-	
-	age_young.pressed.connect(func(): select_multi_toggle(age_box, 0))
-	age_adult.pressed.connect(func(): select_multi_toggle(age_box, 1))
-	age_old.pressed.connect(func(): select_multi_toggle(age_box, 2))
 	
 	sex_man.pressed.connect(func(): select_multi_toggle(sex_box, 0))
 	sex_woman.pressed.connect(func(): select_multi_toggle(sex_box, 1))
@@ -45,7 +41,6 @@ func _ready():
 	generate_button.pressed.connect(generate_ai)
 	
 	
-	age_young.button_pressed = true
 	sex_man.button_pressed = true
 
 func select_multi_toggle(container:Node, selected:int):
@@ -54,6 +49,56 @@ func select_multi_toggle(container:Node, selected:int):
 			button.button_pressed = false
 	container.get_child(selected).button_pressed = true
 
+const name_list:PackedStringArray = [
+	"Emma", 
+	"Olivia", 
+	"Ava", 
+	"Isabella", 
+	"Sophia", 
+	"Mia", 
+	"Charlotte", 
+	"Amelia", 
+	"Harper", 
+	"Evelyn",
+	"Liam",
+	"Noah",
+	"Oliver",
+	"Elijah",
+	"William",
+	"James",
+	"Benjamin",
+	"Lucas",
+	"Henry",
+	"Alexander",
+	"Aria", 
+	"Bodhi", 
+	"Cyrus", 
+	"Delaney", 
+	"Elena", 
+	"Finnegan", 
+	"Giselle", 
+	"Harlow", 
+	"India", 
+	"Jasper",
+	"Nora",
+	"Grace",
+	"Lily",
+	"Hazel",
+	"Brittany",
+	"Craig",
+	"Levi",
+	"Ethan",
+	"Jacob",
+	"Adam",
+	"David",
+	"Andrew",
+	"John",
+	"Michael",
+	"Reed",
+	"Owen"
+]
+func set_random_name():
+	ai_name.text = name_list[randi_range(0, name_list.size()-1)]
 
 
 func generate_ai():
@@ -63,13 +108,7 @@ func generate_ai():
 		return
 	
 	
-	var age:int = 0
-	if(age_young.button_pressed):
-		age = randi_range(18, 30)
-	elif(age_adult.button_pressed):
-		age = randi_range(31, 60)
-	else:
-		age = randi_range(61,100)
+	var age:int = age_input.value
 	
 	var sex:String
 	if(sex_man.button_pressed):

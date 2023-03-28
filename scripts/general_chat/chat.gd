@@ -350,7 +350,7 @@ func regen_message():
 	
 	print(chat_memory)
 	var chat_array:Array = []
-	chat_array.append({"role": "system", "content": "If you are writing code. Encapsulate the code with ``` and state the language of the code at the beginning in square brackets like [javascript]"})
+	chat_array.append({"role": "system", "content": "When writing code. Encapsulate the code with ``` and state the language of the code at the beginning in square brackets like [javascript]"})
 	chat_array.append({"role": "system", "content": globals.load_file_as_string("user://prompts/" + prompt_options.get_item_text(prompt_options.selected))})
 	
 	for m in chat_memory:
