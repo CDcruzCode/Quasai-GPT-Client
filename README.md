@@ -5,6 +5,9 @@ This is a project I'm doing for fun to explore ChatGPT's API and see what I can 
 
 An .exe download is now available at my itch.io page https://cdcruz.itch.io/chatgpt-client
 
+Only use the Github repo if you want to help with building the program as I will often upload buggy or half-complete code.
+If you want to use a stable build, only use the itch.io builds.
+
 <h2>Basic Features:</h2>
 <ul>
   <li>Use your own API Key to connect to OpenAI's API </li>
