@@ -101,29 +101,10 @@ vertical_alignment = 1
 [node name="age_box" type="HBoxContainer" parent="mcon/vbox/scon/vbox"]
 layout_mode = 2
 
-[node name="age_young" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
+[node name="ageinput" type="LineEdit" parent="mcon/vbox/scon/vbox/age_box"]
 layout_mode = 2
 size_flags_horizontal = 3
-toggle_mode = true
-text = "Young Adult
-(18 - 30)"
-
-[node name="age_adult" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Adult
-(31 - 60)"
-
-[node name="age_old" type="Button" parent="mcon/vbox/scon/vbox/age_box"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Mature Adult
-(60+)"
+placeholder_text = "Age (minimum 18)"
 
 [node name="Label3" type="Label" parent="mcon/vbox/scon/vbox"]
 layout_mode = 2

@@ -5,6 +5,7 @@ extends PanelContainer
 @onready var random_name_button = $mcon/vbox/scon/vbox/name_box/random_name_button
 
 @onready var age_box = $mcon/vbox/scon/vbox/age_box
+@onready var ageinput = $mcon/vbox/scon/vbox/age_box/ageinput
 @onready var age_young = $mcon/vbox/scon/vbox/age_box/age_young
 @onready var age_adult = $mcon/vbox/scon/vbox/age_box/age_adult
 @onready var age_old = $mcon/vbox/scon/vbox/age_box/age_old
@@ -41,8 +42,7 @@ func _ready():
 	
 	generate_button.pressed.connect(generate_ai)
 	
-	
-	age_young.button_pressed = true
+
 	sex_man.button_pressed = true
 
 func select_multi_toggle(container:Node, selected:int):
@@ -61,13 +61,24 @@ func generate_ai():
 	
 	
 	var age:int = 0
-	if(age_young.button_pressed):
-		age = randi_range(18, 30)
-	elif(age_adult.button_pressed):
-		age = randi_range(31, 60)
-	else:
-		age = randi_range(61,100)
 	
+	if(ageinput.text.strip_edges().is_empty()):
+		error_message.show()
+		error_message.text = "Please enter an age"
+		return
+		
+	if(not ageinput.text.strip_edges().is_valid_int()):
+		error_message.show()
+		error_message.text = "Age must be a number"
+		return
+		
+	age = int(ageinput.text)
+		
+	if(age<18):
+		error_message.show()
+		error_message.text = "Age must be over 18"
+		return
+		
 	var sex:String
 	if(sex_man.button_pressed):
 		sex = "man"
