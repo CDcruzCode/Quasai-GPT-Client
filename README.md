@@ -21,7 +21,7 @@ An .exe download is now available at my itch.io page https://cdcruz.itch.io/chat
   <li>IDEA - Allow for community-made extensions/ modes to extend the program. </li>
 </ul>
 
-<h3>Changelog:</h3.
+<h3>Changelog:</h3>
 <h4>0.2.0</h4>
 
 <ul>

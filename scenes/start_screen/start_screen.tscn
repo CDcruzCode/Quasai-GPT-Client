@@ -241,12 +241,16 @@ script = ExtResource("24_3khg3")
 
 [node name="notifications" type="ScrollContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="vbox" type="VBoxContainer" parent="notifications"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 alignment = 2
+metadata/_edit_lock_ = true
 
 [node name="notice_popup" parent="notifications/vbox" instance=ExtResource("26_aw1kt")]
 layout_mode = 2
