@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=3 uid="uid://cav86sox4y3sy"]
+
+[ext_resource type="Script" path="res://scripts/general_chat/code_message.gd" id="1_bohyv"]
+[ext_resource type="Texture2D" uid="uid://crpmvcwi6mh6h" path="res://images/icons/copy.png" id="2_ert8f"]
+
+[node name="spacer" type="MarginContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -33.0
+offset_right = 9043.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="message_box" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+script = ExtResource("1_bohyv")
+
+[node name="vbox" type="VBoxContainer" parent="message_box"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="message_box/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="message_box/vbox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "code block"
+vertical_alignment = 1
+
+[node name="copy_code" type="Button" parent="message_box/vbox/HBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("2_ert8f")
+flat = true
+expand_icon = true
+
+[node name="code_box" type="CodeEdit" parent="message_box/vbox"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/background_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+placeholder_text = "Code"
+editable = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+draw_tabs = true
+draw_spaces = true
+scroll_smooth = true
+scroll_fit_content_height = true
+gutters_draw_line_numbers = true

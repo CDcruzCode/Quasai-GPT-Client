@@ -1,0 +1,42 @@
+TODO
+
+[General]
+
+- Add Themes
+- Create a website for the program
+- Figure out how to read streamed API messages to improve response times.
+- Have the program ping the website to check if there is a new version and prompt the user on the start screen.
+- See if HTTPRequest Node can be replaced with HTTPClient Class for optomization reasons.
+
+[Voice Generation]
+
+- Remove text artifacts from a string before sending to voice generation. Like emojis, weird formatting, etc.
+
+[General Chatting]
+
+- Allow messages to be deleted individually.
+- Improve formatting of some things like in-line code.
+
+[Summarizer]
+
+- Support .doc .docx .pdf
+
+[Tokenizer]
+
+- Fix tokenizer to work for GPT 3.5 & GPT 4 as current tokenizer only works for GPT 3, 2 and older models.
+
+[Your Companion]
+
+- Improve use of tokens. Do not need to regenerate list of user memories for each message if there is no new info to add. If no new info is added, just say so and keep the old list.
+
+[Meal Planner]
+
+- Add more options as tickboxes like vegan, vegetarian, halal, gluten-free, etc.
+
+[Misc Ideas]
+
+- Add Alpaca LLM???
+- Image to colour pallete using GPT 4's multi-modal processing
+- Voice generation with ElevenLabs API
+- Story writer mode where the story will span over paragraphs/ pages and be generates in chunks. Have AI voice read back?
+- Add a way for others to add their own "extensions" to the program in the form of new standalone modes.

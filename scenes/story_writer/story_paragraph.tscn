@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://dc7y8qd3p3ni2"]
+
+[ext_resource type="Texture2D" uid="uid://10owa3upltk" path="res://images/icons/redo_icon.png" id="2_ey8ae"]
+
+[node name="story_paragraph" type="PanelContainer"]
+self_modulate = Color(0.392157, 0.392157, 0.392157, 1)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 38.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="mcon" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="vbox" type="VBoxContainer" parent="mcon"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="mcon/vbox"]
+visible = false
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+alignment = 2
+
+[node name="regen_para" type="Button" parent="mcon/vbox/hbox"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+icon = ExtResource("2_ey8ae")
+flat = true
+expand_icon = true
+
+[node name="story_text" type="TextEdit" parent="mcon/vbox"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "test asdgasdg"
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+wrap_mode = 1
+scroll_fit_content_height = true

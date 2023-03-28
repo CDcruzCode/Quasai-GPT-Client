@@ -1,0 +1,219 @@
+[gd_scene load_steps=6 format=3 uid="uid://m1iohg26nlg"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_lkmxt"]
+[ext_resource type="Script" path="res://scripts/meal_planner/meal_planner.gd" id="2_limoj"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_pdu68"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_f3wox"]
+[ext_resource type="Script" path="res://scripts/meal_planner/sex_toggle.gd" id="5_4nhod"]
+
+[node name="meal_planner" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lkmxt")
+script = ExtResource("2_limoj")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Home"
+script = ExtResource("3_pdu68")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Meal Planner"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Meal Planner will provide a dietary plan that will fit your specifications. Consult with your doctor before implementing the AI provided meal plan."
+autowrap_mode = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="info_inputs" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/info_inputs"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="vbox/hbox/info_inputs/vbox"]
+layout_mode = 2
+text = "Provide some basic information about yourself so that the AI can create a plan that is closer to your needs."
+
+[node name="hbox" type="HBoxContainer" parent="vbox/hbox/info_inputs/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/info_inputs/vbox/hbox"]
+layout_mode = 2
+text = "Lifestyle"
+vertical_alignment = 1
+
+[node name="lifestyle_options" type="OptionButton" parent="vbox/hbox/info_inputs/vbox/hbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="vbox/hbox/info_inputs/vbox/hbox"]
+layout_mode = 2
+text = "Your age"
+
+[node name="age_value" type="SpinBox" parent="vbox/hbox/info_inputs/vbox/hbox"]
+layout_mode = 2
+min_value = 18.0
+max_value = 80.0
+value = 18.0
+
+[node name="Label3" type="Label" parent="vbox/hbox/info_inputs/vbox/hbox"]
+layout_mode = 2
+text = "Sex"
+
+[node name="sex_toggle" type="Button" parent="vbox/hbox/info_inputs/vbox/hbox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+toggle_mode = true
+text = "Male"
+script = ExtResource("5_4nhod")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="vbox/hbox/info_inputs/vbox"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="vbox/hbox/info_inputs/vbox/HBoxContainer"]
+layout_mode = 2
+text = "Allergies (provide a comma seperated list)"
+
+[node name="allergies_input" type="LineEdit" parent="vbox/hbox/info_inputs/vbox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter allergies here... for example: honey, peanuts, pineapple"
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="generate_button" type="Button" parent="vbox/hbox/vbox"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+text = "Generate"
+
+[node name="loading" type="TextureRect" parent="vbox/hbox/vbox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture = ExtResource("4_f3wox")
+expand_mode = 2
+
+[node name="diet_inputs" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/diet_inputs"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/diet_inputs/vbox"]
+layout_mode = 2
+text = "Provide any specific dietary requirements."
+
+[node name="hbox" type="HBoxContainer" parent="vbox/diet_inputs/vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/diet_inputs/vbox/hbox"]
+layout_mode = 2
+text = "Diet type"
+vertical_alignment = 1
+
+[node name="diet_options" type="OptionButton" parent="vbox/diet_inputs/vbox/hbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="vbox/diet_inputs/vbox/hbox"]
+layout_mode = 2
+text = "This meal plan is to"
+
+[node name="plan_reason_options" type="OptionButton" parent="vbox/diet_inputs/vbox/hbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="gluten_check" type="CheckBox" parent="vbox/diet_inputs/vbox/hbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Gluten-Free"
+flat = true
+
+[node name="lactose_check" type="CheckBox" parent="vbox/diet_inputs/vbox/hbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Lactose-Free"
+flat = true
+
+[node name="kosher_check" type="CheckBox" parent="vbox/diet_inputs/vbox/hbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Kosher"
+flat = true
+
+[node name="plan_con" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.0941176, 0.0941176, 0.0941176, 1)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="scon" type="ScrollContainer" parent="vbox/plan_con"]
+layout_mode = 2
+
+[node name="plan_display" type="GridContainer" parent="vbox/plan_con/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 6
+
+[node name="meal_header" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="HBoxContainer" parent="vbox/meal_header"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/meal_header/vbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "You can change specific meals by clicking on the reload icon in each cell. Keep in mind calories are only estimates and should not be taken as fact."
+
+[node name="save_button" type="Button" parent="vbox/meal_header/vbox"]
+layout_mode = 2
+text = "Save to .txt"
+
+[node name="save_dialog" type="FileDialog" parent="."]
+initial_position = 1
+title = "Save Recipe"
+size = Vector2i(721, 361)
+always_on_top = true
+dialog_hide_on_ok = true
+access = 2

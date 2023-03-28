@@ -1,0 +1,200 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctqr2g7wujk0t"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_djapq"]
+[ext_resource type="Script" path="res://scripts/general_chat/chat.gd" id="2_ytcof"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_jr0pb"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_3124g"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ehkhm"]
+content_margin_bottom = 20.0
+
+[node name="open_ai" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_djapq")
+script = ExtResource("2_ytcof")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="pcon" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.105882, 0.105882, 0.133333, 1)
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="vbox/pcon"]
+layout_mode = 2
+
+[node name="hbox2" type="HFlowContainer" parent="vbox/pcon/vbox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="home_button" type="Button" parent="vbox/pcon/vbox/hbox2"]
+layout_mode = 2
+text = "Home"
+script = ExtResource("3_jr0pb")
+custom_save = true
+
+[node name="saved_chats_list" type="OptionButton" parent="vbox/pcon/vbox/hbox2"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="save_chat_button" type="Button" parent="vbox/pcon/vbox/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Save New Chat"
+
+[node name="clear_chat" type="Button" parent="vbox/pcon/vbox/hbox2"]
+layout_mode = 2
+text = "Clear Chat"
+
+[node name="config" type="Button" parent="vbox/pcon/vbox/hbox2"]
+layout_mode = 2
+text = "Config"
+
+[node name="hbox" type="HFlowContainer" parent="vbox/pcon/vbox"]
+layout_mode = 2
+
+[node name="chat_label" type="Label" parent="vbox/pcon/vbox/hbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Chat Type"
+
+[node name="VSeparator" type="VSeparator" parent="vbox/pcon/vbox/hbox"]
+layout_mode = 2
+
+[node name="session_tokens" type="Label" parent="vbox/pcon/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+text = "Session Tokens: 0"
+
+[node name="scon" type="ScrollContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ehkhm")
+horizontal_scroll_mode = 0
+
+[node name="chat_log" type="VBoxContainer" parent="vbox/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="loading" type="TextureRect" parent="vbox/hbox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_3124g")
+expand_mode = 2
+
+[node name="user_input" type="TextEdit" parent="vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter your message"
+drag_and_drop_selection_enabled = false
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="regen" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+text = "Regen"
+
+[node name="config_popup" type="AcceptDialog" parent="."]
+size = Vector2i(350, 363)
+unresizable = true
+borderless = true
+
+[node name="vbox" type="VBoxContainer" parent="config_popup"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 342.0
+offset_bottom = 312.0
+
+[node name="prompt_text" type="Label" parent="config_popup/vbox"]
+layout_mode = 2
+text = "Prompt Pre-processor"
+
+[node name="prompt_options" type="OptionButton" parent="config_popup/vbox"]
+layout_mode = 2
+
+[node name="processor_folder" type="Button" parent="config_popup/vbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Open Pre-Processor Folder"
+
+[node name="max_tokens_text" type="Label" parent="config_popup/vbox"]
+layout_mode = 2
+text = "Max Tokens"
+
+[node name="max_tokens" type="SpinBox" parent="config_popup/vbox"]
+layout_mode = 2
+min_value = 5.0
+max_value = 1000.0
+step = 5.0
+value = 1000.0
+allow_greater = true
+
+[node name="temperature_text" type="Label" parent="config_popup/vbox"]
+layout_mode = 2
+text = "Temperature - 0.0"
+
+[node name="temperature" type="HSlider" parent="config_popup/vbox"]
+layout_mode = 2
+max_value = 2.0
+step = 0.05
+value = 1.0
+scrollable = false
+
+[node name="presence_text" type="Label" parent="config_popup/vbox"]
+layout_mode = 2
+text = "Presence Penalty - 0.0"
+
+[node name="presence_penalty" type="HSlider" parent="config_popup/vbox"]
+layout_mode = 2
+min_value = -2.0
+max_value = 2.0
+step = 0.05
+
+[node name="frequency_text" type="Label" parent="config_popup/vbox"]
+layout_mode = 2
+text = "Frequency Penalty - 0.0"
+
+[node name="frequency_penalty" type="HSlider" parent="config_popup/vbox"]
+layout_mode = 2
+min_value = -2.0
+max_value = 2.0
+step = 0.05
+
+[node name="save_chat_popup" type="ConfirmationDialog" parent="."]
+initial_position = 2
+title = "New Chat Name"
+size = Vector2i(350, 100)
+unresizable = true
+always_on_top = true
+ok_button_text = "Save"
+
+[node name="save_chat_name" type="LineEdit" parent="save_chat_popup"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 342.0
+offset_bottom = 49.0
+placeholder_text = "enter name"
+
+[node name="quit_popup" type="ConfirmationDialog" parent="."]
+initial_position = 2
+title = "Save & Quit?"
+size = Vector2i(200, 82)
+unresizable = true
+ok_button_text = "Save & Quit"
+cancel_button_text = "Quit"

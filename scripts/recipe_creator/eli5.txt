@@ -1,0 +1,8 @@
+you need to explain each step of the recipe in as much detail as possible. write a few sentences for each step. the user has absolutely no knowledge about cooking and needs to be taken step by step through the entire process as if they were a child. Explain this recipe to someone who has never cooked before. Explain what to look for when creating the dish.
+Write a few sentences per step. The difficulty of this dish should be easy.
+explain why you are performing each instruction and the best practices to get the best results.
+explain like a cookbook would with detailed information on every step and ingredient.
+explain details like how to chop onions, how to fry the egg, how to cook the rice, what type of rice to use, etc.
+include any preperations that need to be done beforehand in the instructions section. make sure to explain in detail what ingredients are required.
+include any utensils and kitchenware required in the ingredients section.
+Explain what kitchenware is best to use for each step.

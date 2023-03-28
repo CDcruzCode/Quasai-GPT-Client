@@ -1,0 +1,150 @@
+[gd_scene load_steps=5 format=3 uid="uid://doexrk6vlor4e"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_xrs7w"]
+[ext_resource type="Script" path="res://scripts/story_writer/story_writer.gd" id="2_gvy7f"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="4_kq3s7"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="5_vlad7"]
+
+[node name="story_writer" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_xrs7w")
+script = ExtResource("2_gvy7f")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Home"
+script = ExtResource("4_kq3s7")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "   Story Writer"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Story Writer will take an input prompt as a story idea and write a story to a specified amount of paragraphs."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="copy_ouput_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Copy Output"
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_vlad7")
+expand_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="input_con" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/input_con"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/input_con/vbox"]
+layout_mode = 2
+text = "Story brief - Explain your story in as much detail as possible."
+vertical_alignment = 1
+
+[node name="user_input" type="TextEdit" parent="vbox/hbox/input_con/vbox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "Write your story idea here"
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="input_con3" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/input_con3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/input_con3/vbox"]
+layout_mode = 2
+text = "Writing Style"
+vertical_alignment = 1
+
+[node name="writing_style_options" type="OptionButton" parent="vbox/hbox/input_con3/vbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="input_con2" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/input_con2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/input_con2/vbox"]
+layout_mode = 2
+text = "Paragraph no."
+vertical_alignment = 1
+
+[node name="paragraph_amount" type="SpinBox" parent="vbox/hbox/input_con2/vbox"]
+layout_mode = 2
+min_value = 3.0
+value = 3.0
+allow_greater = true
+
+[node name="generate_button" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_default_cursor_shape = 2
+text = "Generate"
+
+[node name="story_panel" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="mcon" type="MarginContainer" parent="vbox/story_panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="scon" type="ScrollContainer" parent="vbox/story_panel/mcon"]
+layout_mode = 2
+
+[node name="story_list" type="VBoxContainer" parent="vbox/story_panel/mcon/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="hbox2" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="vbox/hbox2"]
+layout_mode = 2
+text = "Read out story"

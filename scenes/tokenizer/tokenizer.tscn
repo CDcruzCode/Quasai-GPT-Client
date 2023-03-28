@@ -1,0 +1,141 @@
+[gd_scene load_steps=5 format=3 uid="uid://ce5md6ndtklcv"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_n3upc"]
+[ext_resource type="Script" path="res://scripts/tokenizer/tokenizer.gd" id="2_w2wyu"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_5vlj7"]
+[ext_resource type="Script" path="res://scripts/tokenizer/tokenizer_credit.gd" id="4_p0bbp"]
+
+[node name="tokenizer" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_n3upc")
+script = ExtResource("2_w2wyu")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+text = "Home"
+script = ExtResource("3_5vlj7")
+
+[node name="Label" type="Label" parent="vbox/hbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Tokenizer"
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A Logit Bias helper tool. Enter a comma seperated string and get an editable array to use for preprocessor configurations."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="tokenizer_credit" type="Button" parent="vbox"]
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "Credit to Github user dluc for this GPT3 Tokenizer written in C#."
+flat = true
+script = ExtResource("4_p0bbp")
+
+[node name="hbox2" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="input_con" type="PanelContainer" parent="vbox/hbox2"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox2/input_con"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox2/input_con/vbox"]
+layout_mode = 2
+text = "Input String"
+
+[node name="user_input" type="LineEdit" parent="vbox/hbox2/input_con/vbox"]
+layout_mode = 2
+placeholder_text = "Enter the comma seperated string you want to tokenize"
+
+[node name="tokenizer_version_options" type="OptionButton" parent="vbox/hbox2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="tokenize_button" type="Button" parent="vbox/hbox2"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Tokenize"
+
+[node name="hbox3" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Change the values for each text token to change the bias of each word. Then click the Convert to Dictionary button to generate the code array."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="convert_button" type="Button" parent="vbox/hbox3"]
+layout_mode = 2
+text = "Convert to Dictionary"
+
+[node name="PanelContainer" type="PanelContainer" parent="vbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="hsplit" type="HSplitContainer" parent="vbox/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="scon" type="ScrollContainer" parent="vbox/PanelContainer/hsplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="tokens_list" type="GridContainer" parent="vbox/PanelContainer/hsplit/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 5
+
+[node name="pcon" type="PanelContainer" parent="vbox/PanelContainer/hsplit"]
+self_modulate = Color(0.16, 0.163333, 0.2, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="vcon" type="VBoxContainer" parent="vbox/PanelContainer/hsplit/pcon"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox/PanelContainer/hsplit/pcon/vcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/PanelContainer/hsplit/pcon/vcon/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Array Output:"
+
+[node name="copy_button" type="Button" parent="vbox/PanelContainer/hsplit/pcon/vcon/hbox"]
+layout_mode = 2
+text = "Copy"
+
+[node name="array_display" type="RichTextLabel" parent="vbox/PanelContainer/hsplit/pcon/vcon"]
+layout_mode = 2
+size_flags_vertical = 3

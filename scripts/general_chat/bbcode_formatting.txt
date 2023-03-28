@@ -1,0 +1,8 @@
+Your responses can include BBCode formatting.
+This includes syntax like:
+[b]bold[/b]
+[i]italics[/i]
+[u]underline[/u]
+[s]strikeout[/s]
+
+any much more. Instead of your normal formatting rules. Use BBCode except for when writing code blocks.

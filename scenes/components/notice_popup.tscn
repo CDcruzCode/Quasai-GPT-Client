@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdsqi6y03sxnv"]
+
+[ext_resource type="Script" path="res://scripts/components/notice_popup/notice_popup.gd" id="1_f7srr"]
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_hecb1"]
+
+[node name="notice_popup" type="MarginContainer"]
+modulate = Color(1, 1, 1, 0.980392)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -650.0
+offset_top = -63.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_f7srr")
+
+[node name="pcon" type="PanelContainer" parent="."]
+self_modulate = Color(0.14902, 0.14902, 0.14902, 1)
+layout_mode = 2
+theme = ExtResource("1_hecb1")
+
+[node name="progress_banner" type="ColorRect" parent="pcon"]
+self_modulate = Color(1, 1, 1, 0.0392157)
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="hbox" type="HBoxContainer" parent="pcon"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="indicator" type="ColorRect" parent="pcon/hbox"]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+color = Color(0, 0.741176, 0.270588, 1)
+
+[node name="popup_text" type="RichTextLabel" parent="pcon/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A new update is available, visit quasai.cdcruz.com to download!"
+fit_content = true
+scroll_active = false
+
+[node name="close" type="Button" parent="pcon/hbox"]
+custom_minimum_size = Vector2(33, 33)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.870588, 0.870588, 0.870588, 1)
+text = "╳"
+flat = true

@@ -1,0 +1,139 @@
+[gd_scene load_steps=6 format=3 uid="uid://w2bt0glmbwcu"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_28bsh"]
+[ext_resource type="Script" path="res://scripts/proofreader/proofreader.gd" id="2_wo5p5"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_30ua7"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_pbkrn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fr2rx"]
+bg_color = Color(0.207843, 0.211765, 0.258824, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.207843, 0.211765, 0.258824, 1)
+
+[node name="proofreader" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_28bsh")
+script = ExtResource("2_wo5p5")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HFlowContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Home"
+script = ExtResource("3_30ua7")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Proofreader"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+text = "Writing Style:"
+vertical_alignment = 1
+
+[node name="writing_style_option" type="OptionButton" parent="vbox/hcon"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="proofread_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+tooltip_text = "Fixes spelling & grammar of the provided text
+and will rewrite the text using the chosen writing style."
+text = "Proofread"
+
+[node name="summarize_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+tooltip_text = "Summarizes the provided text dow
+ to 1 paragraph if possible."
+text = "Summarize Text"
+
+[node name="sentiment_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+tooltip_text = "Sentiment Analysis provides a brief description
+of the emotion that the provided text conveys. "
+text = "Sentiment Analysis"
+
+[node name="copy_text_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+text = "Copy Output"
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_pbkrn")
+expand_mode = 2
+
+[node name="vsplit" type="VSplitContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="hsplit" type="HSplitContainer" parent="vbox/vsplit"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="text_input" type="TextEdit" parent="vbox/vsplit/hsplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter your text here. You can also drag .txt files here."
+wrap_mode = 1
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_tabs = true
+draw_spaces = true
+
+[node name="text_display" type="RichTextLabel" parent="vbox/vsplit/hsplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
+text = "test"
+scroll_following = true
+selection_enabled = true
+
+[node name="vbox" type="VBoxContainer" parent="vbox/vsplit"]
+layout_mode = 2
+
+[node name="hcon" type="HFlowContainer" parent="vbox/vsplit/vbox"]
+layout_mode = 2
+
+[node name="token_estimation" type="Label" parent="vbox/vsplit/vbox/hcon"]
+layout_mode = 2
+tooltip_text = "This is an estimation, the real token cost may be higher."
+mouse_filter = 1
+theme_override_font_sizes/font_size = 14
+text = "Changes made:"
+
+[node name="session_tokens_display" type="Label" parent="vbox/vsplit/vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "test"
+
+[node name="Label2" type="Label" parent="vbox/vsplit/vbox"]
+layout_mode = 2
+text = "Changes made:"
+
+[node name="changes_paragraph" type="RichTextLabel" parent="vbox/vsplit/vbox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Stable Diffusion is a type of generative model that uses artificial intelligence (AI) to generate images. It is based on the concept of latent diffusion, which involves breaking down images into noise and learning how to recreate the image from the noise through training. The model is built using a combination of convolutional neural networks (CNNs) and other techniques.Stable Diffusion is a type of generative model that uses artificial intelligence (AI) to generate images. It is based on the concept of latent diffusion, which involves breaking down images into noise and learning how to recreate the image from the noise through training. The model is built using a combination of convolutional neural networks (CNNs) and other techniques."

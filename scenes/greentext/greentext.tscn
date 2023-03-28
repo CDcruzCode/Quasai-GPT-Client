@@ -1,0 +1,181 @@
+[gd_scene load_steps=10 format=3 uid="uid://rv56lfhyhaps"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_kus6q"]
+[ext_resource type="Script" path="res://scripts/greentext/greentext.gd" id="2_g3ri7"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_u2067"]
+[ext_resource type="Script" path="res://scripts/greentext/viewport_image.gd" id="3_x2yq4"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_n212a"]
+[ext_resource type="Script" path="res://scripts/greentext/greentext_text_display.gd" id="5_20djt"]
+[ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_b7ao4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a7uma"]
+bg_color = Color(0.901961, 0.85098, 0.819608, 1)
+border_width_left = 20
+border_width_top = 20
+border_width_right = 20
+border_width_bottom = 20
+border_color = Color(0.901961, 0.85098, 0.819608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fr2rx"]
+bg_color = Color(0.901961, 0.85098, 0.819608, 1)
+border_width_left = 10
+border_width_right = 10
+border_color = Color(0.901961, 0.85098, 0.819608, 1)
+
+[node name="greentexter" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_kus6q")
+script = ExtResource("2_g3ri7")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+script = ExtResource("3_x2yq4")
+
+[node name="hcon" type="HFlowContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Home"
+script = ExtResource("3_u2067")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Greentexter"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Greentexter will create posts in a format known as \"Greentexts\" that originated from 4chan. They usually revolve around a short story or anecdote about the writer and feature humorous or dramatic scenarios."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="copy_ouput_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Copy Output"
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_n212a")
+expand_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="input_con" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="vbox/hbox/input_con"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+text = "Input Prompt"
+vertical_alignment = 1
+
+[node name="user_input" type="LineEdit" parent="vbox/hbox/input_con/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter the story you want to create"
+
+[node name="generate_button" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Generate"
+
+[node name="greentext_panel" type="PanelContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a7uma")
+
+[node name="scon" type="ScrollContainer" parent="vbox/greentext_panel"]
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="vbox/greentext_panel/scon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox/greentext_panel/scon/vbox"]
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="vbox/greentext_panel/scon/vbox/hbox"]
+layout_mode = 2
+
+[node name="img_con" type="ColorRect" parent="vbox/greentext_panel/scon/vbox/hbox/vbox"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_lock_ = true
+
+[node name="greentext_image" type="TextureRect" parent="vbox/greentext_panel/scon/vbox/hbox/vbox/img_con"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+texture = ExtResource("5_b7ao4")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="vbox/greentext_panel/scon/vbox/hbox/vbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.698039, 0.698039, 0.698039, 1)
+theme_override_font_sizes/font_size = 12
+text = "Credit to imgflip.com for images"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="image_file_label" type="Label" parent="vbox/greentext_panel/scon/vbox/hbox/vbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.698039, 0.698039, 0.698039, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="text_display" type="TextEdit" parent="vbox/greentext_panel/scon/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
+drag_and_drop_selection_enabled = false
+wrap_mode = 1
+scroll_fit_content_height = true
+script = ExtResource("5_20djt")
+
+[node name="text_display2" type="TextEdit" parent="vbox/greentext_panel/scon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fr2rx")
+drag_and_drop_selection_enabled = false
+wrap_mode = 1
+scroll_fit_content_height = true
+script = ExtResource("5_20djt")

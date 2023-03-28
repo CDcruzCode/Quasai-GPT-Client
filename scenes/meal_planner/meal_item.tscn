@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbyws28nbd2xu"]
+
+[ext_resource type="Script" path="res://scripts/meal_planner/meal_item.gd" id="1_sq3mv"]
+[ext_resource type="Texture2D" uid="uid://10owa3upltk" path="res://images/icons/redo_icon.png" id="2_ey8ae"]
+
+[node name="meal_item" type="PanelContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 38.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_sq3mv")
+
+[node name="mcon" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="vbox" type="VBoxContainer" parent="mcon"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="mcon/vbox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+alignment = 2
+
+[node name="regen_meal_button" type="Button" parent="mcon/vbox/hbox"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+focus_mode = 0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+icon = ExtResource("2_ey8ae")
+flat = true
+expand_icon = true
+
+[node name="meal_text" type="Label" parent="mcon/vbox"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "test asdgasdg"
+autowrap_mode = 3
