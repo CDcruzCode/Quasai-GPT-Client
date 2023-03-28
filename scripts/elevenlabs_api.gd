@@ -83,7 +83,7 @@ func _list_voices_complete(_result, response_code, _headers, body):
 		var res = JSON.parse_string(body.get_string_from_utf8())
 		var voice_arr:Array = []
 		for r in res.voices:
-			voice_arr.append({"name": r.name, "voice_id": r.voice_id})
+			voice_arr.append({"name": r.name, "voice_id": r.voice_id, "category": r.category})
 		print(voice_arr)
 		emit_signal("request_voices", voice_arr)
 	else:

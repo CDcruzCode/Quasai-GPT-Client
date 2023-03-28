@@ -60,6 +60,8 @@ func load_config():
 		globals.TOTAL_TOKENS_USED = config.get_value("Stats", "TOTAL_TOKENS_USED")
 	if(config.get_value("Settings", "ELEVENLABS_API_KEY") != null):
 		globals.API_KEY_ELEVENLABS = config.get_value("Settings", "ELEVENLABS_API_KEY")
+	if(config.get_value("Settings", "SELECTED_VOICE") != null):
+		globals.SELECTED_VOICE = config.get_value("Settings", "SELECTED_VOICE")
 	
 	return true
 

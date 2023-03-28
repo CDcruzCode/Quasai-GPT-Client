@@ -255,6 +255,7 @@ metadata/_edit_lock_ = true
 initial_position = 1
 title = "Settings"
 size = Vector2i(300, 350)
+visible = true
 unresizable = true
 
 [node name="tabs" type="TabContainer" parent="settings_popup"]
@@ -352,7 +353,7 @@ shortcut_keys_enabled = false
 
 [node name="Label2" type="Label" parent="settings_popup/tabs/Voice Model/vbox/voice_model_settings/elevenlabs_settings"]
 layout_mode = 2
-text = "This is currently an experimental feature. If an ElevenLabs API key is provided, you will be able to have text to speech functionality in the General Chatting mode. You cannot select different voices yet, but it will be available later."
+text = "This is currently an experimental feature. If an ElevenLabs API key is provided, you will be able to have text to speech functionality in the General Chatting mode. You can select different voices, but custom voices are only available to Elevenlabs subscribers."
 vertical_alignment = 1
 autowrap_mode = 3
 

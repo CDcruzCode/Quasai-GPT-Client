@@ -52,6 +52,8 @@ func _ready():
 	model_options_button.set_item_disabled(2, true)
 	model_options_button.item_selected.connect(ai_model_select)
 	
+	elevenlabs_voice_options.item_selected.connect(elevenlabs_voice_select)
+	
 	globals.AI_MODEL = config.get_value("Settings", "MODEL")
 	match config.get_value("Settings", "MODEL"):
 		"gpt-3.5-turbo":
@@ -113,6 +115,8 @@ func connect_openai():
 		elevenlabs.queue_free()
 		elevenlabs = null
 	await get_tree().process_frame
+	
+	elevenlabs_voice_options.disabled = true
 	if(!globals.API_KEY_ELEVENLABS.is_empty()):
 		elevenlabs = ElevenLabsAPI.new(get_tree(), globals.API_KEY_ELEVENLABS)
 		elevenlabs.request_success.connect(_on_elevenlabs_success)
@@ -123,10 +127,23 @@ func connect_openai():
 #		elevenlabs.text_to_speech("This is a test", globals.SELECTED_VOICE)
 
 func _on_elevenlabs_voices(data):
+	elevenlabs_voice_options.disabled = false
 	elevenlabs_voice_options.clear()
 	for i in data.size():
-		elevenlabs_voice_options.add_item(data[i].name)
-		elevenlabs_voice_options.set_item_metadata(i, data[i].voice_id)
+		if(data[i].category == "premade"):
+			elevenlabs_voice_options.add_item(data[i].name)
+			elevenlabs_voice_options.set_item_metadata(i, data[i].voice_id)
+		if(data[i].category == "cloned"):
+			elevenlabs_voice_options.add_item(data[i].name)
+			elevenlabs_voice_options.set_item_metadata(i, data[i].voice_id)
+	
+	#Select the previously set voice by checking all item metadata.
+	for i in range(elevenlabs_voice_options.get_item_count()):
+		var item_text = elevenlabs_voice_options.get_item_metadata(i)
+		if item_text == globals.SELECTED_VOICE:
+			elevenlabs_voice_options.select(i)
+			return
+	elevenlabs_voice_options.select(0)
 
 func _on_elevenlabs_success(data):
 	elevenlabs.play_audio(data)
@@ -210,3 +227,5 @@ func ai_model_select(id:int):
 			ai_model_blurb.text = "GPT 3.5 Turbo: The fastest and cheapest model to use. While GPT 4 can perform some tasks a lot better, GPT 3.5 should still work for 70% of tasks without the large cost.\nCosts $0.002 per 1k tokens."
 	print(globals.AI_MODEL)
 
+func elevenlabs_voice_select(id:int):
+	globals.SELECTED_VOICE = elevenlabs_voice_options.get_item_metadata(elevenlabs_voice_options.selected)

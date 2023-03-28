@@ -147,6 +147,13 @@ func number_suffix(num:int) -> String:
 		return str(num) + "th"
 
 
+func remove_regex(text: String, regex_string: String) -> String:
+	var regex = RegEx.new()
+	regex.compile(regex_string)
+	return regex.sub(text, "", true)
+
+
+
 func parse_api_error(error_code:int, short_err:bool = false):
 	if(short_err):
 		match error_code:
