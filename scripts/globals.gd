@@ -1,6 +1,6 @@
 extends Node
 
-const VERSION:String = "0.2.0"
+const VERSION:String = "0.2.1"
 
 var API_KEY:String
 var API_KEY_ELEVENLABS:String

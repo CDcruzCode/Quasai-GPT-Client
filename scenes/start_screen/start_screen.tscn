@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://8vddpy0a4t32"]
+[gd_scene load_steps=28 format=3 uid="uid://8vddpy0a4t32"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
@@ -25,7 +25,6 @@
 [ext_resource type="PackedScene" uid="uid://bc2kl4vht8olt" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
 [ext_resource type="Texture2D" uid="uid://cyldiqo6n6nwj" path="res://images/icons/code_assistant.png" id="18_6tdaq"]
 [ext_resource type="Script" path="res://scripts/start_screen/version.gd" id="24_3khg3"]
-[ext_resource type="PackedScene" uid="uid://cdsqi6y03sxnv" path="res://scenes/components/notice_popup.tscn" id="26_aw1kt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
 content_margin_left = 10.0
@@ -251,9 +250,6 @@ size_flags_vertical = 3
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
-
-[node name="notice_popup" parent="notifications/vbox" instance=ExtResource("26_aw1kt")]
-layout_mode = 2
 
 [node name="settings_popup" type="AcceptDialog" parent="."]
 initial_position = 1

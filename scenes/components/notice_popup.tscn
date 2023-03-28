@@ -28,6 +28,7 @@ layout_mode = 2
 theme = ExtResource("1_hecb1")
 
 [node name="progress_banner" type="ColorRect" parent="pcon"]
+visible = false
 self_modulate = Color(1, 1, 1, 0.0392157)
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
@@ -42,20 +43,23 @@ size_flags_horizontal = 8
 custom_minimum_size = Vector2(5, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-color = Color(0, 0.741176, 0.270588, 1)
+color = Color(0.87451, 0.466667, 0.596078, 1)
 
 [node name="popup_text" type="RichTextLabel" parent="pcon/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+bbcode_enabled = true
 text = "A new update is available, visit quasai.cdcruz.com to download!"
 fit_content = true
 scroll_active = false
 
-[node name="close" type="Button" parent="pcon/hbox"]
+[node name="close_button" type="Button" parent="pcon/hbox"]
 custom_minimum_size = Vector2(33, 33)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.870588, 0.870588, 0.870588, 1)
 text = "╳"
 flat = true
