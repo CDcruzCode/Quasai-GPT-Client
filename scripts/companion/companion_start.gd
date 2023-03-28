@@ -34,10 +34,7 @@ func _ready():
 	personality_options.add_item("Cheerful")
 	personality_options.add_item("Sassy")
 	personality_options.add_item("Shy")
-	
-	age_young.pressed.connect(func(): select_multi_toggle(age_box, 0))
-	age_adult.pressed.connect(func(): select_multi_toggle(age_box, 1))
-	age_old.pressed.connect(func(): select_multi_toggle(age_box, 2))
+	personality_options.add_item("Nia")
 	
 	sex_man.pressed.connect(func(): select_multi_toggle(sex_box, 0))
 	sex_woman.pressed.connect(func(): select_multi_toggle(sex_box, 1))

@@ -311,6 +311,8 @@ func get_personality(personality:String):
 			return globals.load_file_as_string("res://scripts/companion/prompts/sassy.txt")
 		"Shy":
 			return globals.load_file_as_string("res://scripts/companion/prompts/shy.txt")
+		"Nia":
+			return globals.load_file_as_string("res://scripts/companion/prompts/Nia.txt")
 		_:
 			return
 
