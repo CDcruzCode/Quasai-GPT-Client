@@ -2,6 +2,9 @@ extends PanelContainer
 @onready var openai_status:Button = $mcon/vbox/hbox2/openai_status
 @onready var status_icon = $mcon/vbox/hbox2/status_icon
 
+var notice_popup:PackedScene = preload("res://scenes/components/notice_popup.tscn")
+@onready var notif_vbox = $notifications/vbox
+
 @onready var settings_button = $mcon/vbox/hbox2/settings_button
 @onready var settings_popup = $settings_popup
 
@@ -127,6 +130,10 @@ func connect_openai():
 #		elevenlabs.text_to_speech("This is a test", globals.SELECTED_VOICE)
 
 func _on_elevenlabs_voices(data):
+	var notif = notice_popup.instantiate()
+	notif.message = "ElevenLabs API connected!"
+	notif_vbox.add_child(notif)
+	
 	elevenlabs_voice_options.disabled = false
 	elevenlabs_voice_options.clear()
 	for i in data.size():
@@ -150,6 +157,11 @@ func _on_elevenlabs_success(data):
 
 func _on_elevenlabs_error(error_code):
 	printerr(globals.parse_api_error(error_code))
+	
+	var notif = notice_popup.instantiate()
+	notif.message = "ElevenLabs API failed to connect: "+globals.parse_api_error(error_code)
+	notif.msg_color = Color.RED
+	notif_vbox.add_child(notif)
 
 func _on_openai_request_success(data):
 	print(data)

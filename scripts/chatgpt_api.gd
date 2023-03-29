@@ -30,7 +30,7 @@ func _init(tree_scene:SceneTree, api_base_url2:String, api_key2:String, api_org2
 	http_request = HTTPRequest.new()
 	tree.root.add_child(http_request)
 	http_request.name = node_name
-	http_request.use_threads = true
+	http_request.use_threads = false
 	
 	
 	#await tree.process_frame

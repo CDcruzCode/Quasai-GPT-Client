@@ -171,7 +171,7 @@ func _on_openai_request_success(data):
 				voice_message += line.strip_edges()
 				var new_msg:MarginContainer = message_box.instantiate()
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-				new_msg.get_node("message_box/vbox/msg").text = line.strip_edges()
+				new_msg.get_node("message_box/vbox/msg").text = globals.replace_backticks_with_bbcode(line.strip_edges(), "inlinecode")
 				new_msg.get_node("message_box").message_list = chat_scroll
 				new_msg.get_node("message_box").self_modulate = bot_color
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
@@ -180,7 +180,7 @@ func _on_openai_request_success(data):
 		voice_message += reply_array[0]
 		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		new_msg.get_node("message_box/vbox/msg").text = reply_array[0]
+		new_msg.get_node("message_box/vbox/msg").text = globals.replace_backticks_with_bbcode(reply_array[0].strip_edges(), "inlinecode")
 		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").self_modulate = bot_color
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
@@ -339,6 +339,9 @@ func regen_message():
 		return
 	
 	bot_thinking = true
+	if(wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+	await get_tree().process_frame
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	var reply_array:PackedStringArray = chat_memory[chat_memory.size()-1].split("\n\n")
@@ -451,10 +454,12 @@ func load_saved_chat(id:int):
 
 
 func wait_blink():
-	while bot_thinking:
+	while bot_thinking && !globals.EXIT_THREAD:
 		loading.texture = wait_status
 		await globals.delay(0.5)
-		if(!bot_thinking):
+		if(!bot_thinking || globals.EXIT_THREAD):
+			print("EXIT")
+			globals.EXIT_THREAD = false
 			return
 		loading.texture = nil_status
 		await globals.delay(0.5)

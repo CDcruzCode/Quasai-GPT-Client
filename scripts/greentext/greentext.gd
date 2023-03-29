@@ -156,7 +156,7 @@ func split_text(input_text:String, split_line:int = 10):
 
 
 var image_type:String = ""
-func _on_request_completed(result, response_code, _headers, body):
+func _on_request_completed(result, _response_code, _headers, body):
 	if(result == OK):
 		if(is_image):
 			var image = Image.new()

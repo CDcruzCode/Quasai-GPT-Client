@@ -25,6 +25,7 @@ script = ExtResource("1_f7srr")
 [node name="pcon" type="PanelContainer" parent="."]
 self_modulate = Color(0.14902, 0.14902, 0.14902, 1)
 layout_mode = 2
+mouse_filter = 1
 theme = ExtResource("1_hecb1")
 
 [node name="progress_banner" type="ColorRect" parent="pcon"]
@@ -43,12 +44,14 @@ size_flags_horizontal = 8
 custom_minimum_size = Vector2(5, 0)
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_filter = 1
 color = Color(0.87451, 0.466667, 0.596078, 1)
 
 [node name="popup_text" type="RichTextLabel" parent="pcon/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+mouse_filter = 1
 bbcode_enabled = true
 text = "A new update is available, visit quasai.cdcruz.com to download!"
 fit_content = true

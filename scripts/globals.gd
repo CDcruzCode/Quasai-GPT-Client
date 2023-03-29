@@ -1,6 +1,7 @@
 extends Node
 
 const VERSION:String = "0.2.1"
+var EXIT_THREAD:bool = false
 
 var API_KEY:String
 var API_KEY_ELEVENLABS:String
@@ -152,6 +153,21 @@ func remove_regex(text: String, regex_string: String) -> String:
 	regex.compile(regex_string)
 	return regex.sub(text, "", true)
 
+
+func replace_backticks_with_bbcode(text: String, bbcode:String) -> String:
+	var is_code_block = false
+	var replaced_text = ""
+	for i in text.length():
+		var chara = text[i]
+		if chara == "`":
+			is_code_block = !is_code_block
+			if is_code_block:
+				replaced_text += "["+bbcode+"]"
+			else:
+				replaced_text += "[/"+bbcode+"]"
+		else:
+			replaced_text += chara
+	return replaced_text
 
 
 func parse_api_error(error_code:int, short_err:bool = false):

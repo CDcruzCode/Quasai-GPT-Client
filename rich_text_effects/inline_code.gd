@@ -1,11 +1,11 @@
 @tool
 extends RichTextEffect
-class_name RichTextGhost
+class_name RichTextInline
 
 # Syntax: [ghost freq=5.0 span=10.0][/ghost]
 
 # Define the tag name.
-var bbcode = "ghost"
+var bbcode = "inlinecode"
 
 func _process_custom_fx(char_fx):
 	# Get parameters, or use the provided default value if missing.

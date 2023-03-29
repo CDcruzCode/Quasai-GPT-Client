@@ -3,11 +3,14 @@ extends Button
 @export var custom_save:bool = false
 
 func _ready():
-	self.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn"))
+	globals.EXIT_THREAD = false
+	self.pressed.connect(func(): globals.EXIT_THREAD = true; get_tree().change_scene_to_file("res://scenes/start_screen/start_screen.tscn"))
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST && !custom_save:
 		print("QUITTING")
+		globals.EXIT_THREAD = true
+		await get_tree().process_frame
 #		var root_parent = self.get_parent().get_parent().get_parent()
 #		if(root_parent.wait_thread != null):
 #			root_parent.wait_thread = null
