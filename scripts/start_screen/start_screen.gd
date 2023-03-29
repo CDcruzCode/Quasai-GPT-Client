@@ -157,6 +157,8 @@ func _on_elevenlabs_success(data):
 
 func _on_elevenlabs_error(error_code):
 	printerr(globals.parse_api_error(error_code))
+	elevenlabs_api_key_input.text = ""
+	globals.API_KEY_ELEVENLABS = ""
 	
 	var notif = notice_popup.instantiate()
 	notif.message = "ElevenLabs API failed to connect: "+globals.parse_api_error(error_code)

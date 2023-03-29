@@ -15,7 +15,7 @@ func http_req(host:String, page:String)->String:
 		http.poll()
 		print("[HTTPClient] Connecting...")
 		if not OS.has_feature("web"):
-			OS.delay_msec(500)
+			OS.delay_msec(50)
 		else:
 			await get_tree().process_frame
 
@@ -39,7 +39,7 @@ func http_req(host:String, page:String)->String:
 			# so wait for the next main loop iteration.
 			await get_tree().process_frame
 		else:
-			OS.delay_msec(500)
+			OS.delay_msec(50)
 
 	assert(http.get_status() == HTTPClient.STATUS_BODY or http.get_status() == HTTPClient.STATUS_CONNECTED) # Make sure request finished well.
 

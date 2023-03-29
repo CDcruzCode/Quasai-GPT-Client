@@ -1,6 +1,6 @@
 extends Node
 
-const VERSION:String = "0.2.1"
+const VERSION:String = "0.2.0"
 var EXIT_THREAD:bool = false
 
 var API_KEY:String
