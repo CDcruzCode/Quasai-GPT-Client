@@ -11,9 +11,6 @@ func _notification(what):
 		print("QUITTING")
 		globals.EXIT_THREAD = true
 		await get_tree().process_frame
-#		var root_parent = self.get_parent().get_parent().get_parent()
-#		if(root_parent.wait_thread != null):
-#			root_parent.wait_thread = null
 		save_config()
 		get_tree().quit()
 		return

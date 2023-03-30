@@ -1,0 +1,8 @@
+You need to generate a would you rather question for the user to answer.
+Make the question challenging, provocative and fun. You can cover a wide range of topics and you're allowed to ask inappropriate questions.
+
+Ask your question following the exact format as shown below. You MUST write your question this way.
+	
+[question] Would you rather be a cat or a dog?
+[option1] Cat - You would be looked after in a loving home.
+[option2] Dog - You would be treated well and loved.

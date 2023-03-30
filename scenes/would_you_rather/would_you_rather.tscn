@@ -1,0 +1,125 @@
+[gd_scene load_steps=6 format=3 uid="uid://dnf5b5gtqpsnd"]
+
+[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_msh3k"]
+[ext_resource type="Script" path="res://scripts/would_you_rather/would_you_rather.gd" id="2_27ih0"]
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="3_koxlo"]
+[ext_resource type="StyleBox" uid="uid://dghcolv3tmsar" path="res://scenes/would_you_rather/would_you_rather_button.tres" id="4_hycyj"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_sdmfy"]
+
+[node name="would_you_rather" type="PanelContainer"]
+self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_msh3k")
+script = ExtResource("2_27ih0")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Home"
+script = ExtResource("3_koxlo")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    Would you rather?"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A fun micro game of Would you Rather? Where the AI will generate a question and you choose which answer you'd rather do."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_sdmfy")
+expand_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="pcon" type="PanelContainer" parent="vbox/hbox"]
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "WOULD YOU RATHER..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ai_question" type="Label" parent="vbox/hbox/pcon/vbox"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Download from itch.io or fork on Github?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="hbox" type="HBoxContainer" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="option_1_button" type="PanelContainer" parent="vbox/hbox/pcon/vbox/hbox"]
+self_modulate = Color(0, 0.498039, 0.780392, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_hycyj")
+
+[node name="option_1_text" type="Label" parent="vbox/hbox/pcon/vbox/hbox/option_1_button"]
+layout_mode = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/_edit_lock_ = true
+
+[node name="option_2_button" type="PanelContainer" parent="vbox/hbox/pcon/vbox/hbox"]
+self_modulate = Color(0.827451, 0, 0.12549, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_hycyj")
+
+[node name="option_2_text" type="Label" parent="vbox/hbox/pcon/vbox/hbox/option_2_button"]
+layout_mode = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/_edit_lock_ = true
+
+[node name="generate_button" type="Button" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+text = "Next Question"
+
+[node name="PanelContainer2" type="PanelContainer" parent="vbox/hbox"]
+visible = false
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2

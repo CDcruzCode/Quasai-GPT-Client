@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4kqfmceq7lpe"]
+[gd_scene load_steps=4 format=3 uid="uid://b4kqfmceq7lpe"]
 
 [ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_8k4je"]
+[ext_resource type="Script" path="res://rich_text_effects/inline_code.gd" id="2_oc4r7"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_rseeh"]
+script = ExtResource("2_oc4r7")
 
 [node name="spacer" type="MarginContainer"]
 anchors_preset = 2
@@ -29,7 +33,9 @@ size_flags_horizontal = 0
 focus_mode = 2
 mouse_default_cursor_shape = 1
 bbcode_enabled = true
+text = "[inlinecode]testing more things[/inlinecode]"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
+custom_effects = [SubResource("RichTextEffect_rseeh")]
 selection_enabled = true

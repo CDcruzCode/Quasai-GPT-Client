@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://8vddpy0a4t32"]
+[gd_scene load_steps=30 format=3 uid="uid://8vddpy0a4t32"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://nrgndkkhnjw5" path="res://images/icons/tokenizer_icon.png" id="11_dg22m"]
 [ext_resource type="PackedScene" uid="uid://doexrk6vlor4e" path="res://scenes/story_writer/story_writer.tscn" id="11_jysq5"]
 [ext_resource type="PackedScene" uid="uid://ce5md6ndtklcv" path="res://scenes/tokenizer/tokenizer.tscn" id="11_xpwlf"]
+[ext_resource type="Texture2D" uid="uid://hu3toj66a75o" path="res://images/icons/would_you_rather_icon.png" id="12_dqhkn"]
+[ext_resource type="PackedScene" uid="uid://dnf5b5gtqpsnd" path="res://scenes/would_you_rather/would_you_rather.tscn" id="12_rq4hm"]
 [ext_resource type="PackedScene" uid="uid://m1iohg26nlg" path="res://scenes/meal_planner/meal_planner.tscn" id="13_70hv0"]
 [ext_resource type="PackedScene" uid="uid://dq40ax0n8dn6u" path="res://scenes/companion/companion_start.tscn" id="13_f3v45"]
 [ext_resource type="Texture2D" uid="uid://bl6t378ff1c3h" path="res://images/icons/meal_planner_icon.png" id="13_t70vr"]
@@ -144,10 +146,17 @@ mode_display_name = "Greentexter"
 scene = ExtResource("9_yds3p")
 
 [node name="story_writer" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
+visible = false
 layout_mode = 2
 icon = ExtResource("9_tkg5e")
 mode_display_name = "Story Writer"
 scene = ExtResource("11_jysq5")
+
+[node name="would_you_rather" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
+layout_mode = 2
+icon = ExtResource("12_dqhkn")
+mode_display_name = "Would You Rather"
+scene = ExtResource("12_rq4hm")
 
 [node name="Label2" type="Label" parent="mcon/vbox/scon/VBoxContainer"]
 layout_mode = 2
@@ -250,7 +259,6 @@ metadata/_edit_lock_ = true
 initial_position = 1
 title = "Settings"
 size = Vector2i(300, 350)
-visible = true
 unresizable = true
 
 [node name="tabs" type="TabContainer" parent="settings_popup"]

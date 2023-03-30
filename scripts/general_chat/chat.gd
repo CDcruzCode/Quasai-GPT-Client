@@ -169,18 +169,25 @@ func _on_openai_request_success(data):
 			else:
 				is_code = true
 				voice_message += line.strip_edges()
+				
+				var current_text:String = globals.replace_with_bbcode(line.strip_edges(), "`", "inlinecode")
+				current_text = globals.replace_with_bbcode(current_text.strip_edges(), "**","b")
+				
 				var new_msg:MarginContainer = message_box.instantiate()
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-				new_msg.get_node("message_box/vbox/msg").text = globals.replace_backticks_with_bbcode(line.strip_edges(), "inlinecode")
+				new_msg.get_node("message_box/vbox/msg").text = current_text
 				new_msg.get_node("message_box").message_list = chat_scroll
 				new_msg.get_node("message_box").self_modulate = bot_color
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
 				chat_log.add_child(new_msg)
 	else:
 		voice_message += reply_array[0]
+		var current_text:String = globals.replace_with_bbcode(reply_array[0].strip_edges(), "`", "inlinecode")
+		current_text = globals.replace_with_bbcode(current_text.strip_edges(), "*","b")
+		
 		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		new_msg.get_node("message_box/vbox/msg").text = globals.replace_backticks_with_bbcode(reply_array[0].strip_edges(), "inlinecode")
+		new_msg.get_node("message_box/vbox/msg").text = current_text
 		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").self_modulate = bot_color
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
@@ -325,7 +332,7 @@ func send_message(msg:String):
 	"logit_bias": temp_logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
 
 
 func clear_chat(set_none:bool = true):
@@ -373,7 +380,7 @@ func regen_message():
 	"stream": false,
 	"logit_bias": logit_bias
 	}
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
 
 
 func save_new_chat():
