@@ -4,8 +4,10 @@ const VERSION:String = "0.2.1"
 var EXIT_THREAD:bool = false
 
 var API_KEY:String
+
 var API_KEY_ELEVENLABS:String
 var SELECTED_VOICE:String = "21m00Tcm4TlvDq8ikWAM"
+var VOICE_ALWAYS_ON:bool = false
 
 var INPUT_TOKENS_COST:float = 0.000002 #PROMPT TOKENS COST
 var TOKENS_COST:float = 0.000002 #COMPLETION TOKENS COST
@@ -192,7 +194,7 @@ func parse_api_error(error_code:int, short_err:bool = false):
 			400:
 				return "Error: " + str(error_code) + " - Something was wrong with connecting to the servers. It may be an API Key issue or a program issue..."
 			429:
-				return "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exeeced your quota, check your billing details."
+				return "Error: " + str(error_code) + " - OpenAI servers are experiencing high traffic or you have exceeded your quota, check your billing details."
 			500:
 				return "Error: " + str(error_code) + " - OpenAI servers are experiencing some issues."
 			0:

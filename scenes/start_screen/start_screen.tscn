@@ -258,14 +258,15 @@ metadata/_edit_lock_ = true
 [node name="settings_popup" type="AcceptDialog" parent="."]
 initial_position = 1
 title = "Settings"
-size = Vector2i(300, 350)
+size = Vector2i(678, 617)
+visible = true
 unresizable = true
 
 [node name="tabs" type="TabContainer" parent="settings_popup"]
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 292.0
-offset_bottom = 299.0
+offset_right = 670.0
+offset_bottom = 566.0
 
 [node name="LLM Model" type="ScrollContainer" parent="settings_popup/tabs"]
 layout_mode = 2
@@ -323,6 +324,16 @@ size_flags_vertical = 3
 [node name="voice_model_options" type="OptionButton" parent="settings_popup/tabs/Voice Model/vbox"]
 visible = false
 layout_mode = 2
+
+[node name="voice_always_on_checkbox" type="CheckButton" parent="settings_popup/tabs/Voice Model/vbox"]
+layout_mode = 2
+tooltip_text = "When enabled, text-to-speech will be used
+for all AI responses automatically.
+When disabled, text-to-speech will only play
+when you click on audio play buttons."
+theme_override_colors/font_color = Color(0.94902, 0.94902, 0.94902, 1)
+text = "Voice always on"
+flat = true
 
 [node name="voice_model_settings" type="PanelContainer" parent="settings_popup/tabs/Voice Model/vbox"]
 self_modulate = Color(0.207843, 0.211765, 0.258824, 1)

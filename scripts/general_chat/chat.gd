@@ -195,7 +195,7 @@ func _on_openai_request_success(data):
 	
 	chat_memory.append(reply)
 	
-	if(elevenlabs != null):
+	if(elevenlabs != null && globals.VOICE_ALWAYS_ON):
 		voice_message = globals.remove_regex(voice_message, "<.*?>") #Removes any words surrounded by angle brackets <like this> from the voice message.
 		print(voice_message)
 		elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)

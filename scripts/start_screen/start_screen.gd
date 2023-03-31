@@ -14,6 +14,7 @@ var notice_popup:PackedScene = preload("res://scenes/components/notice_popup.tsc
 @onready var ai_model_blurb = $"settings_popup/tabs/LLM Model/vbox/llm_model_settings/openai_settings/ai_model_blurb"
 
 @onready var voice_model_settings = $"settings_popup/tabs/Voice Model/vbox/voice_model_settings"
+@onready var voice_always_on_checkbox = $"settings_popup/tabs/Voice Model/vbox/voice_always_on_checkbox"
 @onready var elevenlabs_settings = $"settings_popup/tabs/Voice Model/vbox/voice_model_settings/elevenlabs_settings"
 @onready var elevenlabs_api_key_input = $"settings_popup/tabs/Voice Model/vbox/voice_model_settings/elevenlabs_settings/elevenlabs_api_key_input"
 @onready var elevenlabs_voice_options = $"settings_popup/tabs/Voice Model/vbox/voice_model_settings/elevenlabs_settings/elevenlabs_voice_options"
@@ -70,8 +71,9 @@ func _ready():
 			ai_model_select(0)
 	
 	
+	voice_always_on_checkbox.toggled.connect(func(button_pressed:bool): globals.VOICE_ALWAYS_ON = button_pressed)
 	elevenlabs_api_key_input.text = globals.API_KEY_ELEVENLABS
-	
+	voice_always_on_checkbox.button_pressed = globals.VOICE_ALWAYS_ON
 	
 	
 	total_tokens_display.text = "Total tokens used: " + str(globals.TOTAL_TOKENS_USED)
@@ -199,6 +201,7 @@ func save_settings():
 	globals.API_KEY_ELEVENLABS = elevenlabs_api_key_input.text
 	config.set_value("Settings", "ELEVENLABS_API_KEY", globals.API_KEY_ELEVENLABS)
 	config.set_value("Settings", "SELECTED_VOICE", globals.SELECTED_VOICE)
+	config.set_value("Settings", "VOICE_ALWAYS_ON", globals.VOICE_ALWAYS_ON)
 	
 	config.set_value("Stats", "TOTAL_TOKENS_USED", globals.TOTAL_TOKENS_USED)
 	config.set_value("Stats", "TOTAL_TOKENS_COST", globals.TOTAL_TOKENS_COST)

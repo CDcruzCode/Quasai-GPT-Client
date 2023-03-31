@@ -62,6 +62,8 @@ func load_config():
 		globals.API_KEY_ELEVENLABS = config.get_value("Settings", "ELEVENLABS_API_KEY")
 	if(config.get_value("Settings", "SELECTED_VOICE") != null):
 		globals.SELECTED_VOICE = config.get_value("Settings", "SELECTED_VOICE")
+	if(config.get_value("Settings", "VOICE_ALWAYS_ON") != null):
+		globals.VOICE_ALWAYS_ON = config.get_value("Settings", "VOICE_ALWAYS_ON")
 	
 	return true
 
