@@ -5,16 +5,23 @@ extends PanelContainer
 @onready var copy_button = $vbox/options_hbox/copy_button
 @onready var msg_time = $vbox/options_hbox/msg_time
 
-var timer:Timer = null
-
 var message_list:ScrollContainer = null
 
+var type:String = ""
+var elevenlabs_api = null
+var chat_screen = null
 const MAX_SIZE:int = 700
 
 func _ready():
 	options_hbox.hide()
-	self.mouse_entered.connect(start_timer)
-	self.mouse_exited.connect(stop_timer)
+	self.mouse_entered.connect(func(): options_hbox.show())
+	self.mouse_exited.connect(func(): options_hbox.hide())
+	
+	if(elevenlabs_api != null):
+		play_audio.pressed.connect(play_voice_note)
+	else:
+		play_audio.queue_free()
+	
 	copy_button.pressed.connect(copy_text)
 	max_size()
 	
@@ -28,24 +35,6 @@ func _ready():
 		formatted_period = "am"
 	var formatted_time = formatted_hour + ":" + formatted_minute + formatted_period
 	msg_time.text = formatted_time
-
-
-func start_timer():
-	timer = Timer.new()
-	timer.autostart = true
-	timer.one_shot = true
-	get_tree().root.add_child(timer)
-	await timer.timeout
-	timer.queue_free()
-	timer = null
-	options_hbox.show()
-
-func stop_timer():
-	if timer != null:
-		timer.queue_free()
-		timer = null
-	options_hbox.hide()
-
 
 func copy_text():
 	DisplayServer.clipboard_set(msg.text)
@@ -61,3 +50,14 @@ func max_size() -> void:
 	if(message_list):
 		await get_tree().process_frame
 		message_list.scroll_vertical = message_list.get_v_scroll_bar().max_value
+
+
+func play_voice_note():
+	if(elevenlabs_api != null && !chat_screen.bot_thinking):
+		chat_screen.bot_thinking = true
+		chat_screen.send_button.disabled = true
+		chat_screen.wait_thread = Thread.new()
+		chat_screen.wait_thread.start(chat_screen.wait_blink)
+		
+		var voice_message = globals.remove_regex(msg.text, "<.*?>") #Removes any words surrounded by angle brackets <like this> from the voice message.
+		chat_screen.elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)

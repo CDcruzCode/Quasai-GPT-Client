@@ -104,8 +104,8 @@ func text_to_speech(text:String, voice_id:String = "21m00Tcm4TlvDq8ikWAM"):
 	var data:Dictionary = {
 		"text": text,
 		"voice_settings": {
-			"stability": 0,
-			"similarity_boost": 0
+			"stability": 0.5,
+			"similarity_boost": 0.5
 		}
 	}
 

@@ -106,7 +106,11 @@ drag_and_drop_selection_enabled = false
 wrap_mode = 1
 scroll_fit_content_height = true
 
-[node name="regen" type="Button" parent="vbox/hbox"]
+[node name="send_button" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+text = "Send"
+
+[node name="regen_button" type="Button" parent="vbox/hbox"]
 layout_mode = 2
 text = "Regen"
 

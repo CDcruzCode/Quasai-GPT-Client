@@ -133,7 +133,28 @@ func clear_apis(openai:OpenAIAPI = null, elevenlabs:ElevenLabsAPI = null):
 	if(elevenlabs != null): 
 		elevenlabs.queue_free()
 
+var parse_voice_list:Array = [
+	["[inlinecode]",""],
+	["[/inlinecode]",""],
+	["[b]", ""],
+	["[/b]", ""],
+	["=", "equals"],
+	[">", ""],
+	["<", ""],
+	["{", ""],
+	["}", ""],
+	["[", ""],
+	["]", ""],
+	[":", ""],
+	[";", ""],
+	["~", ""],
+	["*", ""]
+]
 func parse_voice_message(msg:String) -> String:
+	for p in parse_voice_list:
+		msg = msg.replace(p[0], p[1])
+	
+	print("[parse_voice_message] OUTPUT: " + msg)
 	return msg
 
 

@@ -11,7 +11,8 @@ var elevenlabs:ElevenLabsAPI
 @onready var chat_scroll:ScrollContainer = $vbox/scon
 @onready var chat_label = $vbox/pcon/vbox/hbox/chat_label
 @onready var clear_chat_button = $vbox/pcon/vbox/hbox2/clear_chat
-@onready var regen_button = $vbox/hbox/regen
+@onready var send_button = $vbox/hbox/send_button
+@onready var regen_button = $vbox/hbox/regen_button
 @onready var session_tokens_display = $vbox/pcon/vbox/hbox/session_tokens
 @onready var save_chat_popup = $save_chat_popup
 @onready var save_chat_name = $save_chat_popup/save_chat_name
@@ -75,6 +76,7 @@ func _ready():
 	config_button.pressed.connect(open_config)
 	config_popup.confirmed.connect(save_config)
 	clear_chat_button.pressed.connect(clear_chat)
+	send_button.pressed.connect(func(): send_message(user_input.text); await get_tree().process_frame; user_input.text = "")
 	regen_button.pressed.connect(regen_message)
 	save_chat_button.pressed.connect(func(): save_chat_popup.popup_centered())
 	save_chat_popup.confirmed.connect(save_new_chat)
@@ -124,14 +126,16 @@ func connect_openai():
 func _on_elevenlabs_success(data):
 	elevenlabs.play_audio(data)
 	bot_thinking = false
+	send_button.disabled = false
 	await get_tree().process_frame
 	loading.texture = good_status
 
 func _on_elevenlabs_error(error_code):
 	printerr(globals.parse_api_error(error_code))
 	bot_thinking = false
+	send_button.disabled = false
 	await get_tree().process_frame
-	loading.texture = good_status
+	loading.texture = bad_status
 
 
 func _on_openai_request_success(data):
@@ -164,6 +168,7 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
 				new_msg.get_node("message_box").message_list = chat_scroll
 				new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.banner
+				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
 				chat_log.add_child(new_msg)
 			else:
@@ -178,6 +183,9 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box/vbox/msg").text = current_text
 				new_msg.get_node("message_box").message_list = chat_scroll
 				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
+				new_msg.get_node("message_box").chat_screen = self
+				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
 				chat_log.add_child(new_msg)
 	else:
@@ -190,6 +198,9 @@ func _on_openai_request_success(data):
 		new_msg.get_node("message_box/vbox/msg").text = current_text
 		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").self_modulate = bot_color
+		new_msg.get_node("message_box").elevenlabs_api = elevenlabs
+		new_msg.get_node("message_box").type = "bot"
+		new_msg.get_node("message_box").chat_screen = self
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
 		chat_log.add_child(new_msg)
 	
@@ -201,6 +212,7 @@ func _on_openai_request_success(data):
 		elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)
 	else:
 		bot_thinking = false
+		send_button.disabled = false
 		await get_tree().process_frame
 		loading.texture = good_status
 		
@@ -247,6 +259,7 @@ func save_config():
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
 	bot_thinking = false
+	send_button.disabled = false
 	var new_msg:MarginContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
@@ -286,7 +299,11 @@ func send_message(msg:String):
 		chat_log.add_child(new_msg)
 		return
 	
+	if(msg.strip_escapes().is_empty()):
+		return
+	
 	bot_thinking = true
+	send_button.disabled = true
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	print("USER MSG: "+msg)
@@ -300,6 +317,7 @@ func send_message(msg:String):
 	new_msg.get_node("message_box/vbox/msg").text = msg
 	new_msg.get_node("message_box").message_list = chat_scroll
 	new_msg.get_node("message_box").self_modulate = user_color
+	new_msg.get_node("message_box").type = "user"
 	chat_log.add_child(new_msg)
 	
 	var temp_logit_bias = logit_bias
@@ -346,17 +364,22 @@ func regen_message():
 		return
 	
 	bot_thinking = true
+	send_button.disabled = true
 	if(wait_thread.is_alive()):
 		globals.EXIT_THREAD = true
 	await get_tree().process_frame
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
-	var reply_array:PackedStringArray = chat_memory[chat_memory.size()-1].split("\n\n")
+	
 	chat_memory.remove_at(chat_memory.size()-1)
-	while(!reply_array.is_empty()):
-		reply_array.remove_at(0)
-		chat_log.get_child(chat_log.get_child_count() - 1).queue_free()
-		await get_tree().process_frame
+	while(true):
+		var current_child:Node = chat_log.get_child(chat_log.get_child_count() - 1)
+		if( current_child != null && current_child.get_node("message_box").type == "bot"):
+			current_child.queue_free()
+			await get_tree().process_frame
+		else:
+			break
+	
 	
 	print(chat_memory)
 	var chat_array:Array = []

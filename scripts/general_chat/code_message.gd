@@ -3,6 +3,8 @@ extends PanelContainer
 var message_list:ScrollContainer = null
 @onready var copy_code_button = $vbox/HBoxContainer/copy_code
 
+
+var type:String = ""
 const MAX_SIZE:int = 700
 
 func _ready():

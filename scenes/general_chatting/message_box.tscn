@@ -31,6 +31,7 @@ mouse_filter = 2
 
 [node name="options_hbox" type="HBoxContainer" parent="message_box/vbox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="play_audio" type="Button" parent="message_box/vbox/options_hbox"]
 custom_minimum_size = Vector2(30, 30)
@@ -63,7 +64,6 @@ vertical_alignment = 1
 [node name="msg" type="RichTextLabel" parent="message_box/vbox"]
 layout_mode = 2
 size_flags_horizontal = 0
-focus_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 1
 bbcode_enabled = true

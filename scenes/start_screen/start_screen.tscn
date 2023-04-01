@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://8vddpy0a4t32"]
+[gd_scene load_steps=31 format=3 uid="uid://8vddpy0a4t32"]
 
 [ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://bc2kl4vht8olt" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
 [ext_resource type="Texture2D" uid="uid://cyldiqo6n6nwj" path="res://images/icons/code_assistant.png" id="18_6tdaq"]
 [ext_resource type="Script" path="res://scripts/start_screen/version.gd" id="24_3khg3"]
+[ext_resource type="Script" path="res://scripts/api_walkthrough/api_link.gd" id="28_vsqng"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
 content_margin_left = 10.0
@@ -269,6 +270,7 @@ offset_right = 670.0
 offset_bottom = 566.0
 
 [node name="LLM Model" type="ScrollContainer" parent="settings_popup/tabs"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qoywm")
 
@@ -396,3 +398,28 @@ layout_mode = 2
 size_flags_horizontal = 4
 focus_mode = 0
 text = "Clear All Stats"
+
+[node name="Credits" type="ScrollContainer" parent="settings_popup/tabs"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ian16")
+
+[node name="vbox" type="VBoxContainer" parent="settings_popup/tabs/Credits"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="credits" type="RichTextLabel" parent="settings_popup/tabs/Credits/vbox"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+bbcode_enabled = true
+text = "Quasai is created by CDcruz using the Godot 4 game engine.
+If you'd like to support the continued development of Quasai, please consider donating to CDcruz via the [url=https://cdcruz.itch.io/chatgpt-client]itch.io page[/url].
+
+[b]Other resources:[/b]
+
+GPT 3 Tokenizer - [url]https://github.com/dluc/openai-tools[/url] - CC0 1.0 Universal License
+
+[b]Fonts:[/b]
+
+Inconsolata - [url]https://github.com/googlefonts/Inconsolata[/url] - SIL Open Font License"
+script = ExtResource("28_vsqng")
