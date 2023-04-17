@@ -11,15 +11,14 @@ If you want to use a stable build, only use the itch.io builds.
 <h2>Basic Features:</h2>
 <ul>
   <li>Use your own API Key to connect to OpenAI's API </li>
+  <li>Use your own ElevenLabs API Key for text-to-speech generation</li>
   <li>Has some context awareness and remembers previous messages </li>
   <li>Use pre-processor prompts to instruct the AI on how to respond to your messages.</li>
   <li>Save your chats and load them at a later date to continue your conversation. Your conversations are saved locally to your PC. </li>
-  <li>PLANNED - A basic theme selection for different coloured UI and text bubbles </li>
   <li>PLANNED - Optimizations to chat memory and memory of key details in a conversation </li>
   <li>PLANNED - Add more specialized & custom interfaces for different use cases, for example, a recipe generator. </li>
   <li>PLANNED - Add a folder structure for saved conversations so you can organize conversations into groups. </li>
   <li>PLANNED - Support for Google's AI PaLM API </li>
-  <li>IDEA - Add Text to Speech for the general chatting feature. This will most likely involve the ElevenLabs API. </li>
   <li>IDEA - Allow for PDF & Word docs to be analyzed and summarized. </li>
   <li>IDEA - Allow for community-made extensions/ modes to extend the program. </li>
 </ul>
