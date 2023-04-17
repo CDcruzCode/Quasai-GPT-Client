@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bn4anehxiu17m"]
 
 [node name="token_element" type="PanelContainer"]
-self_modulate = Color(0.16, 0.163333, 0.2, 1)
 offset_right = 40.0
 offset_bottom = 40.0
+theme_type_variation = &"tertiary_panel"
 
 [node name="hbox" type="HBoxContainer" parent="."]
 layout_mode = 2

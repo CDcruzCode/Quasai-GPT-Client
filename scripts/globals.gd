@@ -1,9 +1,10 @@
 extends Node
 
-const VERSION:String = "0.2.1"
+const VERSION:String = "0.2.2"
 var EXIT_THREAD:bool = false
 
 var API_KEY:String
+var THEME:String = "Default"
 
 var API_KEY_ELEVENLABS:String
 var SELECTED_VOICE:String = "21m00Tcm4TlvDq8ikWAM"
@@ -14,15 +15,6 @@ var TOKENS_COST:float = 0.000002 #COMPLETION TOKENS COST
 var AI_MODEL:String = "gpt-3.5-turbo"
 var TOTAL_TOKENS_USED:int = 0
 var TOTAL_TOKENS_COST:float = 0.0
-
-var CURRENT_THEME:Dictionary = {
-	"bg": "262730",
-	"container": "353642",
-	"banner": "1b1b22",
-	"user_bubble": "1982c4",
-	"bot_bubble": "E9006D",
-	"button": "white"
-}
 
 const TEXT_EXTENSIONS:PackedStringArray = [
 	"txt"
@@ -46,6 +38,18 @@ const SCRIPT_EXTENSIONS:PackedStringArray = [
 #########################
 #CODE SNIPPETS
 #########################
+func set_new_theme():
+	if(load_file_as_string("user://themes/"+THEME+".tres") != "error"):
+		get_tree().root.theme = load("user://themes/"+THEME+".tres")
+		print("Loaded theme: " + "user://themes/"+THEME+".tres")
+		return
+	
+	printerr("Could not load theme: " + "user://themes/"+THEME+".tres")
+	globals.THEME = "Default"
+	get_tree().root.theme = load("res://themes/main_themes/Default.tres")
+
+
+
 func save_text_file(filepath, content):
 	var file = FileAccess.open(filepath, FileAccess.WRITE);
 	if file != null:
@@ -55,7 +59,7 @@ func save_text_file(filepath, content):
 	else:
 		return false
 
-func load_file_as_string(path):
+func load_file_as_string(path)->String:
 	var file = FileAccess.open(path, FileAccess.READ)
 	var content : String
 	if file != null:

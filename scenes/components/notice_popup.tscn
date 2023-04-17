@@ -1,10 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdsqi6y03sxnv"]
+[gd_scene load_steps=2 format=3 uid="uid://bdn83qogywtri"]
 
 [ext_resource type="Script" path="res://scripts/components/notice_popup/notice_popup.gd" id="1_f7srr"]
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_hecb1"]
 
 [node name="notice_popup" type="MarginContainer"]
-modulate = Color(1, 1, 1, 0.980392)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -23,10 +21,9 @@ theme_override_constants/margin_bottom = 10
 script = ExtResource("1_f7srr")
 
 [node name="pcon" type="PanelContainer" parent="."]
-self_modulate = Color(0.14902, 0.14902, 0.14902, 1)
 layout_mode = 2
 mouse_filter = 1
-theme = ExtResource("1_hecb1")
+theme_type_variation = &"notice_popup"
 
 [node name="progress_banner" type="ColorRect" parent="pcon"]
 visible = false

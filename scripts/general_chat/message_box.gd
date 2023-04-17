@@ -1,8 +1,11 @@
 extends PanelContainer
+
+var msg_id:int = 0
 @onready var msg:RichTextLabel = $vbox/msg
 @onready var options_hbox = $vbox/options_hbox
 @onready var play_audio = $vbox/options_hbox/play_audio
 @onready var copy_button = $vbox/options_hbox/copy_button
+@onready var delete_button = $vbox/options_hbox/delete_button
 @onready var msg_time = $vbox/options_hbox/msg_time
 
 var message_list:ScrollContainer = null
@@ -23,6 +26,7 @@ func _ready():
 		play_audio.queue_free()
 	
 	copy_button.pressed.connect(copy_text)
+	delete_button.pressed.connect(delete_message)
 	max_size()
 	
 	var current_time = Time.get_datetime_dict_from_system()
@@ -38,6 +42,13 @@ func _ready():
 
 func copy_text():
 	DisplayServer.clipboard_set(msg.text)
+
+func delete_message():
+	print(msg_id)
+	chat_screen.chat_memory.remove_at(msg_id)
+	print(chat_screen.chat_memory)
+	self.get_parent().queue_free()
+
 
 func max_size() -> void:
 	await get_tree().process_frame

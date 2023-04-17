@@ -1,18 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://4l45j2tc7bxh"]
+[gd_scene load_steps=5 format=3 uid="uid://b84oneyvuv34i"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_mvonl"]
+[ext_resource type="Theme" uid="uid://dkyf5bs8xjqoj" path="res://themes/main_themes/Default.tres" id="1_n4kjk"]
 [ext_resource type="Script" path="res://scripts/api_walkthrough/introduction_screen.gd" id="2_1vocu"]
 [ext_resource type="Script" path="res://scripts/api_walkthrough/api_link.gd" id="2_kjcaw"]
 [ext_resource type="Texture2D" uid="uid://d4ddqufrhkvit" path="res://images/api_key_screen.png" id="3_16r40"]
 
 [node name="introduction_screen" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_mvonl")
+theme = ExtResource("1_n4kjk")
 script = ExtResource("2_1vocu")
 
 [node name="mcon" type="MarginContainer" parent="."]

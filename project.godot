@@ -24,6 +24,11 @@ config/quit_on_go_back=false
 globals="*res://scripts/globals.gd"
 httprequest="*res://scripts/http_client.gd"
 
+[display]
+
+window/dpi/allow_hidpi=false
+window/stretch/aspect="expand"
+
 [dotnet]
 
 project/assembly_name="Quasai"

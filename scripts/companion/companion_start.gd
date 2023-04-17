@@ -4,7 +4,6 @@ extends PanelContainer
 @onready var ai_name = $mcon/vbox/scon/vbox/name_box/ai_name
 @onready var random_name_button = $mcon/vbox/scon/vbox/name_box/random_name_button
 
-@onready var age_box = $mcon/vbox/scon/vbox/age_box
 @onready var age_input = $mcon/vbox/scon/vbox/age_input
 
 @onready var sex_box = $mcon/vbox/scon/vbox/sex_box

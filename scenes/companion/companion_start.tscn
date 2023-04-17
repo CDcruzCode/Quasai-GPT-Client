@@ -1,17 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://dq40ax0n8dn6u"]
+[gd_scene load_steps=3 format=3 uid="uid://b31vrfol47x6l"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_oglvc"]
 [ext_resource type="Script" path="res://scripts/companion/companion_start.gd" id="2_2qrna"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_etyor"]
 
 [node name="companion_start" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_oglvc")
 script = ExtResource("2_2qrna")
 
 [node name="mcon" type="MarginContainer" parent="."]

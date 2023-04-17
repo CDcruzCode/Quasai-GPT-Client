@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://bc2kl4vht8olt"]
+[gd_scene load_steps=5 format=3 uid="uid://cedxbpboadjeg"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_wm6fx"]
 [ext_resource type="Script" path="res://scripts/code_assistant/code_assistant.gd" id="2_2y50c"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_4kkrw"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_yc7b8"]
@@ -14,13 +13,11 @@ border_width_bottom = 10
 border_color = Color(0.207843, 0.211765, 0.258824, 1)
 
 [node name="code_assistant" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_wm6fx")
 script = ExtResource("2_2y50c")
 
 [node name="vbox" type="VBoxContainer" parent="."]

@@ -57,8 +57,8 @@ var logit_bias:Dictionary = {
 var bot_thinking:bool = false
 var chat_memory:PackedStringArray = []
 
-var bot_color:Color = Color(globals.CURRENT_THEME.bot_bubble)
-var user_color:Color = Color(globals.CURRENT_THEME.user_bubble)
+#var bot_color:Color = Color(globals.BOT_BUBBLE)
+#var user_color:Color = Color(globals.USER_BUBBLE)
 
 
 var prompt_types:PackedStringArray = []
@@ -167,9 +167,10 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 				new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
 				new_msg.get_node("message_box").message_list = chat_scroll
-				new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.banner
+				new_msg.get_node("message_box").self_modulate = "1b1b22"
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
 				chat_log.add_child(new_msg)
 			else:
 				is_code = true
@@ -182,11 +183,13 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 				new_msg.get_node("message_box/vbox/msg").text = current_text
 				new_msg.get_node("message_box").message_list = chat_scroll
-				new_msg.get_node("message_box").self_modulate = bot_color
+#				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
 				new_msg.get_node("message_box").chat_screen = self
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+				new_msg.get_node("message_box").msg_id = chat_memory.size()
 				chat_log.add_child(new_msg)
 	else:
 		voice_message += reply_array[0]
@@ -197,11 +200,13 @@ func _on_openai_request_success(data):
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		new_msg.get_node("message_box/vbox/msg").text = current_text
 		new_msg.get_node("message_box").message_list = chat_scroll
-		new_msg.get_node("message_box").self_modulate = bot_color
+#		new_msg.get_node("message_box").self_modulate = bot_color
+		new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 		new_msg.get_node("message_box").elevenlabs_api = elevenlabs
 		new_msg.get_node("message_box").type = "bot"
 		new_msg.get_node("message_box").chat_screen = self
 		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+		new_msg.get_node("message_box").msg_id = chat_memory.size()
 		chat_log.add_child(new_msg)
 	
 	chat_memory.append(reply)
@@ -263,7 +268,8 @@ func _on_openai_request_error(error_code):
 	var new_msg:MarginContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
-	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
+#	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
+	new_msg.get_node("message_box").theme_type_variation = StringName("error_bubble")
 	chat_log.add_child(new_msg)
 	loading.texture = bad_status
 	await get_tree().process_frame
@@ -316,8 +322,11 @@ func send_message(msg:String):
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
 	new_msg.get_node("message_box/vbox/msg").text = msg
 	new_msg.get_node("message_box").message_list = chat_scroll
-	new_msg.get_node("message_box").self_modulate = user_color
+	new_msg.get_node("message_box").chat_screen = self
+#	new_msg.get_node("message_box").self_modulate = user_color
+	new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 	new_msg.get_node("message_box").type = "user"
+	new_msg.get_node("message_box").msg_id = chat_memory.size() - 1 #Minus 1 because we need the position of the message in the array and array starts at 0
 	chat_log.add_child(new_msg)
 	
 	var temp_logit_bias = logit_bias
@@ -464,7 +473,8 @@ func load_saved_chat(id:int):
 			var new_msg = message_box.instantiate()
 			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
 			new_msg.get_node("message_box/vbox/msg").text = msg.strip_edges().trim_prefix("<USER> ")
-			new_msg.get_node("message_box").self_modulate = user_color
+#			new_msg.get_node("message_box").self_modulate = user_color
+			new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 			chat_log.add_child(new_msg)
 		else:
 			var reply_array:PackedStringArray = msg.split("\n\n")
@@ -473,7 +483,8 @@ func load_saved_chat(id:int):
 				var new_msg:MarginContainer = message_box.instantiate()
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 				new_msg.get_node("message_box/vbox/msg").text = line
-				new_msg.get_node("message_box").self_modulate = bot_color
+#				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 				chat_log.add_child(new_msg)
 	
 	await get_tree().process_frame

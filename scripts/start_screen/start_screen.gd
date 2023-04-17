@@ -42,13 +42,16 @@ func _ready():
 	load_config()
 	self.tree_exiting.connect(func(): globals.clear_apis(openai, elevenlabs) )
 	
+	if(config.get_value("Settings", "THEME") != null):
+		globals.THEME = config.get_value("Settings", "THEME")
+	$settings_popup/tabs/General/vbox/theme_settings/openai_settings/theme_options.init_theme_options()
+	
 	settings_popup.hide()
 	settings_popup.confirmed.connect(func(): save_settings(); connect_openai())
 	settings_button.pressed.connect(open_settings)
 	clear_stats_button.pressed.connect(clear_stats)
 	openai_status.pressed.connect(func(): OS.shell_open("https://status.openai.com/"))
 	openai_status.text = "Checking OpenAI Status..."
-	$"settings_popup/tabs/LLM Model/vbox/open_user_folder".pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
 	openai_api_key_input.text = globals.API_KEY
 	model_options_button.add_item("GPT 3.5 Turbo")
 	model_options_button.add_item("GPT 4 - 8k")
@@ -206,6 +209,7 @@ func save_settings():
 	config.set_value("Stats", "TOTAL_TOKENS_USED", globals.TOTAL_TOKENS_USED)
 	config.set_value("Stats", "TOTAL_TOKENS_COST", globals.TOTAL_TOKENS_COST)
 	config.set_value("Settings", "MODEL", globals.AI_MODEL)
+	config.set_value("Settings", "THEME", globals.THEME)
 	config.save("user://settings.cfg")
 	
 	
@@ -222,7 +226,7 @@ func clear_stats():
 
 
 func ai_model_select(id:int):
-	match model_options_button.get_item_text(model_options_button.selected):
+	match model_options_button.get_item_text(id):
 		"GPT 3.5 Turbo":
 			globals.AI_MODEL = "gpt-3.5-turbo"
 			globals.INPUT_TOKENS_COST = 0.000002
@@ -245,4 +249,4 @@ func ai_model_select(id:int):
 	print(globals.AI_MODEL)
 
 func elevenlabs_voice_select(id:int):
-	globals.SELECTED_VOICE = elevenlabs_voice_options.get_item_metadata(elevenlabs_voice_options.selected)
+	globals.SELECTED_VOICE = elevenlabs_voice_options.get_item_metadata(id)

@@ -33,16 +33,19 @@ func copy_prompts_folder():
 	var file_list = globals.list_folders_in_directory("res://scripts/general_chat/prompts/")
 	
 	var dir = DirAccess.open("user://")
-	var destination_folder_path = "user://prompts/"
 	await get_tree().process_frame
 	dir.make_dir("user://prompts")
 	dir.make_dir("user://companion")
+	dir.make_dir("user://themes")
 	for f in file_list:
-		dir.copy("res://scripts/general_chat/prompts/"+f, destination_folder_path+f)
+		dir.copy("res://scripts/general_chat/prompts/"+f, "user://prompts/"+f)
 #		if success == OK:
 #			print("Folder copied successfully!")
 #		else:
 #			print("Error copying folder.")
+	var themes_list = globals.list_folders_in_directory("res://themes/main_themes/")
+	for f in themes_list:
+		dir.copy("res://themes/main_themes/"+f, "user://themes/"+f)
 
 
 func load_config():
@@ -50,8 +53,10 @@ func load_config():
 	if err != OK:
 		printerr(err)
 		return false
+	if(config.get_value("Settings", "THEME") != null):
+		globals.THEME = config.get_value("Settings", "THEME")
 	if(config.get_value("Settings", "MODEL") != null):
-		globals.API_KEY = config.get_value("Settings", "MODEL")
+		globals.AI_MODEL = config.get_value("Settings", "MODEL")
 	if(config.get_value("Settings", "API_KEY") != null):
 		globals.API_KEY = config.get_value("Settings", "API_KEY")
 	if(config.get_value("Stats", "TOTAL_TOKENS_COST") != null):

@@ -1,19 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnf5b5gtqpsnd"]
+[gd_scene load_steps=5 format=3 uid="uid://bwwfwda276apu"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_msh3k"]
 [ext_resource type="Script" path="res://scripts/would_you_rather/would_you_rather.gd" id="2_27ih0"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_koxlo"]
 [ext_resource type="StyleBox" uid="uid://dghcolv3tmsar" path="res://scenes/would_you_rather/would_you_rather_button.tres" id="4_hycyj"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_sdmfy"]
 
 [node name="would_you_rather" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_msh3k")
 script = ExtResource("2_27ih0")
 
 [node name="vbox" type="VBoxContainer" parent="."]
@@ -57,9 +54,9 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="pcon" type="PanelContainer" parent="vbox/hbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"secondary_panel"
 
 [node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon"]
 layout_mode = 2

@@ -2,10 +2,10 @@ TODO
 
 [General]
 
-- Add Themes
++ Add Themes
 - Create a website for the program
 - Figure out how to read streamed API messages to improve response times.
-- Have the program ping the website to check if there is a new version and prompt the user on the start screen.
++ Have the program ping the website to check if there is a new version and prompt the user on the start screen.
 - See if HTTPRequest Node can be replaced with HTTPClient Class for optomization reasons.
 
 [Voice Generation]
@@ -15,10 +15,10 @@ TODO
 [General Chatting]
 
 - Allow messages to be deleted individually.
-- Improve formatting of some things like in-line code.
++ Improve formatting of some things like in-line code.
 
 [Summarizer]
-
+- Be able to break large documents into parsable sections for the API.
 - Support .doc .docx .pdf
 
 [Tokenizer]
@@ -37,6 +37,7 @@ TODO
 
 - Add Alpaca LLM???
 - Image to colour pallete using GPT 4's multi-modal processing
-- Voice generation with ElevenLabs API
++ Voice generation with ElevenLabs API
 - Story writer mode where the story will span over paragraphs/ pages and be generates in chunks. Have AI voice read back?
 - Add a way for others to add their own "extensions" to the program in the form of new standalone modes.
+- Add Voice to Text for user input.

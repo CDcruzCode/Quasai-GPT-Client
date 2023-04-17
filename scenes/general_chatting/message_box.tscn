@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b4kqfmceq7lpe"]
+[gd_scene load_steps=7 format=3 uid="uid://b4kqfmceq7lpe"]
 
 [ext_resource type="Script" path="res://scripts/general_chat/message_box.gd" id="1_8k4je"]
 [ext_resource type="Texture2D" uid="uid://crpmvcwi6mh6h" path="res://images/icons/copy.png" id="2_fu40e"]
 [ext_resource type="Script" path="res://rich_text_effects/inline_code.gd" id="2_oc4r7"]
 [ext_resource type="Texture2D" uid="uid://uelxu2f5etew" path="res://images/icons/play_circle.png" id="3_js1bn"]
+[ext_resource type="Texture2D" uid="uid://c213oetdmo5sp" path="res://images/icons/delete.png" id="4_35a6k"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_kcy40"]
 script = ExtResource("2_oc4r7")
@@ -53,6 +54,17 @@ icon = ExtResource("2_fu40e")
 flat = true
 expand_icon = true
 
+[node name="delete_button" type="Button" parent="message_box/vbox/options_hbox"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+icon = ExtResource("4_35a6k")
+flat = true
+expand_icon = true
+
 [node name="msg_time" type="Label" parent="message_box/vbox/options_hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -64,6 +76,7 @@ vertical_alignment = 1
 [node name="msg" type="RichTextLabel" parent="message_box/vbox"]
 layout_mode = 2
 size_flags_horizontal = 0
+focus_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 1
 bbcode_enabled = true

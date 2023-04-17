@@ -1,19 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://m1iohg26nlg"]
+[gd_scene load_steps=5 format=3 uid="uid://covffic0awryv"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_lkmxt"]
 [ext_resource type="Script" path="res://scripts/meal_planner/meal_planner.gd" id="2_limoj"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_pdu68"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_f3wox"]
 [ext_resource type="Script" path="res://scripts/meal_planner/sex_toggle.gd" id="5_4nhod"]
 
 [node name="meal_planner" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_lkmxt")
 script = ExtResource("2_limoj")
 
 [node name="vbox" type="VBoxContainer" parent="."]
@@ -48,9 +45,9 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="info_inputs" type="PanelContainer" parent="vbox/hbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"secondary_panel"
 
 [node name="vbox" type="VBoxContainer" parent="vbox/hbox/info_inputs"]
 layout_mode = 2
@@ -125,9 +122,9 @@ texture = ExtResource("4_f3wox")
 expand_mode = 2
 
 [node name="diet_inputs" type="PanelContainer" parent="vbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"secondary_panel"
 
 [node name="vbox" type="VBoxContainer" parent="vbox/diet_inputs"]
 layout_mode = 2
@@ -179,9 +176,9 @@ text = "Kosher"
 flat = true
 
 [node name="plan_con" type="PanelContainer" parent="vbox"]
-self_modulate = Color(0.0941176, 0.0941176, 0.0941176, 1)
 layout_mode = 2
 size_flags_vertical = 3
+theme_type_variation = &"tertiary_panel"
 
 [node name="scon" type="ScrollContainer" parent="vbox/plan_con"]
 layout_mode = 2
@@ -193,9 +190,9 @@ size_flags_vertical = 3
 columns = 6
 
 [node name="meal_header" type="PanelContainer" parent="vbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"secondary_panel"
 
 [node name="vbox" type="HBoxContainer" parent="vbox/meal_header"]
 layout_mode = 2

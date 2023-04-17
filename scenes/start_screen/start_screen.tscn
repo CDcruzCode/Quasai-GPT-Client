@@ -1,39 +1,35 @@
-[gd_scene load_steps=31 format=3 uid="uid://8vddpy0a4t32"]
+[gd_scene load_steps=33 format=3 uid="uid://du0h6f2shbkhm"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_dmsys"]
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_fpw51"]
 [ext_resource type="PackedScene" uid="uid://bsf6ioty2h3oi" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
-[ext_resource type="PackedScene" uid="uid://w2bt0glmbwcu" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
+[ext_resource type="PackedScene" uid="uid://d2g744xct1fw0" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
 [ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
 [ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_mf0nk"]
 [ext_resource type="Texture2D" uid="uid://i7lgcofh557v" path="res://images/icons/image_prompter_icon.png" id="6_65mhf"]
-[ext_resource type="PackedScene" uid="uid://bicf8plck88h4" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
+[ext_resource type="PackedScene" uid="uid://buorkji8qndni" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
 [ext_resource type="Texture2D" uid="uid://byrppiparamo2" path="res://images/icons/recipe_creator_icon.png" id="8_4inxh"]
-[ext_resource type="PackedScene" uid="uid://ddb33pybk7s8u" path="res://scenes/recipe_creator/recipe_creator.tscn" id="8_co8xd"]
+[ext_resource type="PackedScene" uid="uid://drn2pm33uwddh" path="res://scenes/recipe_creator/recipe_creator.tscn" id="8_co8xd"]
 [ext_resource type="Texture2D" uid="uid://can3i4gjfq45t" path="res://images/icons/greentext_icon.png" id="9_tkg5e"]
-[ext_resource type="PackedScene" uid="uid://rv56lfhyhaps" path="res://scenes/greentext/greentext.tscn" id="9_yds3p"]
+[ext_resource type="PackedScene" uid="uid://byl6yvs3185qk" path="res://scenes/greentext/greentext.tscn" id="9_yds3p"]
 [ext_resource type="Texture2D" uid="uid://nrgndkkhnjw5" path="res://images/icons/tokenizer_icon.png" id="11_dg22m"]
-[ext_resource type="PackedScene" uid="uid://doexrk6vlor4e" path="res://scenes/story_writer/story_writer.tscn" id="11_jysq5"]
-[ext_resource type="PackedScene" uid="uid://ce5md6ndtklcv" path="res://scenes/tokenizer/tokenizer.tscn" id="11_xpwlf"]
+[ext_resource type="PackedScene" uid="uid://bavx7wr06ipcl" path="res://scenes/story_writer/story_writer.tscn" id="11_jysq5"]
+[ext_resource type="PackedScene" uid="uid://cq1otbur7rvjh" path="res://scenes/tokenizer/tokenizer.tscn" id="11_xpwlf"]
 [ext_resource type="Texture2D" uid="uid://hu3toj66a75o" path="res://images/icons/would_you_rather_icon.png" id="12_dqhkn"]
-[ext_resource type="PackedScene" uid="uid://dnf5b5gtqpsnd" path="res://scenes/would_you_rather/would_you_rather.tscn" id="12_rq4hm"]
-[ext_resource type="PackedScene" uid="uid://m1iohg26nlg" path="res://scenes/meal_planner/meal_planner.tscn" id="13_70hv0"]
-[ext_resource type="PackedScene" uid="uid://dq40ax0n8dn6u" path="res://scenes/companion/companion_start.tscn" id="13_f3v45"]
+[ext_resource type="PackedScene" uid="uid://bwwfwda276apu" path="res://scenes/would_you_rather/would_you_rather.tscn" id="12_rq4hm"]
+[ext_resource type="PackedScene" uid="uid://covffic0awryv" path="res://scenes/meal_planner/meal_planner.tscn" id="13_70hv0"]
+[ext_resource type="PackedScene" uid="uid://b31vrfol47x6l" path="res://scenes/companion/companion_start.tscn" id="13_f3v45"]
 [ext_resource type="Texture2D" uid="uid://bl6t378ff1c3h" path="res://images/icons/meal_planner_icon.png" id="13_t70vr"]
 [ext_resource type="Texture2D" uid="uid://by5ya06djwpgs" path="res://images/icons/translator_icon.png" id="14_aeaj1"]
-[ext_resource type="PackedScene" uid="uid://ch08crnhaa23j" path="res://scenes/translator/translator.tscn" id="14_qg75j"]
-[ext_resource type="PackedScene" uid="uid://cfubylf2ssol0" path="res://scenes/wiki_search/wiki_search.tscn" id="17_d26w1"]
-[ext_resource type="PackedScene" uid="uid://bc2kl4vht8olt" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
+[ext_resource type="PackedScene" uid="uid://bc1rprbqsorou" path="res://scenes/ai_pretender/ai_pretender.tscn" id="14_g7y1y"]
+[ext_resource type="PackedScene" uid="uid://ck0es86q1b1o6" path="res://scenes/translator/translator.tscn" id="14_qg75j"]
+[ext_resource type="PackedScene" uid="uid://cs7wihb7vvkkn" path="res://scenes/wiki_search/wiki_search.tscn" id="17_d26w1"]
+[ext_resource type="PackedScene" uid="uid://cedxbpboadjeg" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
 [ext_resource type="Texture2D" uid="uid://cyldiqo6n6nwj" path="res://images/icons/code_assistant.png" id="18_6tdaq"]
 [ext_resource type="Script" path="res://scripts/start_screen/version.gd" id="24_3khg3"]
 [ext_resource type="Script" path="res://scripts/api_walkthrough/api_link.gd" id="28_vsqng"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
+[ext_resource type="Script" path="res://scripts/start_screen/open_user_folder.gd" id="29_8c62c"]
+[ext_resource type="Script" path="res://scripts/start_screen/theme_options.gd" id="29_w61p6"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ian16"]
 content_margin_left = 10.0
@@ -41,14 +37,18 @@ content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qoywm"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
 [node name="start_screen" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_dmsys")
 script = ExtResource("2_ey057")
 
 [node name="mcon" type="MarginContainer" parent="."]
@@ -69,6 +69,12 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "Settings"
 
+[node name="version" type="Label" parent="mcon/vbox/hbox2"]
+layout_mode = 2
+text = "Version x.x.x"
+vertical_alignment = 1
+script = ExtResource("24_3khg3")
+
 [node name="ColorRect" type="ColorRect" parent="mcon/vbox/hbox2"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -77,7 +83,7 @@ color = Color(1, 1, 1, 0)
 [node name="openai_status" type="Button" parent="mcon/vbox/hbox2"]
 layout_mode = 2
 focus_mode = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_type_variation = &"flat_button"
 text = "OpenAI server status"
 flat = true
 alignment = 0
@@ -130,34 +136,40 @@ layout_mode = 2
 
 [node name="your_companion" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("5_mf0nk")
+mode_icon = ExtResource("5_mf0nk")
 mode_display_name = "Your Companion (Experimental)"
 scene = ExtResource("13_f3v45")
 
 [node name="image_prompter" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("6_65mhf")
+mode_icon = ExtResource("6_65mhf")
 mode_display_name = "Image Prompter"
 scene = ExtResource("6_rkqeg")
 
 [node name="greentexter" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("9_tkg5e")
+mode_icon = ExtResource("9_tkg5e")
 mode_display_name = "Greentexter"
 scene = ExtResource("9_yds3p")
 
 [node name="story_writer" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2
-icon = ExtResource("9_tkg5e")
 mode_display_name = "Story Writer"
 scene = ExtResource("11_jysq5")
 
 [node name="would_you_rather" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("12_dqhkn")
+mode_icon = ExtResource("12_dqhkn")
 mode_display_name = "Would You Rather"
 scene = ExtResource("12_rq4hm")
+
+[node name="ai_pretender" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
+visible = false
+layout_mode = 2
+mode_icon = ExtResource("12_dqhkn")
+mode_display_name = "AI Pretender"
+scene = ExtResource("14_g7y1y")
 
 [node name="Label2" type="Label" parent="mcon/vbox/scon/VBoxContainer"]
 layout_mode = 2
@@ -172,19 +184,19 @@ theme_override_constants/v_separation = 15
 
 [node name="proofreader" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("4_j6jgc")
+mode_icon = ExtResource("4_j6jgc")
 mode_display_name = "Proofreader"
 scene = ExtResource("4_4mch1")
 
 [node name="meal_planner" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("13_t70vr")
+mode_icon = ExtResource("13_t70vr")
 mode_display_name = "Meal Planner"
 scene = ExtResource("13_70hv0")
 
 [node name="recipe_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("8_4inxh")
+mode_icon = ExtResource("8_4inxh")
 mode_display_name = "Recipe Creator"
 scene = ExtResource("8_co8xd")
 
@@ -196,26 +208,25 @@ scene = ExtResource("17_d26w1")
 
 [node name="translator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("14_aeaj1")
+mode_icon = ExtResource("14_aeaj1")
 mode_display_name = "Translator"
 scene = ExtResource("14_qg75j")
 
 [node name="code_assistant" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("18_6tdaq")
+mode_icon = ExtResource("18_6tdaq")
 mode_display_name = "Code Assistant"
 scene = ExtResource("18_4txjr")
 
 [node name="code_creator" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 visible = false
 layout_mode = 2
-icon = ExtResource("18_6tdaq")
 mode_display_name = "Code Creator"
 scene = ExtResource("18_4txjr")
 
 [node name="tokenizer" parent="mcon/vbox/scon/VBoxContainer/utility_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-icon = ExtResource("11_dg22m")
+mode_icon = ExtResource("11_dg22m")
 mode_display_name = "Tokenizer"
 scene = ExtResource("11_xpwlf")
 
@@ -237,12 +248,6 @@ mode_display_name = "Prompt Engineer"
 [node name="hbox" type="HBoxContainer" parent="mcon/vbox"]
 layout_mode = 2
 
-[node name="version" type="Label" parent="mcon/vbox/hbox"]
-layout_mode = 2
-text = "Version x.x.x"
-vertical_alignment = 1
-script = ExtResource("24_3khg3")
-
 [node name="notifications" type="ScrollContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
@@ -260,14 +265,45 @@ metadata/_edit_lock_ = true
 initial_position = 1
 title = "Settings"
 size = Vector2i(678, 617)
-visible = true
 unresizable = true
 
 [node name="tabs" type="TabContainer" parent="settings_popup"]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 670.0
-offset_bottom = 566.0
+offset_bottom = 568.0
+
+[node name="General" type="ScrollContainer" parent="settings_popup/tabs"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ian16")
+
+[node name="vbox" type="VBoxContainer" parent="settings_popup/tabs/General"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="theme_settings" type="PanelContainer" parent="settings_popup/tabs/General/vbox"]
+layout_mode = 2
+theme_type_variation = &"secondary_panel"
+
+[node name="openai_settings" type="VBoxContainer" parent="settings_popup/tabs/General/vbox/theme_settings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="settings_popup/tabs/General/vbox/theme_settings/openai_settings"]
+layout_mode = 2
+text = "Theme Selector
+"
+vertical_alignment = 1
+
+[node name="theme_options" type="OptionButton" parent="settings_popup/tabs/General/vbox/theme_settings/openai_settings"]
+layout_mode = 2
+script = ExtResource("29_w61p6")
+
+[node name="open_user_folder" type="Button" parent="settings_popup/tabs/General/vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Open User Data Folder"
+script = ExtResource("29_8c62c")
 
 [node name="LLM Model" type="ScrollContainer" parent="settings_popup/tabs"]
 visible = false
@@ -288,8 +324,8 @@ vertical_alignment = 1
 layout_mode = 2
 
 [node name="llm_model_settings" type="PanelContainer" parent="settings_popup/tabs/LLM Model/vbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
+theme_type_variation = &"secondary_panel"
 
 [node name="openai_settings" type="VBoxContainer" parent="settings_popup/tabs/LLM Model/vbox/llm_model_settings"]
 layout_mode = 2
@@ -307,11 +343,6 @@ placeholder_text = "API Key"
 layout_mode = 2
 fit_content = true
 shortcut_keys_enabled = false
-
-[node name="open_user_folder" type="Button" parent="settings_popup/tabs/LLM Model/vbox"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Open User Data Folder"
 
 [node name="Voice Model" type="ScrollContainer" parent="settings_popup/tabs"]
 visible = false
@@ -333,13 +364,13 @@ tooltip_text = "When enabled, text-to-speech will be used
 for all AI responses automatically.
 When disabled, text-to-speech will only play
 when you click on audio play buttons."
-theme_override_colors/font_color = Color(0.94902, 0.94902, 0.94902, 1)
+focus_mode = 0
 text = "Voice always on"
 flat = true
 
 [node name="voice_model_settings" type="PanelContainer" parent="settings_popup/tabs/Voice Model/vbox"]
-self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 layout_mode = 2
+theme_type_variation = &"secondary_panel"
 
 [node name="elevenlabs_settings" type="VBoxContainer" parent="settings_popup/tabs/Voice Model/vbox/voice_model_settings"]
 layout_mode = 2
@@ -400,6 +431,7 @@ focus_mode = 0
 text = "Clear All Stats"
 
 [node name="Credits" type="ScrollContainer" parent="settings_popup/tabs"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ian16")
 

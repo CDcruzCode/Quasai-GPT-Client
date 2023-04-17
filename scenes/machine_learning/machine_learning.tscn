@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3cx4lmara31v"]
+
+[ext_resource type="Script" path="res://scripts/home_button.gd" id="1_cgmiv"]
+[ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="2_xpu5i"]
+
+[node name="ai_pretender" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hcon" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="home_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Home"
+script = ExtResource("1_cgmiv")
+
+[node name="Label2" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "    AI Pretender"
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="vbox/hcon"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A fun mini game similar to 20 Questions where the AI takes on the role of a celebrity, historical figure, occupation and more. Your task is to ask it questions and then try to guess who the AI is acting as."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="loading" type="TextureRect" parent="vbox/hcon"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_xpu5i")
+expand_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="pcon" type="PanelContainer" parent="vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="input_con" type="PanelContainer" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"secondary_panel"
+
+[node name="hbox" type="HBoxContainer" parent="vbox/hbox/pcon/vbox/input_con"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="user_input" type="LineEdit" parent="vbox/hbox/pcon/vbox/input_con/hbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+placeholder_text = "Enter your question or guess the character"
+
+[node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon/vbox/input_con/hbox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="question_button" type="Button" parent="vbox/hbox/pcon/vbox/input_con/hbox/vbox"]
+layout_mode = 2
+text = "Question"
+
+[node name="guess_button" type="Button" parent="vbox/hbox/pcon/vbox/input_con/hbox/vbox"]
+layout_mode = 2
+text = "Guess"
+
+[node name="messages_remaining" type="Label" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+text = "20 Messages Left | 3 Guesses Left"
+
+[node name="PanelContainer2" type="PanelContainer" parent="vbox/hbox"]
+visible = false
+self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2

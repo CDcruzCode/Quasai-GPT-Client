@@ -16,7 +16,7 @@ var bot_message:bool = false
 @onready var wait_status = preload("res://images/icons/wait_status.png")
 @onready var nil_status = preload("res://images/icons/nil_status.png")
 
-@onready var message_box = preload("res://scenes/companion/companion_message_box.tscn")
+@onready var message_box = preload("res://scenes/general_chatting/message_box.tscn")
 
 enum MSG_TYPE {USER, SYSTEM, ASSISTANT}
 var basic_info:Dictionary = {}
@@ -97,7 +97,8 @@ func _on_openai_request_success(data):
 	var new_msg:MarginContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	new_msg.get_node("message_box/vbox/msg").text = bot_msg
-	new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.bot_bubble
+#	new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.bot_bubble
+	new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 	chat_log_box.add_child(new_msg)
 	
 	if(data.choices[0].message.content.strip_edges().ends_with("[continue]")):
@@ -188,7 +189,8 @@ func send_message(msg:String, system_msg:MSG_TYPE = MSG_TYPE.USER):
 		var new_msg:MarginContainer = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
 		new_msg.get_node("message_box/vbox/msg").text = msg
-		new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.user_bubble
+#		new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.user_bubble
+		new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 		chat_log_box.add_child(new_msg)
 		
 		chat_log.append("<USER> "+msg)
@@ -341,13 +343,15 @@ func load_saved_chat():
 			var new_msg = message_box.instantiate()
 			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_END
 			new_msg.get_node("message_box/vbox/msg").text = msg.strip_edges().trim_prefix("<USER> ")
-			new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.user_bubble
+#			new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.user_bubble
+			new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 			chat_log_box.add_child(new_msg)
 		else:
 			var new_msg:MarginContainer = message_box.instantiate()
 			new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 			new_msg.get_node("message_box/vbox/msg").text = msg.strip_edges()
-			new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.bot_bubble
+#			new_msg.get_node("message_box").self_modulate = globals.CURRENT_THEME.bot_bubble
+			new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 			chat_log_box.add_child(new_msg)
 	
 	await get_tree().process_frame

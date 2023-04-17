@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://bovwmotkm5fef"]
+[gd_scene load_steps=5 format=3 uid="uid://b65g6j88ckns3"]
 
-[ext_resource type="Theme" uid="uid://bxvebmn23os06" path="res://themes/main_theme.tres" id="1_4228v"]
 [ext_resource type="Script" path="res://scripts/companion/companion.gd" id="2_k0t5i"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_sp4f2"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_yoxsp"]
@@ -9,21 +8,19 @@
 content_margin_bottom = 20.0
 
 [node name="companion" type="PanelContainer"]
-self_modulate = Color(0.14902, 0.152941, 0.188235, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_4228v")
 script = ExtResource("2_k0t5i")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="pcon" type="PanelContainer" parent="vbox"]
-self_modulate = Color(0.105882, 0.105882, 0.133333, 1)
 layout_mode = 2
+theme_type_variation = &"banner"
 
 [node name="vbox" type="VBoxContainer" parent="vbox/pcon"]
 layout_mode = 2
