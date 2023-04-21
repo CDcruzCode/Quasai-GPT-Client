@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://cewuqwc6ifmj5"]
+[gd_resource type="Theme" load_steps=18 format=3 uid="uid://cewuqwc6ifmj5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uc72n"]
 bg_color = Color(0.121569, 0.12549, 0.262745, 1)
@@ -154,6 +154,18 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q00xu"]
+bg_color = Color(0.337255, 0.627451, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.337255, 0.627451, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1gf5j"]
 bg_color = Color(0.862745, 0.184314, 0.00784314, 1)
 border_width_left = 5
@@ -202,6 +214,8 @@ notice_popup/base_type = &"Panel"
 notice_popup/styles/panel = SubResource("StyleBoxFlat_c0gyf")
 secondary_panel/base_type = &"Panel"
 secondary_panel/styles/panel = SubResource("StyleBoxFlat_fpnxj")
+success_bubble/base_type = &"Panel"
+success_bubble/styles/panel = SubResource("StyleBoxFlat_q00xu")
 tertiary_panel/base_type = &"Panel"
 tertiary_panel/styles/panel = SubResource("StyleBoxFlat_1gf5j")
 user_bubble/base_type = &"Panel"

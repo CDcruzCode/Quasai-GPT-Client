@@ -1,5 +1,7 @@
 extends PanelContainer
 
+var disable_options:bool = false
+
 var msg_id:int = 0
 @onready var msg:RichTextLabel = $vbox/msg
 @onready var options_hbox = $vbox/options_hbox
@@ -13,32 +15,36 @@ var message_list:ScrollContainer = null
 var type:String = ""
 var elevenlabs_api = null
 var chat_screen = null
-const MAX_SIZE:int = 700
+var MAX_SIZE:int = 700
 
 func _ready():
 	options_hbox.hide()
-	self.mouse_entered.connect(func(): options_hbox.show())
-	self.mouse_exited.connect(func(): options_hbox.hide())
-	
-	if(elevenlabs_api != null):
-		play_audio.pressed.connect(play_voice_note)
-	else:
-		play_audio.queue_free()
-	
-	copy_button.pressed.connect(copy_text)
-	delete_button.pressed.connect(delete_message)
 	max_size()
 	
-	var current_time = Time.get_datetime_dict_from_system()
-	var formatted_hour = str(current_time.hour % 12).pad_zeros(2)
-	var formatted_minute = str(current_time.minute).pad_zeros(2)
-	var formatted_period
-	if current_time.hour >= 12:
-		formatted_period = "pm"
-	else:
-		formatted_period = "am"
-	var formatted_time = formatted_hour + ":" + formatted_minute + formatted_period
-	msg_time.text = formatted_time
+	if(!disable_options):
+		
+		self.mouse_entered.connect(func(): options_hbox.show())
+		self.mouse_exited.connect(func(): options_hbox.hide())
+		
+		if(elevenlabs_api != null):
+			play_audio.pressed.connect(play_voice_note)
+		else:
+			play_audio.queue_free()
+		
+		copy_button.pressed.connect(copy_text)
+		delete_button.pressed.connect(delete_message)
+		
+		
+		var current_time = Time.get_datetime_dict_from_system()
+		var formatted_hour = str(current_time.hour % 12).pad_zeros(2)
+		var formatted_minute = str(current_time.minute).pad_zeros(2)
+		var formatted_period
+		if current_time.hour >= 12:
+			formatted_period = "pm"
+		else:
+			formatted_period = "am"
+		var formatted_time = formatted_hour + ":" + formatted_minute + formatted_period
+		msg_time.text = formatted_time
 
 func copy_text():
 	DisplayServer.clipboard_set(msg.text)

@@ -110,6 +110,7 @@ func connect_openai():
 	openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	#print("openai connected")
 	openai.connect("request_success", _on_openai_request_success)
+	openai.connect("request_success_stream", _on_openai_request_success_stream)
 	openai.connect("request_error", _on_openai_request_error)
 	
 	
@@ -137,6 +138,13 @@ func _on_elevenlabs_error(error_code):
 	await get_tree().process_frame
 	loading.texture = bad_status
 
+
+
+func _on_openai_request_success_stream(data):
+	var res_arr:PackedStringArray = data.split("data: ", false)
+	for item in res_arr:
+		var res_json = JSON.parse_string(item.strip_edges())
+		print( res_json.choices[0].delta )
 
 func _on_openai_request_success(data):
 	#print("Request succeeded:", data)
@@ -170,7 +178,7 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box").self_modulate = "1b1b22"
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
-				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
+#				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
 				chat_log.add_child(new_msg)
 			else:
 				is_code = true
@@ -189,7 +197,7 @@ func _on_openai_request_success(data):
 				new_msg.get_node("message_box").chat_screen = self
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
-				new_msg.get_node("message_box").msg_id = chat_memory.size()
+#				new_msg.get_node("message_box").msg_id = chat_memory.size()
 				chat_log.add_child(new_msg)
 	else:
 		voice_message += reply_array[0]
@@ -355,11 +363,12 @@ func send_message(msg:String):
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",
-	"stream": false,
 	"logit_bias": temp_logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
+#	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
+	await get_tree().process_frame
+	openai.make_stream_request("completions", HTTPClient.METHOD_POST, data, 120.0)
 
 
 func clear_chat(set_none:bool = true):
@@ -412,7 +421,7 @@ func regen_message():
 	"stream": false,
 	"logit_bias": logit_bias
 	}
-	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
+	openai.make_request("completions", HTTPClient.METHOD_POST, data, 120.0)
 
 
 func save_new_chat():

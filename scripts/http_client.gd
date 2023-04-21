@@ -7,7 +7,7 @@ func http_req(host:String, page:String)->String:
 	var err = 0
 	var http = HTTPClient.new() # Create the Client.
 
-	err = http.connect_to_host(host, 80) # Connect to host/port.
+	err = http.connect_to_host(host, -1) # Connect to host/port.
 	assert(err == OK) # Make sure connection is OK.
 
 	# Wait until resolved and connected.

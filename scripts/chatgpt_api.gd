@@ -45,7 +45,8 @@ func _on_request_completed(_result, response_code, _headers, body):
 	print(str(http_request.get_http_client_status()))
 	if response_code == 200:
 		if(streaming):
-			emit_signal("request_success_stream", body)
+#			emit_signal("request_success_stream", body)
+			print(body)
 		else:
 			var data = JSON.parse_string(body.get_string_from_utf8())
 			emit_signal("request_success", data)
@@ -68,18 +69,106 @@ func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary,
 	print("[OpenAIAPI] make_request sent")
 
 
-func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary):
+#func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 40.0):
+#	streaming = true
+#	var headers = [
+#	"Content-Type: application/json",
+#	"Authorization: Bearer " + api_key,
+#	"OpenAI-Organization: " + api_org]
+#	var url = api_base_url + endpoint
+#
+#	data.stream = true
+#	print(data)
+#	print( http_request.request(url, headers, method, JSON.stringify(data)) )
+#	print("[OpenAIAPI] make_request_stream sent")
+
+func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 40.0):
 	streaming = true
-	var headers = [
-	"Content-Type: text/event-stream",
-	"Authorization: Bearer " + api_key,
-	"OpenAI-Organization: " + api_org]
-	var url = api_base_url + endpoint
+	
+	var err = 0
+	var http = HTTPClient.new() # Create the Client.
+
+	err = http.connect_to_host("https://api.openai.com", -1) # Connect to host/port.
+	assert(err == OK) # Make sure connection is OK.
+
+	# Wait until resolved and connected.
+	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
+		http.poll()
+		
+		print("[OPENAIAPI] HTTP Connecting...")
+		if not OS.has_feature("web"):
+			OS.delay_msec(50)
+		else:
+			await get_tree().process_frame
+	
+	print( "[OPENAIAPI] HTTP Status: " + str(http.get_status()) )
+	assert(http.get_status() == HTTPClient.STATUS_CONNECTED) # Check if the connection was made successfully.
 	
 	data.stream = true
+	var query_string = http.query_string_from_dict(data)
+	# Some headers
+	var headers = [
+	"Content-Type: application/json",
+	"Authorization: Bearer " + api_key,
+	"OpenAI-Organization: " + api_org]
+	
 	print(data)
-	print( http_request.request(url, headers, method, JSON.stringify(data)) )
-	print("[OpenAIAPI] make_request_stream sent")
+	err = http.request(HTTPClient.METHOD_POST, api_base_url+endpoint, headers, JSON.stringify(data) ) # Request a page from the site (this one was chunked..)
+	assert(err == OK) # Make sure all is OK.
+
+	while http.get_status() == HTTPClient.STATUS_REQUESTING:
+		# Keep polling for as long as the request is being processed.
+		http.poll()
+		print("[OPENAIAPI] HTTP Requesting...")
+		if OS.has_feature("web"):
+			# Synchronous HTTP requests are not supported on the web,
+			# so wait for the next main loop iteration.
+			await get_tree().process_frame
+		else:
+			OS.delay_msec(50)
+
+	assert(http.get_status() == HTTPClient.STATUS_BODY or http.get_status() == HTTPClient.STATUS_CONNECTED) # Make sure request finished well.
+
+#	print("response? ", http.has_response()) # Site might not have a response.
+
+	if http.has_response():
+		# If there is a response...
+
+		headers = http.get_response_headers_as_dictionary() # Get response headers.
+#		print("code: ", http.get_response_code()) # Show response code.
+#		print("**headers:\\n", headers) # Show headers.
+
+		# Getting the HTTP Body
+
+		if http.is_response_chunked():
+			# Does it use chunks?
+			print("Response is Chunked!")
+			
+#			var full_string:String = ""
+#			for chunk in http.read_response_body_chunk():
+#				print(chunk)
+#				full_string = full_string + String.chr( chunk )
+			
+			while http.get_status() == HTTPClient.STATUS_BODY:
+				# While there is body left to be read
+				http.poll()
+				# Get a chunk.
+				var chunk = http.read_response_body_chunk()
+				if chunk.size() == 0:
+					if not OS.has_feature("web"):
+						# Got nothing, wait for buffers to fill a bit.
+						OS.delay_usec(1000)
+					else:
+						await get_tree().process_frame
+				else:
+#					full_string = full_string + String.chr( chunk ) # Append to read buffer.
+					#print(chunk.get_string_from_ascii())
+					emit_signal("request_success_stream", chunk.get_string_from_ascii())
+			# Done!
+		else:
+			# Or just plain Content-Length
+			pass
+
 
 
 signal request_success(data)

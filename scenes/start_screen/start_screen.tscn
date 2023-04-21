@@ -1,10 +1,11 @@
-[gd_scene load_steps=33 format=3 uid="uid://du0h6f2shbkhm"]
+[gd_scene load_steps=34 format=3 uid="uid://du0h6f2shbkhm"]
 
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_fpw51"]
 [ext_resource type="PackedScene" uid="uid://bsf6ioty2h3oi" path="res://scenes/start_screen/mode_button.tscn" id="3_w1g0p"]
 [ext_resource type="PackedScene" uid="uid://d2g744xct1fw0" path="res://scenes/proofreader/proofreader.tscn" id="4_4mch1"]
 [ext_resource type="Texture2D" uid="uid://dsf7ve3veatyt" path="res://images/icons/proofreader_icon.png" id="4_j6jgc"]
+[ext_resource type="Texture2D" uid="uid://ddw8pl65byo7j" path="res://images/logo/quasai_font_white_horizontal_logo.png" id="4_ritl0"]
 [ext_resource type="Texture2D" uid="uid://b5mx77yjf64ic" path="res://images/icons/companion_icon.png" id="5_mf0nk"]
 [ext_resource type="Texture2D" uid="uid://i7lgcofh557v" path="res://images/icons/image_prompter_icon.png" id="6_65mhf"]
 [ext_resource type="PackedScene" uid="uid://buorkji8qndni" path="res://scenes/image_prompter/image_prompter.tscn" id="6_rkqeg"]
@@ -97,7 +98,16 @@ texture = ExtResource("3_fpw51")
 expand_mode = 1
 stretch_mode = 4
 
+[node name="logo" type="TextureRect" parent="mcon/vbox"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("4_ritl0")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Label" type="Label" parent="mcon/vbox"]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "Quasai"
@@ -165,7 +175,6 @@ mode_display_name = "Would You Rather"
 scene = ExtResource("12_rq4hm")
 
 [node name="ai_pretender" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
-visible = false
 layout_mode = 2
 mode_icon = ExtResource("12_dqhkn")
 mode_display_name = "AI Pretender"
@@ -443,9 +452,12 @@ size_flags_vertical = 3
 [node name="credits" type="RichTextLabel" parent="settings_popup/tabs/Credits/vbox"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "Quasai is created by CDcruz using the Godot 4 game engine.
 If you'd like to support the continued development of Quasai, please consider donating to CDcruz via the [url=https://cdcruz.itch.io/chatgpt-client]itch.io page[/url].
+
+[b]Quasai Logo created by:[/b]  Brear Crogan
 
 [b]Other resources:[/b]
 

@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bc1rprbqsorou"]
+[gd_scene load_steps=4 format=3 uid="uid://bc1rprbqsorou"]
 
+[ext_resource type="Script" path="res://scripts/ai_pretender/ai_pretender.gd" id="1_k83rj"]
 [ext_resource type="Script" path="res://scripts/home_button.gd" id="3_2x1pu"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="4_koicy"]
 
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_k83rj")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -38,6 +40,12 @@ text = "A fun mini game similar to 20 Questions where the AI takes on the role o
 vertical_alignment = 1
 autowrap_mode = 3
 
+[node name="new_game_button" type="Button" parent="vbox/hcon"]
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+text = "New Game"
+
 [node name="loading" type="TextureRect" parent="vbox/hcon"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -53,15 +61,30 @@ size_flags_vertical = 3
 [node name="pcon" type="PanelContainer" parent="vbox/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"tertiary_panel"
 
 [node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon"]
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="vbox" type="VBoxContainer" parent="vbox/hbox/pcon/vbox"]
+[node name="pcon" type="PanelContainer" parent="vbox/hbox/pcon/vbox"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="chat_scroll" type="ScrollContainer" parent="vbox/hbox/pcon/vbox/pcon"]
+layout_mode = 2
+
+[node name="message_list" type="VBoxContainer" parent="vbox/hbox/pcon/vbox/pcon/chat_scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"secondary_panel"
+
+[node name="messages_remaining" type="Label" parent="vbox/hbox/pcon/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "20 Messages Left | 3 Guesses Left"
 
 [node name="input_con" type="PanelContainer" parent="vbox/hbox/pcon/vbox"]
 layout_mode = 2
@@ -73,7 +96,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="user_input" type="LineEdit" parent="vbox/hbox/pcon/vbox/input_con/hbox"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -91,12 +114,113 @@ text = "Question"
 layout_mode = 2
 text = "Guess"
 
-[node name="messages_remaining" type="Label" parent="vbox/hbox/pcon/vbox"]
-layout_mode = 2
-text = "20 Messages Left | 3 Guesses Left"
-
 [node name="PanelContainer2" type="PanelContainer" parent="vbox/hbox"]
 visible = false
 self_modulate = Color(0.207843, 0.211765, 0.258824, 1)
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+
+[node name="categories_popup" type="AcceptDialog" parent="."]
+initial_position = 2
+title = "Categories"
+size = Vector2i(416, 249)
+visible = true
+unresizable = true
+dialog_autowrap = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="categories_popup"]
+custom_minimum_size = Vector2(400, 0)
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 408.0
+offset_bottom = 200.0
+
+[node name="Label" type="Label" parent="categories_popup/VBoxContainer"]
+layout_mode = 2
+text = "Select the categories that will be possible persons to guess in the game."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HFlowContainer" type="HFlowContainer" parent="categories_popup/VBoxContainer"]
+layout_mode = 2
+
+[node name="historical_figures" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Historical Figures"
+
+[node name="game_characters" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Game Characters"
+
+[node name="influencers" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Streamers/ Youtubers
+"
+
+[node name="celebrities" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Celebrities"
+
+[node name="cartoon_characters" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Cartoon Characters"
+
+[node name="anime_characters" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Anime Characters"
+
+[node name="musicians" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Musicians"
+
+[node name="artists" type="CheckBox" parent="categories_popup/VBoxContainer/HFlowContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Artists"
+
+[node name="start_popup" type="Window" parent="."]
+initial_position = 2
+size = Vector2i(691, 344)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+unresizable = true
+
+[node name="mcon" type="MarginContainer" parent="start_popup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="vbox" type="VBoxContainer" parent="start_popup/mcon"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="start_popup/mcon/vbox"]
+layout_mode = 2
+text = "Start your game! Select categories if you want to only guess from a specific category."
+autowrap_mode = 3
+
+[node name="categories_button" type="Button" parent="start_popup/mcon/vbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Categories"
+
+[node name="start_button" type="Button" parent="start_popup/mcon/vbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Start"
