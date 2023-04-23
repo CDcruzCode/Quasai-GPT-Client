@@ -4,6 +4,6 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AI.Dev.OpenAI.GPT" Version="1.0.2" />
+    <PackageReference Include="SharpToken" Version="1.0.27" />
   </ItemGroup>
 </Project>

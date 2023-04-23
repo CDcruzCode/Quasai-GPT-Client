@@ -12,6 +12,9 @@ func http_req(host:String, page:String)->String:
 
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
+		if(globals.EXIT_HTTP):
+			globals.EXIT_HTTP = false
+			return "0.0.0"
 		http.poll()
 		print("[HTTPClient] Connecting...")
 		if not OS.has_feature("web"):
@@ -31,6 +34,9 @@ func http_req(host:String, page:String)->String:
 	assert(err == OK) # Make sure all is OK.
 
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
+		if(globals.EXIT_HTTP):
+			globals.EXIT_HTTP = false
+			return "0.0.0"
 		# Keep polling for as long as the request is being processed.
 		http.poll()
 		print("[HTTPClient] Requesting...")
@@ -60,7 +66,7 @@ func http_req(host:String, page:String)->String:
 			pass
 		else:
 			# Or just plain Content-Length
-			var bl = http.get_response_body_length()
+			var _bl = http.get_response_body_length()
 #			print("Response Length: ", bl)
 
 		# This method works for both anyway
@@ -68,6 +74,9 @@ func http_req(host:String, page:String)->String:
 		var rb = PackedByteArray() # Array that will hold the data.
 
 		while http.get_status() == HTTPClient.STATUS_BODY:
+			if(globals.EXIT_HTTP):
+				globals.EXIT_HTTP = false
+				return ""
 			# While there is body left to be read
 			http.poll()
 			# Get a chunk.

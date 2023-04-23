@@ -1,7 +1,8 @@
 extends Node
 
-const VERSION:String = "0.2.2"
+const VERSION:String = "0.2.0"
 var EXIT_THREAD:bool = false
+var EXIT_HTTP:bool = false
 
 var API_KEY:String
 var THEME:String = "Default"
@@ -161,7 +162,6 @@ func parse_voice_message(msg:String) -> String:
 	print("[parse_voice_message] OUTPUT: " + msg)
 	return msg
 
-
 # Define the function
 func number_suffix(num:int) -> String:
 	var lastDigit:int = num % 10
@@ -231,6 +231,15 @@ func parse_api_error(error_code:int, short_err:bool = false):
 var tokenizer_script = preload("res://scripts/tokenizer/tokenizer.cs")
 var token_api = tokenizer_script.new()
 func token_estimate(text:String):
-	var string_encoded:String = token_api.call("token_encoder", text)
+	var model:String
+	match(AI_MODEL):
+		"gpt-3.5-turbo":
+			model = "gpt-3"
+		"gpt-4", "gpt-4-32k":
+			model = "gpt-4"
+		_:
+			model = "gpt-3"
+	
+	var string_encoded:String = token_api.call("token_encoder", text, model)
 	var string_split:PackedStringArray = string_encoded.split(",")
 	return string_split.size()

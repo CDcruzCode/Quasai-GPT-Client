@@ -140,11 +140,107 @@ func _on_elevenlabs_error(error_code):
 
 
 
+var response_msg:String = ""
+var response_box:MarginContainer
 func _on_openai_request_success_stream(data):
+	print("START CHUNK PARSE")
+	print(data)
 	var res_arr:PackedStringArray = data.split("data: ", false)
 	for item in res_arr:
 		var res_json = JSON.parse_string(item.strip_edges())
-		print( res_json.choices[0].delta )
+		if(res_json == null):
+			print(item)
+			if(item.strip_edges() == "[DONE]"):
+				await get_tree().process_frame
+				parse_streamed_message()
+				print("FINISH")
+				return
+		
+		if(res_json.has("choices") && res_json.choices[0].has("delta")):
+			if(res_json.choices[0].delta.has("role")):
+				#Role stated, this means its the start of the AI response
+				response_msg = ""
+#				print("Role is: "+str(res_json.choices[0].delta.role))
+				response_box = message_box.instantiate()
+				response_box.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				response_box.get_node("message_box/vbox/msg").text = response_msg
+				response_box.get_node("message_box").message_list = chat_scroll
+				response_box.get_node("message_box").theme_type_variation = StringName("bot_bubble")
+				response_box.get_node("message_box").elevenlabs_api = elevenlabs
+				response_box.get_node("message_box").chat_screen = self
+				response_box.get_node("message_box").type = "bot"
+#				response_box.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+#				response_box.get_node("message_box").msg_id = chat_memory.size()
+				chat_log.add_child(response_box)
+				continue
+			
+			if(res_json.choices[0].delta.has("content")):
+#				print("Content: "+str(res_json.choices[0].delta.content))
+				await get_tree().process_frame
+				response_msg += str(res_json.choices[0].delta.content)
+				var current_text:String = globals.replace_with_bbcode(response_msg.strip_edges(), "`", "inlinecode")
+				current_text = globals.replace_with_bbcode(current_text.strip_edges(), "*","b")
+				response_box.get_node("message_box/vbox/msg").text = current_text
+				response_box.get_node("message_box").max_size()
+				continue
+	
+	print("END")
+
+func parse_streamed_message():
+	print(response_msg)
+	
+	response_msg = response_msg.replace("&amp;", "&")
+	response_msg = globals.remove_after_phrase(response_msg, "<USER>").strip_edges()
+	chat_memory.append(response_msg)
+	
+	var voice_message:String = ""
+	var reply_array:PackedStringArray = response_msg.split("```")
+	
+	if(reply_array.size() > 1):
+		response_box.queue_free()
+		
+		var is_code:bool = false
+		if(response_msg.strip_edges().begins_with("```")):
+			is_code = true
+		for line in reply_array:
+			if(is_code):
+				is_code = false
+				var new_msg:MarginContainer = code_message.instantiate()
+				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
+				new_msg.get_node("message_box").message_list = chat_scroll
+				new_msg.get_node("message_box").self_modulate = "1b1b22"
+				new_msg.get_node("message_box").type = "bot"
+#				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+#				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
+				chat_log.add_child(new_msg)
+			else:
+				is_code = true
+				voice_message += line.strip_edges()
+				
+				var current_text:String = globals.replace_with_bbcode(line.strip_edges(), "`", "inlinecode")
+				current_text = globals.replace_with_bbcode(current_text.strip_edges(), "**","b")
+				
+				var new_msg:MarginContainer = message_box.instantiate()
+				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+				new_msg.get_node("message_box/vbox/msg").text = current_text
+				new_msg.get_node("message_box").message_list = chat_scroll
+#				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
+				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
+				new_msg.get_node("message_box").chat_screen = self
+				new_msg.get_node("message_box").type = "bot"
+#				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
+#				new_msg.get_node("message_box").msg_id = chat_memory.size()
+				chat_log.add_child(new_msg)
+	
+	
+	
+	bot_thinking = false
+	regen_button.disabled = false
+	send_button.disabled = false
+	loading.texture = good_status
+
 
 func _on_openai_request_success(data):
 	#print("Request succeeded:", data)
@@ -225,6 +321,7 @@ func _on_openai_request_success(data):
 		elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)
 	else:
 		bot_thinking = false
+		regen_button.disabled = false
 		send_button.disabled = false
 		await get_tree().process_frame
 		loading.texture = good_status
@@ -272,11 +369,15 @@ func save_config():
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
 	bot_thinking = false
+	regen_button.disabled = false
 	send_button.disabled = false
+	
 	var new_msg:MarginContainer = message_box.instantiate()
 	new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
-#	new_msg.get_node("message_box").self_modulate = Color.DARK_RED
+	if(typeof(error_code) == TYPE_INT):
+		new_msg.get_node("message_box/vbox/msg").text = globals.parse_api_error(error_code)
+	else:
+		new_msg.get_node("message_box/vbox/msg").text = "Request failed with unknown error: " + str(error_code)
 	new_msg.get_node("message_box").theme_type_variation = StringName("error_bubble")
 	chat_log.add_child(new_msg)
 	loading.texture = bad_status
@@ -304,6 +405,8 @@ func user_gui(event:InputEvent):
 			user_input.text = ""
 
 
+var send_msg_thread:Thread = Thread.new()
+
 func send_message(msg:String):
 	if(globals.API_KEY == "" || globals.API_KEY == null):
 		var new_msg:MarginContainer = message_box.instantiate()
@@ -316,8 +419,22 @@ func send_message(msg:String):
 	if(msg.strip_escapes().is_empty()):
 		return
 	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		print("WAITING TO FINISH")
+		var err = send_msg_thread.wait_to_finish()
+		print(err)
+	
+	
 	bot_thinking = true
+	regen_button.disabled = true
 	send_button.disabled = true
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		print("WAITING TO FINISH")
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+		print("WAIT_THREAD finished")
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	print("USER MSG: "+msg)
@@ -367,8 +484,9 @@ func send_message(msg:String):
 	}
 	
 #	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
-	await get_tree().process_frame
-	openai.make_stream_request("completions", HTTPClient.METHOD_POST, data, 120.0)
+	
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data, 10.0))
 
 
 func clear_chat(set_none:bool = true):
@@ -383,9 +501,12 @@ func regen_message():
 	
 	bot_thinking = true
 	send_button.disabled = true
-	if(wait_thread.is_alive()):
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		print("WAITING TO FINISH")
 		globals.EXIT_THREAD = true
-	await get_tree().process_frame
+		var _err = wait_thread.wait_to_finish()
+		print("WAIT_THREAD finished")
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	
@@ -505,12 +626,13 @@ func load_saved_chat(id:int):
 
 func wait_blink():
 	while bot_thinking && !globals.EXIT_THREAD:
+		print("blink")
 		loading.texture = wait_status
 		await globals.delay(0.5)
 		if(!bot_thinking || globals.EXIT_THREAD):
-			print("EXIT")
+			print("[WAIT BLINK] EXIT")
 			globals.EXIT_THREAD = false
-			return
+			return OK
 		loading.texture = nil_status
 		await globals.delay(0.5)
 

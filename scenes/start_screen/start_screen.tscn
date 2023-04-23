@@ -106,14 +106,6 @@ texture = ExtResource("4_ritl0")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="mcon/vbox"]
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Quasai"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Label3" type="Label" parent="mcon/vbox"]
 layout_mode = 2
 text = "Select the mode you would like to use."
@@ -461,7 +453,7 @@ If you'd like to support the continued development of Quasai, please consider do
 
 [b]Other resources:[/b]
 
-GPT 3 Tokenizer - [url]https://github.com/dluc/openai-tools[/url] - CC0 1.0 Universal License
+SharpToken - [url]https://github.com/dmitry-brazhenko/SharpToken[\\url] - MIT License
 
 [b]Fonts:[/b]
 

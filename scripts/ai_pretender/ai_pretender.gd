@@ -28,6 +28,9 @@ var bot_thinking:bool = false
 @onready var celebrities = $categories_popup/VBoxContainer/HFlowContainer/celebrities
 @onready var cartoon_characters = $categories_popup/VBoxContainer/HFlowContainer/cartoon_characters
 @onready var anime_characters = $categories_popup/VBoxContainer/HFlowContainer/anime_characters
+@onready var musicians = $categories_popup/VBoxContainer/HFlowContainer/musicians
+@onready var artists = $categories_popup/VBoxContainer/HFlowContainer/artists
+@onready var movie_characters = $categories_popup/VBoxContainer/HFlowContainer/movie_characters
 
 
 @onready var loading = $vbox/hcon/loading
@@ -140,6 +143,12 @@ func reload_guessing_list():
 		guessing_list.append_array(globals.load_file_as_string("res://scripts/ai_pretender/guess_lists/cartoon_characters.txt").replace("\r", "").split("\n", false))
 	if(anime_characters.button_pressed):
 		guessing_list.append_array(globals.load_file_as_string("res://scripts/ai_pretender/guess_lists/anime_characters.txt").replace("\r", "").split("\n", false))
+	if(musicians.button_pressed):
+		guessing_list.append_array(globals.load_file_as_string("res://scripts/ai_pretender/guess_lists/movie_characters.txt").replace("\r", "").split("\n", false))
+	if(artists.button_pressed):
+		guessing_list.append_array(globals.load_file_as_string("res://scripts/ai_pretender/guess_lists/movie_characters.txt").replace("\r", "").split("\n", false))
+	if(movie_characters.button_pressed):
+		guessing_list.append_array(globals.load_file_as_string("res://scripts/ai_pretender/guess_lists/movie_characters.txt").replace("\r", "").split("\n", false))
 
 
 
@@ -163,6 +172,11 @@ func ask_question():
 	bot_thinking = true
 	question_button.disabled = true
 	guess_button.disabled = true
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	
@@ -347,10 +361,12 @@ func _on_openai_request_error(error_code):
 
 var wait_thread:Thread = Thread.new()
 func wait_blink():
-	while bot_thinking:
+	while bot_thinking && !globals.EXIT_THREAD:
 		loading.texture = wait_status
 		await globals.delay(0.5)
-		if(!bot_thinking):
-			return
+		if(!bot_thinking || globals.EXIT_THREAD):
+			print("[WAIT BLINK] EXIT")
+			globals.EXIT_THREAD = false
+			return OK
 		loading.texture = nil_status
 		await globals.delay(0.5)

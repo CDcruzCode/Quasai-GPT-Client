@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b84oneyvuv34i"]
+[gd_scene load_steps=6 format=3 uid="uid://b84oneyvuv34i"]
 
 [ext_resource type="Theme" uid="uid://dkyf5bs8xjqoj" path="res://themes/main_themes/Default.tres" id="1_n4kjk"]
 [ext_resource type="Script" path="res://scripts/api_walkthrough/introduction_screen.gd" id="2_1vocu"]
 [ext_resource type="Script" path="res://scripts/api_walkthrough/api_link.gd" id="2_kjcaw"]
 [ext_resource type="Texture2D" uid="uid://d4ddqufrhkvit" path="res://images/api_key_screen.png" id="3_16r40"]
+[ext_resource type="Texture2D" uid="uid://ddw8pl65byo7j" path="res://images/logo/quasai_font_white_horizontal_logo.png" id="3_qhijo"]
 
 [node name="introduction_screen" type="PanelContainer"]
 anchors_preset = 15
@@ -25,12 +26,13 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="mcon/vcon"]
+[node name="logo" type="TextureRect" parent="mcon/vcon"]
+custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Quasai"
-horizontal_alignment = 1
-vertical_alignment = 1
+size_flags_horizontal = 4
+texture = ExtResource("3_qhijo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label3" type="RichTextLabel" parent="mcon/vcon"]
 layout_mode = 2

@@ -46,7 +46,7 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
-text = "Credit to Github user dluc for this GPT3 Tokenizer written in C#."
+text = "Credit to Github user dimtry-brazhenko for this GPT Tokenizer written in C#."
 flat = true
 script = ExtResource("4_p0bbp")
 

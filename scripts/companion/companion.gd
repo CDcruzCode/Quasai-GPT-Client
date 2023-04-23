@@ -131,15 +131,12 @@ func _on_openai_request_success(data):
 	
 	await get_tree().process_frame
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value
-	if(wait_thread.is_started()):
-		wait_thread.wait_to_finish()
 	bot_thinking =false
 	loading.texture = good_status
 	
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
-	wait_thread.wait_to_finish()
 	bot_thinking =false
 	loading.texture = bad_status
 	await get_tree().process_frame
@@ -179,6 +176,9 @@ func user_gui(event:InputEvent):
 
 func send_message(msg:String, system_msg:MSG_TYPE = MSG_TYPE.USER):
 	bot_thinking = true
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		var err = wait_thread.wait_to_finish()
+	
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
 	

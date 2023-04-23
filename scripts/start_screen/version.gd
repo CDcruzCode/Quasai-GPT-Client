@@ -8,14 +8,15 @@ var notice_popup:PackedScene = preload("res://scenes/components/notice_popup.tsc
 func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
 		# destructor logic
-#		thread.wait_to_finish()
+		globals.EXIT_HTTP = true
+		var _err = thread.wait_to_finish()
+		globals.EXIT_HTTP = false
 		pass
 
 func _ready():
 	self.text = "Version "+globals.VERSION
 	await get_tree().process_frame
 	thread.start(get_new_version)
-	
 
 func get_new_version():
 	var ver_arr:Array = globals.VERSION.split(".")

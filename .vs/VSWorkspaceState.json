@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\scripts",
+    "\\scripts\\tokenizer"
   ],
+  "SelectedNode": "\\scripts",
   "PreviewInSolutionExplorer": false
 }

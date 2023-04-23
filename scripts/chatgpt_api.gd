@@ -44,10 +44,13 @@ func _on_request_completed(_result, response_code, _headers, body):
 	print("[OpenAIAPI] Request completed.")
 	print(str(http_request.get_http_client_status()))
 	if response_code == 200:
-		if(streaming):
-#			emit_signal("request_success_stream", body)
-			print(body)
-		else:
+#		if(streaming):
+##			emit_signal("request_success_stream", body)
+#			print(body)
+#		else:
+#			var data = JSON.parse_string(body.get_string_from_utf8())
+#			emit_signal("request_success", data)
+		if(!streaming):
 			var data = JSON.parse_string(body.get_string_from_utf8())
 			emit_signal("request_success", data)
 	else:
@@ -82,15 +85,20 @@ func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary,
 #	print( http_request.request(url, headers, method, JSON.stringify(data)) )
 #	print("[OpenAIAPI] make_request_stream sent")
 
-func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 40.0):
+
+
+#We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please send an email to support@openai.com and include any relevant code you'd like help with.)
+
+func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 10.0):
 	streaming = true
+	http_request.timeout = timeout
 	
 	var err = 0
 	var http = HTTPClient.new() # Create the Client.
-
+	
 	err = http.connect_to_host("https://api.openai.com", -1) # Connect to host/port.
 	assert(err == OK) # Make sure connection is OK.
-
+	
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		http.poll()
@@ -105,17 +113,17 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	assert(http.get_status() == HTTPClient.STATUS_CONNECTED) # Check if the connection was made successfully.
 	
 	data.stream = true
-	var query_string = http.query_string_from_dict(data)
 	# Some headers
 	var headers = [
 	"Content-Type: application/json",
 	"Authorization: Bearer " + api_key,
 	"OpenAI-Organization: " + api_org]
 	
-	print(data)
-	err = http.request(HTTPClient.METHOD_POST, api_base_url+endpoint, headers, JSON.stringify(data) ) # Request a page from the site (this one was chunked..)
+	print(JSON.stringify(data))
+	
+	err = http.request(method, api_base_url+endpoint, headers, JSON.stringify(data) ) # Request a page from the site (this one was chunked..)
 	assert(err == OK) # Make sure all is OK.
-
+	
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
 		# Keep polling for as long as the request is being processed.
 		http.poll()
@@ -126,28 +134,23 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 			await get_tree().process_frame
 		else:
 			OS.delay_msec(50)
-
+	
 	assert(http.get_status() == HTTPClient.STATUS_BODY or http.get_status() == HTTPClient.STATUS_CONNECTED) # Make sure request finished well.
-
+	
 #	print("response? ", http.has_response()) # Site might not have a response.
-
+	
 	if http.has_response():
 		# If there is a response...
-
+		
 		headers = http.get_response_headers_as_dictionary() # Get response headers.
-#		print("code: ", http.get_response_code()) # Show response code.
-#		print("**headers:\\n", headers) # Show headers.
-
+		print("code: ", http.get_response_code()) # Show response code.
+		print("**headers:\\n", headers) # Show headers.
+	
 		# Getting the HTTP Body
-
+		print(http.is_response_chunked())
 		if http.is_response_chunked():
-			# Does it use chunks?
-			print("Response is Chunked!")
-			
-#			var full_string:String = ""
-#			for chunk in http.read_response_body_chunk():
-#				print(chunk)
-#				full_string = full_string + String.chr( chunk )
+				# Does it use chunks?
+			print("[OPENAIAPI] Response is Chunked!")
 			
 			while http.get_status() == HTTPClient.STATUS_BODY:
 				# While there is body left to be read
@@ -161,14 +164,33 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 					else:
 						await get_tree().process_frame
 				else:
-#					full_string = full_string + String.chr( chunk ) # Append to read buffer.
-					#print(chunk.get_string_from_ascii())
-					emit_signal("request_success_stream", chunk.get_string_from_ascii())
-			# Done!
+					print(chunk.get_string_from_utf8())
+					emit_signal("request_success_stream", chunk.get_string_from_utf8())
 		else:
-			# Or just plain Content-Length
-			pass
-
+			var rb = PackedByteArray() # Array that will hold the data.
+			
+			while http.get_status() == HTTPClient.STATUS_BODY:
+				if(globals.EXIT_HTTP):
+					globals.EXIT_HTTP = false
+					return ""
+				# While there is body left to be read
+				http.poll()
+				# Get a chunk.
+				var chunk = http.read_response_body_chunk()
+				if chunk.size() == 0:
+					if not OS.has_feature("web"):
+						# Got nothing, wait for buffers to fill a bit.
+						OS.delay_usec(1000)
+					else:
+						await get_tree().process_frame
+				else:
+					rb = rb + chunk # Append to read buffer.
+				
+			var res = JSON.parse_string(rb.get_string_from_ascii())
+			emit_signal("request_error", res)
+		# Done!
+	print("DONE HTTP")
+	return OK
 
 
 signal request_success(data)

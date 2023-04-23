@@ -27,7 +27,6 @@ func _ready():
 	#print( token_api.call("text", "January 1st, 2000") )
 	tokenizer_version_options.add_item("GPT-3 and older")
 	tokenizer_version_options.add_item("GPT-3.5 and GPT-4")
-	tokenizer_version_options.set_item_disabled(1, true)
 
 func copy_output():
 	if(array_display.text.strip_edges().strip_escapes().is_empty()):
@@ -51,9 +50,11 @@ func tokenize_string():
 		var string_encoded:String
 		match tokenizer_version_options.get_item_text(tokenizer_version_options.selected):
 			"GPT-3 and older":
-				string_encoded = token_api.call("token_encoder", current_txt)
+				string_encoded = token_api.call("token_encoder", current_txt, "gpt-3")
+			"GPT-3.5 and GPT-4":
+				string_encoded = token_api.call("token_encoder", current_txt, "gpt-4")
 			_:
-				string_encoded = token_api.call("token_encoder", current_txt)
+				string_encoded = token_api.call("token_encoder", current_txt, "gpt-3")
 		
 		
 		var string_split:PackedStringArray = string_encoded.split(",")
