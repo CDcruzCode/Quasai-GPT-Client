@@ -99,7 +99,7 @@ func connect_openai():
 	
 	continue_button.disabled = true
 	await get_tree().process_frame
-	openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", api_key_input.text.strip_edges())
+	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", api_key_input.text.strip_edges())
 	openai.request_success.connect(save_config)
 	openai.request_error.connect(req_err)
 	

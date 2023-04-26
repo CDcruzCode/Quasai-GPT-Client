@@ -14,10 +14,11 @@ config/name="Quasai"
 run/main_scene="res://scenes/api_walkthrough.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="quasai"
-config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
 config/auto_accept_quit=false
 config/quit_on_go_back=false
+config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
+config/icon="res://images/logo/icon_256.png"
+config/windows_native_icon="res://images/logo/icon.ico"
 
 [autoload]
 
@@ -26,8 +27,8 @@ httprequest="*res://scripts/http_client.gd"
 
 [display]
 
-window/dpi/allow_hidpi=false
 window/stretch/aspect="expand"
+window/dpi/allow_hidpi=false
 
 [dotnet]
 

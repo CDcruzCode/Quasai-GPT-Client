@@ -102,7 +102,7 @@ func connect_openai():
 			openai.queue_free()
 			openai = null
 		await get_tree().process_frame
-		openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
+		openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 		openai.request_success.connect(_on_openai_request_success)
 		openai.request_error.connect(_on_openai_request_error)
 		

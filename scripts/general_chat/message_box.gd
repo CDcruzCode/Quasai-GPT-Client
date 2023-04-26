@@ -66,7 +66,7 @@ func max_size() -> void:
 	
 	if(message_list):
 		await get_tree().process_frame
-		message_list.scroll_vertical = message_list.get_v_scroll_bar().max_value
+		message_list.scroll_vertical = message_list.get_v_scroll_bar().max_value as int
 
 
 func play_voice_note():

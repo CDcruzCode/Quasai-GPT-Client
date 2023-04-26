@@ -1,4 +1,3 @@
-using AI.Dev.OpenAI.GPT;
 using Godot;
 using System.Collections.Generic;
 using SharpToken;

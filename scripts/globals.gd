@@ -156,9 +156,12 @@ var parse_voice_list:Array = [
 	["*", ""]
 ]
 func parse_voice_message(msg:String) -> String:
+	msg = remove_regex(msg, "<.*?>") #Removes any words surrounded by angle brackets <like this> from the voice message.
+	
 	for p in parse_voice_list:
 		msg = msg.replace(p[0], p[1])
 	
+	msg = msg.to_ascii_buffer().get_string_from_ascii() #Using this to remove emoji's from message.
 	print("[parse_voice_message] OUTPUT: " + msg)
 	return msg
 
@@ -230,7 +233,7 @@ func parse_api_error(error_code:int, short_err:bool = false):
 
 var tokenizer_script = preload("res://scripts/tokenizer/tokenizer.cs")
 var token_api = tokenizer_script.new()
-func token_estimate(text:String):
+func token_estimate(text:String) -> int:
 	var model:String
 	match(AI_MODEL):
 		"gpt-3.5-turbo":
@@ -243,3 +246,14 @@ func token_estimate(text:String):
 	var string_encoded:String = token_api.call("token_encoder", text, model)
 	var string_split:PackedStringArray = string_encoded.split(",")
 	return string_split.size()
+
+func max_model_tokens() -> int:
+	match(AI_MODEL):
+		"gpt-3.5-turbo":
+			return 4096
+		"gpt-4":
+			return 8192
+		"gpt-4-32k":
+			return 32768
+		_:
+			return 4096

@@ -87,11 +87,11 @@ func _ready():
 
 func connect_openai():
 	await get_tree().process_frame
-	openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
+	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	openai.connect("request_success", _on_openai_request_success)
 	openai.connect("request_error", _on_openai_request_error)
 	
-	openai_item = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_MEAL_ITEM")
+	openai_item = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_MEAL_ITEM")
 	openai_item.connect("request_success", _item_request_success)
 	openai_item.connect("request_error", _item_request_error)
 

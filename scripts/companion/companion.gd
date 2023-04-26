@@ -69,15 +69,15 @@ func _ready():
 
 func connect_openai():
 	await get_tree().process_frame
-	openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
+	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	openai.connect("request_success", _on_openai_request_success)
 	openai.connect("request_error", _on_openai_request_error)
 	
-	openai_user_thread = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_USER_THREAD")
+	openai_user_thread = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_USER_THREAD")
 	openai_user_thread.connect("request_success", _openai_user_thread_success)
 	openai_user_thread.connect("request_error", _openai_user_thread_error)
 	
-	openai_bot_thread = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_BOT_THREAD")
+	openai_bot_thread = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY, "", "HTTP_BOT_THREAD")
 	openai_bot_thread.connect("request_success", _openai_bot_thread_success)
 	openai_bot_thread.connect("request_error", _openai_bot_thread_error)
 
@@ -177,7 +177,7 @@ func user_gui(event:InputEvent):
 func send_message(msg:String, system_msg:MSG_TYPE = MSG_TYPE.USER):
 	bot_thinking = true
 	if(wait_thread.is_started() || wait_thread.is_alive()):
-		var err = wait_thread.wait_to_finish()
+		var _err = wait_thread.wait_to_finish()
 	
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
@@ -318,10 +318,10 @@ func get_personality(personality:String):
 			return
 
 func delete_ai_personality():
-	await globals.delete_file("user://companion/chatlog.json")
-	await globals.delete_file("user://companion/user_notes.txt")
-	await globals.delete_file("user://companion/bot_notes.txt")
-	if( await globals.delete_file("user://companion/basic_info.json") ):
+	globals.delete_file("user://companion/chatlog.json")
+	globals.delete_file("user://companion/user_notes.txt")
+	globals.delete_file("user://companion/bot_notes.txt")
+	if( globals.delete_file("user://companion/basic_info.json") ):
 		get_tree().change_scene_to_file("res://scenes/companion/companion_start.tscn")
 	else:
 		printerr("Could not delete file.")

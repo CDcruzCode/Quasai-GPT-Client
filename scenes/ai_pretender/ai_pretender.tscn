@@ -124,7 +124,6 @@ layout_mode = 2
 initial_position = 2
 title = "Categories"
 size = Vector2i(416, 249)
-visible = true
 unresizable = true
 dialog_autowrap = true
 
@@ -196,7 +195,6 @@ size = Vector2i(691, 344)
 visible = false
 wrap_controls = true
 transient = true
-exclusive = true
 unresizable = true
 
 [node name="mcon" type="MarginContainer" parent="start_popup"]

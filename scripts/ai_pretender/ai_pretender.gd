@@ -57,6 +57,9 @@ var logit_bias:Dictionary = {
 }
 
 func _ready():
+	start_popup.hide()
+	categories_popup.hide()
+	
 	start_popup.popup_centered(Vector2i(300, 200) )
 	
 	question_button.disabled = true
@@ -68,7 +71,7 @@ func _ready():
 	bot_thinking = true
 	loading.texture = wait_status
 	
-	categories_popup.hide()
+	
 	categories_button.pressed.connect(func(): categories_popup.popup_centered(Vector2i(400,200)) )
 	
 	start_button.pressed.connect(start_game)
@@ -91,6 +94,7 @@ func new_game():
 		start_popup.popup_centered(Vector2i(300, 200))
 
 func start_game():
+	categories_popup.hide()
 	chat_memory.clear()
 	globals.delete_all_children(message_list)
 	
@@ -120,11 +124,11 @@ func start_game():
 
 func connect_openai():
 	await get_tree().process_frame
-	openai = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
+	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	openai.connect("request_success", _on_openai_request_success)
 	openai.connect("request_error", _on_openai_request_error)
 	
-	openai_guess = await OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
+	openai_guess = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	openai_guess.connect("request_success", _on_guess_return)
 	openai_guess.connect("request_error", _on_openai_request_error)
 

@@ -91,7 +91,7 @@ func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary,
 
 func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 10.0):
 	streaming = true
-	http_request.timeout = timeout
+	var timeout_count:float = 0.0
 	
 	var err = 0
 	var http = HTTPClient.new() # Create the Client.
@@ -102,14 +102,22 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		http.poll()
+		timeout_count += 0.05
+		if(timeout_count >= timeout):
+			emit_signal("request_error", 0) #Request timeout
+			return ERR_CANT_CONNECT
 		
 		print("[OPENAIAPI] HTTP Connecting...")
 		if not OS.has_feature("web"):
 			OS.delay_msec(50)
 		else:
-			await get_tree().process_frame
+			await tree.process_frame
 	
+	timeout_count = 0
 	print( "[OPENAIAPI] HTTP Status: " + str(http.get_status()) )
+	if(http.get_status() == HTTPClient.STATUS_CANT_RESOLVE):
+		emit_signal("request_error", 0) #Request can't connect
+		return ERR_CANT_CONNECT
 	assert(http.get_status() == HTTPClient.STATUS_CONNECTED) # Check if the connection was made successfully.
 	
 	data.stream = true
@@ -119,19 +127,24 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	"Authorization: Bearer " + api_key,
 	"OpenAI-Organization: " + api_org]
 	
-	print(JSON.stringify(data))
+	var data_string:String = JSON.stringify(data).replace("\r","").to_utf8_buffer().get_string_from_utf8()
+	print(data_string)
 	
-	err = http.request(method, api_base_url+endpoint, headers, JSON.stringify(data) ) # Request a page from the site (this one was chunked..)
+	err = http.request(method, api_base_url+endpoint, headers, data_string ) # Request a page from the site (this one was chunked..)
 	assert(err == OK) # Make sure all is OK.
 	
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
 		# Keep polling for as long as the request is being processed.
 		http.poll()
+		timeout_count += 0.05
+		if(timeout_count >= timeout):
+			emit_signal("request_error", 0) #Request timeout
+			return ERR_CANT_CONNECT
 		print("[OPENAIAPI] HTTP Requesting...")
 		if OS.has_feature("web"):
 			# Synchronous HTTP requests are not supported on the web,
 			# so wait for the next main loop iteration.
-			await get_tree().process_frame
+			await tree.process_frame
 		else:
 			OS.delay_msec(50)
 	
@@ -142,36 +155,20 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	if http.has_response():
 		# If there is a response...
 		
-		headers = http.get_response_headers_as_dictionary() # Get response headers.
-		print("code: ", http.get_response_code()) # Show response code.
-		print("**headers:\\n", headers) # Show headers.
+#		headers = http.get_response_headers_as_dictionary() # Get response headers.
+#		print("code: ", http.get_response_code()) # Show response code.
+#		print("**headers:\\n", headers) # Show headers.
 	
 		# Getting the HTTP Body
-		print(http.is_response_chunked())
 		if http.is_response_chunked():
 				# Does it use chunks?
 			print("[OPENAIAPI] Response is Chunked!")
 			
 			while http.get_status() == HTTPClient.STATUS_BODY:
-				# While there is body left to be read
-				http.poll()
-				# Get a chunk.
-				var chunk = http.read_response_body_chunk()
-				if chunk.size() == 0:
-					if not OS.has_feature("web"):
-						# Got nothing, wait for buffers to fill a bit.
-						OS.delay_usec(1000)
-					else:
-						await get_tree().process_frame
-				else:
-					print(chunk.get_string_from_utf8())
-					emit_signal("request_success_stream", chunk.get_string_from_utf8())
-		else:
-			var rb = PackedByteArray() # Array that will hold the data.
-			
-			while http.get_status() == HTTPClient.STATUS_BODY:
 				if(globals.EXIT_HTTP):
 					globals.EXIT_HTTP = false
+					http.close()
+					print("[OPENAIAPI] STOPPING API")
 					return ""
 				# While there is body left to be read
 				http.poll()
@@ -182,7 +179,28 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 						# Got nothing, wait for buffers to fill a bit.
 						OS.delay_usec(1000)
 					else:
-						await get_tree().process_frame
+						await tree.process_frame
+				else:
+					emit_signal("request_success_stream", chunk.get_string_from_utf8())
+		else:
+			var rb = PackedByteArray() # Array that will hold the data.
+			
+			while http.get_status() == HTTPClient.STATUS_BODY:
+				if(globals.EXIT_HTTP):
+					globals.EXIT_HTTP = false
+					http.close()
+					print("[OPENAIAPI] STOPPING API")
+					return ""
+				# While there is body left to be read
+				http.poll()
+				# Get a chunk.
+				var chunk = http.read_response_body_chunk()
+				if chunk.size() == 0:
+					if not OS.has_feature("web"):
+						# Got nothing, wait for buffers to fill a bit.
+						OS.delay_usec(1000)
+					else:
+						await tree.process_frame
 				else:
 					rb = rb + chunk # Append to read buffer.
 				

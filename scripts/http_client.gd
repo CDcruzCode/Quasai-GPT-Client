@@ -14,7 +14,7 @@ func http_req(host:String, page:String)->String:
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		if(globals.EXIT_HTTP):
 			globals.EXIT_HTTP = false
-			return "0.0.0"
+			return ""
 		http.poll()
 		print("[HTTPClient] Connecting...")
 		if not OS.has_feature("web"):
@@ -36,7 +36,7 @@ func http_req(host:String, page:String)->String:
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
 		if(globals.EXIT_HTTP):
 			globals.EXIT_HTTP = false
-			return "0.0.0"
+			return ""
 		# Keep polling for as long as the request is being processed.
 		http.poll()
 		print("[HTTPClient] Requesting...")
@@ -75,8 +75,10 @@ func http_req(host:String, page:String)->String:
 
 		while http.get_status() == HTTPClient.STATUS_BODY:
 			if(globals.EXIT_HTTP):
-				globals.EXIT_HTTP = false
-				return ""
+					globals.EXIT_HTTP = false
+					http.close()
+					print("[HTTPCLIENT] STOPPING REQUEST")
+					return ""
 			# While there is body left to be read
 			http.poll()
 			# Get a chunk.

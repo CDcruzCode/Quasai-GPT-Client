@@ -9,6 +9,11 @@ var msg_color:Color = Color.LIME_GREEN
 
 var tween:Tween
 
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		# destructor logic
+		tween.kill()
+
 func _ready():
 	tween = get_tree().create_tween()
 	tween.tween_property(self, "modulate", Color(1,1,1,0), 3).set_trans(Tween.TRANS_QUAD)
