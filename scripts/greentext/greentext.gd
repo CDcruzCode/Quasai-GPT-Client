@@ -32,6 +32,20 @@ var logit_bias:Dictionary = {
 	10167: -80, #istant
 }
 
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		# destructor logic
+		globals.EXIT_THREAD = true
+		globals.EXIT_HTTP = true
+		if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+			var _err = send_msg_thread.wait_to_finish()
+		
+		if(wait_thread.is_started() || wait_thread.is_alive()):
+			var _err = wait_thread.wait_to_finish()
+		globals.EXIT_THREAD = false
+		globals.EXIT_HTTP = false
+
+
 func _ready():
 	self.tree_exiting.connect(func(): openai.queue_free())
 	bot_thinking = true
@@ -67,16 +81,30 @@ func copy_output():
 func connect_openai():
 	await get_tree().process_frame
 	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
-	openai.connect("request_success", _on_openai_request_success)
+	openai.connect("request_success_stream", _on_openai_request_success_stream)
 	openai.connect("request_error", _on_openai_request_error)
 
 
+var send_msg_thread:Thread = Thread.new()
 func generate_greentext():
 	if(bot_thinking || user_input.text.strip_edges().is_empty()):
 		return
 	
 	bot_thinking = true
-	wait_blink()
+	generate_button.disabled = true
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		print("WAITING TO FINISH")
+		var _err = send_msg_thread.wait_to_finish()
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		print("WAITING TO FINISH")
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
+	wait_thread = Thread.new()
+	wait_thread.start(wait_blink)
+	
 	text_display.text = "Awaiting response..."
 	text_display_2.text = ""
 	image_file_label.text = ""
@@ -93,11 +121,12 @@ func generate_greentext():
 	"temperature": 1.1,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"stream": false,
 	"logit_bias": logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+#	openai.make_stream_request("completions", HTTPClient.METHOD_POST, data)
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data, 10.0))
 	
 	greentext_image.hide()
 	greentext_image.texture = null
@@ -106,25 +135,84 @@ func generate_greentext():
 	image_request.request("https://api.imgflip.com/get_memes", headers, HTTPClient.METHOD_GET)
 
 
-func _on_openai_request_success(data):
-	print(data)
-	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
-	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+
+var response_msg:String = ""
+var has_split:bool = false
+func _on_openai_request_success_stream(data):
+	#print("START CHUNK PARSE")
+	var res_arr:PackedStringArray = data.split("data: ", false)
+	var json_parse:JSON = JSON.new()
 	
-	var split = split_text(data.choices[0].message.content.replace("\n\n", "\n"))
-	text_display.text = split[0]
-	text_display_2.text = split[1]
+	for item in res_arr:
+#		var res_json = JSON.parse_string(item.strip_edges())
+		var json_err = json_parse.parse(item.strip_edges())
+#		print(json_err)
+		var res_json = json_parse.data
+		if(json_err == ERR_PARSE_ERROR):
+			if(item.strip_edges() == "[DONE]"):
+				await get_tree().process_frame
+				parse_streamed_message()
+				print("FINISH")
+				return
+		
+		if(res_json.has("choices") && res_json.choices[0].has("delta")):
+			
+			if(res_json.choices[0].delta.has("role")):
+				#Role stated, this means its the start of the AI response
+				response_msg = ""
+				has_split = false
+				image_file_label.text = String.humanize_size(randi_range(5000,100000)) + " JPG"
+#				print("Role is: "+str(res_json.choices[0].delta.role))
+				continue
+			
+			if(res_json.choices[0].delta.has("content")):
+				#print("Content: "+str(res_json.choices[0].delta.content))
+				await get_tree().process_frame
+				response_msg += str(res_json.choices[0].delta.content)
+				if(!has_split):
+					var split = split_text(response_msg.replace("\n\n", "\n"))
+					text_display.text = split[0]
+					text_display_2.text = split[1]
+					if(text_display_2.text != ""):
+						has_split = true
+				else:
+					text_display_2.text += str(res_json.choices[0].delta.content)
+				continue
+
+func parse_streamed_message():
+	#print(response_msg)
 	
-	image_file_label.text = String.humanize_size(randi_range(5000,100000)) + " JPG"
+	var output_tokens:int = globals.token_estimate(response_msg)
+	globals.TOTAL_TOKENS_USED += output_tokens
+	globals.TOTAL_TOKENS_COST += (output_tokens*globals.INPUT_TOKENS_COST)
+#	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
 	
+	var voice_message:String = ""
+	
+	voice_message += response_msg
+	
+#	if(elevenlabs != null && globals.VOICE_ALWAYS_ON):
+#		print(voice_message)
+#		elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)
+#	else:
+#		bot_thinking = false
+#		generate_button.disabled = false
+#		loading.texture = good_status
 	bot_thinking = false
+	generate_button.disabled = false
 	loading.texture = good_status
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
-	text_display.text = globals.parse_api_error(error_code)
 	bot_thinking = false
+	generate_button.disabled = false
+	
+	if(typeof(error_code) == TYPE_INT):
+		text_display.text = globals.parse_api_error(error_code)
+	else:
+		text_display.text = "Request failed with unknown error: " + str(error_code)
 	loading.texture = bad_status
+	await get_tree().process_frame
 
 var wait_thread:Thread = Thread.new()
 func wait_blink():

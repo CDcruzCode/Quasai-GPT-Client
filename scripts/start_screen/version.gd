@@ -26,9 +26,15 @@ func get_new_version():
 	var req_json:Dictionary
 	if(req != ""):
 		req_json = JSON.parse_string(req)
-
-	if(req_json.major > int(ver_arr[0]) || req_json.minor > int(ver_arr[1]) || req_json.mini > int(ver_arr[2])):
-		print("[Version] Out of date")
-		var notif = notice_popup.instantiate()
-		notif.message = "A new update is available: version "+str(req_json.major)+"."+str(req_json.minor)+"."+str(req_json.mini)+ "\nVisit [url]https://cdcruz.itch.io/chatgpt-client[/url] to download!"
-		notif_vbox.add_child(notif)
+	
+	if(req_json.major < int(ver_arr[0])):
+		return
+	if(req_json.minor < int(ver_arr[1])):
+		return
+	if(req_json.mini < int(ver_arr[2])):
+		return
+	
+	print("[Version] Out of date")
+	var notif = notice_popup.instantiate()
+	notif.message = "A new update is available: version "+str(req_json.major)+"."+str(req_json.minor)+"."+str(req_json.mini)+ "\nVisit [url]https://cdcruz.itch.io/chatgpt-client[/url] to download!"
+	notif_vbox.add_child(notif)

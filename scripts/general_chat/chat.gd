@@ -112,7 +112,6 @@ func connect_openai():
 	await get_tree().process_frame
 	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	#print("openai connected")
-#	openai.connect("request_success", _on_openai_request_success)
 	openai.connect("request_success_stream", _on_openai_request_success_stream)
 	openai.connect("request_error", _on_openai_request_error)
 	
@@ -145,9 +144,9 @@ func _on_elevenlabs_error(error_code):
 
 var response_msg:String = ""
 var response_box:MarginContainer
+var response_id:String = ""
 func _on_openai_request_success_stream(data):
 #	print("START CHUNK PARSE")
-	print(globals.EXIT_THREAD)
 	var res_arr:PackedStringArray = data.split("data: ", false)
 	var json_parse:JSON = JSON.new()
 	
@@ -164,10 +163,13 @@ func _on_openai_request_success_stream(data):
 				return
 		
 		if(res_json.has("choices") && res_json.choices[0].has("delta")):
+			response_id = str(res_json.id)
+			
 			if(res_json.choices[0].delta.has("role")):
 				#Role stated, this means its the start of the AI response
 				response_msg = ""
 #				print("Role is: "+str(res_json.choices[0].delta.role))
+				print(str(res_json))
 				response_box = message_box.instantiate()
 				response_box.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 				response_box.get_node("message_box/vbox/msg").text = response_msg
@@ -176,7 +178,7 @@ func _on_openai_request_success_stream(data):
 				response_box.get_node("message_box").elevenlabs_api = elevenlabs
 				response_box.get_node("message_box").chat_screen = self
 				response_box.get_node("message_box").type = "bot"
-#				response_box.get_node("message_box").msg_id = chat_memory.size()
+				response_box.get_node("message_box").msg_id = response_id
 				chat_log.add_child(response_box)
 				continue
 			
@@ -200,6 +202,7 @@ func parse_streamed_message():
 	globals.TOTAL_TOKENS_COST += (output_tokens*globals.INPUT_TOKENS_COST)
 	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
 	response_box.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
+	response_box.get_node("message_box").msg_id = response_id
 	
 	response_msg = response_msg.replace("&amp;", "&")
 	response_msg = globals.remove_after_phrase(response_msg, "<USER>").strip_edges()
@@ -225,7 +228,7 @@ func parse_streamed_message():
 				new_msg.get_node("message_box").self_modulate = "1b1b22"
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
-#				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
+				new_msg.get_node("message_box").msg_id = response_id
 				chat_log.add_child(new_msg)
 			else:
 				is_code = true
@@ -238,13 +241,12 @@ func parse_streamed_message():
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 				new_msg.get_node("message_box/vbox/msg").text = current_text
 				new_msg.get_node("message_box").message_list = chat_scroll
-#				new_msg.get_node("message_box").self_modulate = bot_color
 				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
 				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
 				new_msg.get_node("message_box").chat_screen = self
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
-#				new_msg.get_node("message_box").msg_id = chat_memory.size()
+				new_msg.get_node("message_box").msg_id = response_id
 				chat_log.add_child(new_msg)
 	else:
 		voice_message += response_msg
@@ -257,91 +259,6 @@ func parse_streamed_message():
 		regen_button.disabled = false
 		send_button.disabled = false
 		loading.texture = good_status
-
-
-#func _on_openai_request_success(data):
-#	#print("Request succeeded:", data)
-#	session_token_total += data.usage.total_tokens
-#	session_cost += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
-#	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
-#	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
-#	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
-#
-#	#print(data.choices[0].message.content)
-#	var reply:String = data.choices[0].message.content
-#	reply = reply.replace("&amp;", "&")
-#	reply = globals.remove_after_phrase(reply, "<USER>").strip_edges()
-#
-#	#var reply_array:PackedStringArray = reply.split("\n\n")
-#
-#	var voice_message:String = ""
-#	var reply_array:PackedStringArray = reply.split("```")
-#	if(reply_array.size() > 1):
-#		print(reply_array)
-#		var is_code:bool = false
-#		if(reply.strip_edges().begins_with("```")):
-#			is_code = true
-#		for line in reply_array:
-#			if(is_code):
-#				is_code = false
-#				var new_msg:MarginContainer = code_message.instantiate()
-#				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-#				new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
-#				new_msg.get_node("message_box").message_list = chat_scroll
-#				new_msg.get_node("message_box").self_modulate = "1b1b22"
-#				new_msg.get_node("message_box").type = "bot"
-#				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
-##				new_msg.get_node("message_box").msg_id = chat_memory.size() #No need to minus 1 as the current message hasn't been appended yet.
-#				chat_log.add_child(new_msg)
-#			else:
-#				is_code = true
-#				voice_message += line.strip_edges()
-#
-#				var current_text:String = globals.replace_with_bbcode(line.strip_edges(), "`", "inlinecode")
-#				current_text = globals.replace_with_bbcode(current_text.strip_edges(), "**","b")
-#
-#				var new_msg:MarginContainer = message_box.instantiate()
-#				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-#				new_msg.get_node("message_box/vbox/msg").text = current_text
-#				new_msg.get_node("message_box").message_list = chat_scroll
-##				new_msg.get_node("message_box").self_modulate = bot_color
-#				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
-#				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
-#				new_msg.get_node("message_box").chat_screen = self
-#				new_msg.get_node("message_box").type = "bot"
-#				new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
-##				new_msg.get_node("message_box").msg_id = chat_memory.size()
-#				chat_log.add_child(new_msg)
-#	else:
-#		voice_message += reply_array[0]
-#		var current_text:String = globals.replace_with_bbcode(reply_array[0].strip_edges(), "`", "inlinecode")
-#		current_text = globals.replace_with_bbcode(current_text.strip_edges(), "*","b")
-#
-#		var new_msg:MarginContainer = message_box.instantiate()
-#		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-#		new_msg.get_node("message_box/vbox/msg").text = current_text
-#		new_msg.get_node("message_box").message_list = chat_scroll
-##		new_msg.get_node("message_box").self_modulate = bot_color
-#		new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
-#		new_msg.get_node("message_box").elevenlabs_api = elevenlabs
-#		new_msg.get_node("message_box").type = "bot"
-#		new_msg.get_node("message_box").chat_screen = self
-#		new_msg.get_node("message_box").tooltip_text = str(data.usage.completion_tokens) + " Tokens"
-#		new_msg.get_node("message_box").msg_id = chat_memory.size()
-#		chat_log.add_child(new_msg)
-#
-#	chat_memory.append(reply)
-#
-#	if(elevenlabs != null && globals.VOICE_ALWAYS_ON):
-#		print(voice_message)
-#		elevenlabs.text_to_speech(globals.parse_voice_message(voice_message), globals.SELECTED_VOICE)
-#	else:
-#		bot_thinking = false
-#		regen_button.disabled = false
-#		send_button.disabled = false
-#		await get_tree().process_frame
-#		loading.texture = good_status
-		
 
 func load_config():
 	
@@ -522,7 +439,7 @@ func send_message(msg:String):
 #	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
 	
 	send_msg_thread = Thread.new()
-	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data, 10.0))
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
 
 func clear_chat(set_none:bool = true):
@@ -530,6 +447,7 @@ func clear_chat(set_none:bool = true):
 		saved_chats_list.select(0)
 	globals.delete_all_children(chat_log)
 	chat_memory.clear()
+	chat_memory_temp.clear()
 
 func regen_message():
 	if(bot_thinking || chat_memory.is_empty()):
@@ -537,6 +455,12 @@ func regen_message():
 	
 	bot_thinking = true
 	send_button.disabled = true
+	regen_button.disabled = true
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		print("WAITING TO FINISH")
+		var err = send_msg_thread.wait_to_finish()
+	
 	if(wait_thread.is_started() || wait_thread.is_alive()):
 		print("WAITING TO FINISH")
 		globals.EXIT_THREAD = true
@@ -574,10 +498,10 @@ func regen_message():
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",
-	"stream": false,
 	"logit_bias": logit_bias
 	}
-	openai.make_request("completions", HTTPClient.METHOD_POST, data, 120.0)
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
 
 func save_new_chat():
@@ -642,21 +566,61 @@ func load_saved_chat(id:int):
 			new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 			chat_log.add_child(new_msg)
 		else:
-			var reply_array:PackedStringArray = msg.split("\n\n")
-			
-			for line in reply_array:
+			var reply_array:PackedStringArray = msg.split("```")
+			print(reply_array)
+			if(reply_array.size() > 1):
+				
+				var is_code:bool = false
+				if(response_msg.strip_edges().begins_with("```")):
+					is_code = true
+				for line in reply_array:
+					if(is_code):
+						is_code = false
+						var new_msg:MarginContainer = code_message.instantiate()
+						new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+						new_msg.get_node("message_box/vbox/code_box").text = line.strip_edges()
+						new_msg.get_node("message_box").message_list = chat_scroll
+						new_msg.get_node("message_box").self_modulate = "1b1b22"
+						new_msg.get_node("message_box").type = "bot"
+#						new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
+#						new_msg.get_node("message_box").msg_id = response_id
+						chat_log.add_child(new_msg)
+					else:
+						is_code = true
+						
+						var current_text:String = globals.replace_with_bbcode(line.strip_edges(), "`", "inlinecode")
+						current_text = globals.replace_with_bbcode(current_text.strip_edges(), "**","b")
+						
+						var new_msg:MarginContainer = message_box.instantiate()
+						new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+						new_msg.get_node("message_box/vbox/msg").text = current_text
+						new_msg.get_node("message_box").message_list = chat_scroll
+						new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
+						new_msg.get_node("message_box").elevenlabs_api = elevenlabs
+						new_msg.get_node("message_box").chat_screen = self
+						new_msg.get_node("message_box").type = "bot"
+#						new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
+#						new_msg.get_node("message_box").msg_id = response_id
+						chat_log.add_child(new_msg)
+			else:
 				var new_msg:MarginContainer = message_box.instantiate()
 				new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-				new_msg.get_node("message_box/vbox/msg").text = line
-#				new_msg.get_node("message_box").self_modulate = bot_color
+				new_msg.get_node("message_box/vbox/msg").text = msg
+				new_msg.get_node("message_box").message_list = chat_scroll
 				new_msg.get_node("message_box").theme_type_variation = StringName("bot_bubble")
+				new_msg.get_node("message_box").elevenlabs_api = elevenlabs
+				new_msg.get_node("message_box").chat_screen = self
+				new_msg.get_node("message_box").type = "bot"
+#				new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
+#				new_msg.get_node("message_box").msg_id = response_id
 				chat_log.add_child(new_msg)
-	
 	await get_tree().process_frame
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value as int
 	
 	bot_thinking = false
 	loading.texture = good_status
+
+
 
 
 func wait_blink():

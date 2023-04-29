@@ -13,6 +13,7 @@ func http_req(host:String, page:String)->String:
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		if(globals.EXIT_HTTP):
+			http.close()
 			globals.EXIT_HTTP = false
 			return ""
 		http.poll()
@@ -35,6 +36,7 @@ func http_req(host:String, page:String)->String:
 
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
 		if(globals.EXIT_HTTP):
+			http.close()
 			globals.EXIT_HTTP = false
 			return ""
 		# Keep polling for as long as the request is being processed.

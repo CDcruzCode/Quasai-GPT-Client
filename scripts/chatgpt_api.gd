@@ -71,25 +71,9 @@ func make_request(endpoint: String, method: HTTPClient.Method, data: Dictionary,
 	http_request.request(url, headers, method, JSON.stringify(data))
 	print("[OpenAIAPI] make_request sent")
 
-
-#func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 40.0):
-#	streaming = true
-#	var headers = [
-#	"Content-Type: application/json",
-#	"Authorization: Bearer " + api_key,
-#	"OpenAI-Organization: " + api_org]
-#	var url = api_base_url + endpoint
-#
-#	data.stream = true
-#	print(data)
-#	print( http_request.request(url, headers, method, JSON.stringify(data)) )
-#	print("[OpenAIAPI] make_request_stream sent")
-
-
-
 #We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please send an email to support@openai.com and include any relevant code you'd like help with.)
 
-func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 10.0):
+func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dictionary, timeout:float = 20.0):
 	streaming = true
 	var timeout_count:float = 0.0
 	
@@ -102,8 +86,16 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		http.poll()
+		
+		if(globals.EXIT_HTTP):
+			globals.EXIT_HTTP = false
+			http.close()
+			print("[OPENAIAPI] STOPPING API")
+			return ""
+		
 		timeout_count += 0.05
 		if(timeout_count >= timeout):
+			http.close()
 			emit_signal("request_error", 0) #Request timeout
 			return ERR_CANT_CONNECT
 		
@@ -116,6 +108,7 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	timeout_count = 0
 	print( "[OPENAIAPI] HTTP Status: " + str(http.get_status()) )
 	if(http.get_status() == HTTPClient.STATUS_CANT_RESOLVE):
+		http.close()
 		emit_signal("request_error", 0) #Request can't connect
 		return ERR_CANT_CONNECT
 	assert(http.get_status() == HTTPClient.STATUS_CONNECTED) # Check if the connection was made successfully.
@@ -127,7 +120,7 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	"Authorization: Bearer " + api_key,
 	"OpenAI-Organization: " + api_org]
 	
-	var data_string:String = JSON.stringify(data).replace("\r","").to_utf8_buffer().get_string_from_utf8()
+	var data_string:String = JSON.stringify(data).replace("\r","").to_ascii_buffer().get_string_from_ascii() #To ASCII is a quick fix to remove special characters & emoji as for some reason these characters are causing parsing errors for requests.
 	print(data_string)
 	
 	err = http.request(method, api_base_url+endpoint, headers, data_string ) # Request a page from the site (this one was chunked..)
@@ -136,8 +129,16 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
 		# Keep polling for as long as the request is being processed.
 		http.poll()
+		
+		if(globals.EXIT_HTTP):
+			globals.EXIT_HTTP = false
+			http.close()
+			print("[OPENAIAPI] STOPPING API")
+			return ""
+		
 		timeout_count += 0.05
 		if(timeout_count >= timeout):
+			http.close()
 			emit_signal("request_error", 0) #Request timeout
 			return ERR_CANT_CONNECT
 		print("[OPENAIAPI] HTTP Requesting...")
