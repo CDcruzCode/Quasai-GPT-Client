@@ -130,6 +130,7 @@ func _on_elevenlabs_success(data):
 	elevenlabs.play_audio(data)
 	bot_thinking = false
 	send_button.disabled = false
+	regen_button.disabled = false
 	await get_tree().process_frame
 	loading.texture = good_status
 
@@ -137,6 +138,7 @@ func _on_elevenlabs_error(error_code):
 	printerr(globals.parse_api_error(error_code))
 	bot_thinking = false
 	send_button.disabled = false
+	regen_button.disabled = false
 	await get_tree().process_frame
 	loading.texture = bad_status
 
@@ -178,7 +180,7 @@ func _on_openai_request_success_stream(data):
 				response_box.get_node("message_box").elevenlabs_api = elevenlabs
 				response_box.get_node("message_box").chat_screen = self
 				response_box.get_node("message_box").type = "bot"
-				response_box.get_node("message_box").msg_id = response_id
+				response_box.get_node("message_box").msg_id = str(response_id)
 				chat_log.add_child(response_box)
 				continue
 			
@@ -202,7 +204,7 @@ func parse_streamed_message():
 	globals.TOTAL_TOKENS_COST += (output_tokens*globals.INPUT_TOKENS_COST)
 	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
 	response_box.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
-	response_box.get_node("message_box").msg_id = response_id
+	response_box.get_node("message_box").msg_id = str(response_id)
 	
 	response_msg = response_msg.replace("&amp;", "&")
 	response_msg = globals.remove_after_phrase(response_msg, "<USER>").strip_edges()
@@ -228,7 +230,7 @@ func parse_streamed_message():
 				new_msg.get_node("message_box").self_modulate = "1b1b22"
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
-				new_msg.get_node("message_box").msg_id = response_id
+				new_msg.get_node("message_box").msg_id = str(response_id)
 				chat_log.add_child(new_msg)
 			else:
 				is_code = true
@@ -246,7 +248,7 @@ func parse_streamed_message():
 				new_msg.get_node("message_box").chat_screen = self
 				new_msg.get_node("message_box").type = "bot"
 				new_msg.get_node("message_box").tooltip_text = str(output_tokens) + " Tokens"
-				new_msg.get_node("message_box").msg_id = response_id
+				new_msg.get_node("message_box").msg_id = str(response_id)
 				chat_log.add_child(new_msg)
 	else:
 		voice_message += response_msg
@@ -365,8 +367,7 @@ func send_message(msg:String):
 	
 	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
 		print("WAITING TO FINISH")
-		var err = send_msg_thread.wait_to_finish()
-		print(err)
+		var _err = send_msg_thread.wait_to_finish()
 	
 	
 	bot_thinking = true
@@ -404,7 +405,7 @@ func send_message(msg:String):
 	new_msg.get_node("message_box").theme_type_variation = StringName("user_bubble")
 	new_msg.get_node("message_box").tooltip_text = str(globals.token_estimate(msg)) + " Tokens"
 	new_msg.get_node("message_box").type = "user"
-	new_msg.get_node("message_box").msg_id = chat_memory.size() - 1 #Minus 1 because we need the position of the message in the array and array starts at 0
+	new_msg.get_node("message_box").msg_id = str(chat_memory.size() - 1) #Minus 1 because we need the position of the message in the array and array starts at 0
 	chat_log.add_child(new_msg)
 	
 	var temp_logit_bias = logit_bias
@@ -437,12 +438,15 @@ func send_message(msg:String):
 	}
 	
 #	openai.make_request("completions", HTTPClient.METHOD_POST, data, 60.0)
-	
+	await get_tree().process_frame
 	send_msg_thread = Thread.new()
 	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
 
 func clear_chat(set_none:bool = true):
+	if(bot_thinking):
+		return
+	
 	if(set_none):
 		saved_chats_list.select(0)
 	globals.delete_all_children(chat_log)
@@ -459,7 +463,7 @@ func regen_message():
 	
 	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
 		print("WAITING TO FINISH")
-		var err = send_msg_thread.wait_to_finish()
+		var _err = send_msg_thread.wait_to_finish()
 	
 	if(wait_thread.is_started() || wait_thread.is_alive()):
 		print("WAITING TO FINISH")
@@ -490,11 +494,13 @@ func regen_message():
 		else:
 			chat_array.append({"role": "assistant", "content": m.strip_edges()})
 	
+	chat_array.append({"role": "system", "content": "Write a different response than what you would usually respond."})
+	
 	var data = {
 	"model": globals.AI_MODEL,
 	"messages": chat_array,
 	"max_tokens": MAX_TOKENS,
-	"temperature": TEMPERATURE,
+	"temperature": clampf(TEMPERATURE + 0.3, 0.0, 2.0),
 	"presence_penalty": PRESENCE,
 	"frequency_penalty": FREQUENCY,
 	"stop": "<USER>",

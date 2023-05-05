@@ -166,13 +166,15 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 			print("[OPENAIAPI] Response is Chunked!")
 			
 			while http.get_status() == HTTPClient.STATUS_BODY:
+				http.poll()
+				
 				if(globals.EXIT_HTTP):
 					globals.EXIT_HTTP = false
 					http.close()
 					print("[OPENAIAPI] STOPPING API")
 					return ""
 				# While there is body left to be read
-				http.poll()
+				
 				# Get a chunk.
 				var chunk = http.read_response_body_chunk()
 				if chunk.size() == 0:
@@ -208,6 +210,8 @@ func make_stream_request(endpoint: String, method: HTTPClient.Method, data: Dict
 			var res = JSON.parse_string(rb.get_string_from_ascii())
 			emit_signal("request_error", res)
 		# Done!
+	
+	http.close()
 	print("DONE HTTP")
 	return OK
 

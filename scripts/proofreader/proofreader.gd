@@ -61,7 +61,7 @@ func _ready():
 	sentiment_button.pressed.connect(sentiment_text)
 	
 	copy_text_button.pressed.connect(copy_output)
-	text_input.text_changed.connect(func(): token_estimation.text = "Token Estimation: " + str((globals.token_estimate(text_input.text)*2)+200) + " | ")
+	text_input.text_changed.connect(func(): token_estimation.text = "Token Estimation: " + str((globals.token_estimate(text_input.text)*2)+50) + " | ")
 	await connect_openai()
 	bot_thinking = false
 	loading.texture = good_status
@@ -95,9 +95,28 @@ func writing_styles():
 func proofread_text():
 	if(bot_thinking):
 		return
+	
+	var input_tokens:int = globals.token_estimate(text_input.text)
+	if(input_tokens >= globals.max_model_tokens()):
+		text_display.text = "Your text is too long! It is "+str(input_tokens)+" Tokens. The current model can only accept a total of "+str(globals.max_model_tokens())+" Tokens."
+		return
+	
+	
 	bot_thinking = true
+	proofread_button.disabled = true
+	summarize_button.disabled = true
+	sentiment_button.disabled = true
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		var _err = send_msg_thread.wait_to_finish()
+	
 	text_display.text = "Awaiting response..."
 	changes_paragraph.text = ""
 	var chat_array:Array = []
@@ -114,18 +133,37 @@ func proofread_text():
 	"temperature": 1.0,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"stream": false,
 	"logit_bias": logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	await get_tree().process_frame
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
 func summarize_text():
 	if(bot_thinking):
 		return
+	
+	var input_tokens:int = globals.token_estimate(text_input.text)
+	if(input_tokens >= globals.max_model_tokens()):
+		text_display.text = "Your text is too long! It is "+str(input_tokens)+" Tokens. The current model can only accept a total of "+str(globals.max_model_tokens())+" Tokens."
+		return
+	
 	bot_thinking = true
+	proofread_button.disabled = true
+	summarize_button.disabled = true
+	sentiment_button.disabled = true
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		var _err = send_msg_thread.wait_to_finish()
+	
 	text_display.text = "Awaiting response..."
 	changes_paragraph.text = ""
 	var chat_array:Array = []
@@ -141,18 +179,40 @@ func summarize_text():
 	"temperature": 0.8,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"stream": false,
 	"logit_bias": logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	await get_tree().process_frame
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
+var send_msg_thread:Thread = Thread.new()
 func sentiment_text():
 	if(bot_thinking):
 		return
+	
+	var input_tokens:int = globals.token_estimate(text_input.text)
+	if(input_tokens >= globals.max_model_tokens()):
+		text_display.text = "Your text is too long! It is "+str(input_tokens)+" Tokens. The current model can only accept a total of "+str(globals.max_model_tokens())+" Tokens."
+		return
+	
 	bot_thinking = true
+	proofread_button.disabled = true
+	summarize_button.disabled = true
+	sentiment_button.disabled = true
+	
+	
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
 	wait_thread = Thread.new()
 	wait_thread.start(wait_blink)
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		var _err = send_msg_thread.wait_to_finish()
+	
+	
 	text_display.text = "Awaiting response..."
 	changes_paragraph.text = ""
 	var chat_array:Array = []
@@ -167,11 +227,12 @@ func sentiment_text():
 	"temperature": 0.8,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"stream": false,
 	"logit_bias": logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	await get_tree().process_frame
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
 
 func copy_output():
@@ -187,40 +248,94 @@ func connect_openai():
 	await get_tree().process_frame
 	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
 	#print("openai connected")
-	openai.connect("request_success", _on_openai_request_success)
+	openai.connect("request_success_stream", _on_openai_request_success_stream)
 	openai.connect("request_error", _on_openai_request_error)
 
-func _on_openai_request_success(data):
-	print(data)
-	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
-	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
-	session_tokens += data.usage.total_tokens
-	session_cost += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+#func _on_openai_request_success(data):
+#	print(data)
+#	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
+#	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+#	session_tokens += data.usage.total_tokens
+#	session_cost += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+#	session_tokens_display.text = "Session Tokens: "+str(session_tokens)+" | Est. Cost: $"+str( session_cost )
+#	var text:PackedStringArray = data.choices[0].message.content.split("<changes>", false, 1)
+#	text_display.text = text[0].strip_edges()
+#	if(text.size() > 1):
+#		changes_paragraph.text = text[1].strip_edges()
+#	else:
+#		changes_paragraph.text = "<No change information provided>"
+#	bot_thinking =false
+#	loading.texture = good_status
+
+var response_msg:String = ""
+func _on_openai_request_success_stream(data):
+	#print("START CHUNK PARSE")
+	var res_arr:PackedStringArray = data.split("data: ", false)
+	var json_parse:JSON = JSON.new()
+	
+	for item in res_arr:
+		var json_err = json_parse.parse(item.strip_edges())
+#		print(json_err)
+		var res_json = json_parse.data
+		if(json_err == ERR_PARSE_ERROR):
+			if(item.strip_edges() == "[DONE]"):
+				await get_tree().process_frame
+				parse_streamed_message()
+				print("FINISH")
+				return
+		
+		if(res_json.has("choices") && res_json.choices[0].has("delta")):
+			
+			if(res_json.choices[0].delta.has("role")):
+				#Role stated, this means its the start of the AI response
+				response_msg = ""
+#				print("Role is: "+str(res_json.choices[0].delta.role))
+				continue
+			
+			if(res_json.choices[0].delta.has("content")):
+				#print("Content: "+str(res_json.choices[0].delta.content))
+				await get_tree().process_frame
+				response_msg += str(res_json.choices[0].delta.content)
+				text_display.text = response_msg
+				continue
+
+func parse_streamed_message():
+	#print(response_msg)
+	
+	var output_tokens:int = globals.token_estimate(response_msg)
+	globals.TOTAL_TOKENS_USED += output_tokens + globals.token_estimate(text_input.text)
+	globals.TOTAL_TOKENS_COST += (globals.token_estimate(text_input.text)*globals.INPUT_TOKENS_COST) + (output_tokens*globals.TOKENS_COST)
+	session_tokens += output_tokens + globals.token_estimate(text_input.text)
+	session_cost += (globals.token_estimate(text_input.text)*globals.INPUT_TOKENS_COST) + (output_tokens*globals.TOKENS_COST)
 	session_tokens_display.text = "Session Tokens: "+str(session_tokens)+" | Est. Cost: $"+str( session_cost )
-	var text:PackedStringArray = data.choices[0].message.content.split("<changes>", false, 1)
-	text_display.text = text[0].strip_edges()
-	if(text.size() > 1):
-		changes_paragraph.text = text[1].strip_edges()
-	else:
-		changes_paragraph.text = "<No change information provided>"
-	bot_thinking =false
+	bot_thinking = false
+	proofread_button.disabled = false
+	summarize_button.disabled = false
+	sentiment_button.disabled = false
 	loading.texture = good_status
+
+
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
 	text_display.text = globals.parse_api_error(error_code)
 	bot_thinking =false
+	proofread_button.disabled = false
+	summarize_button.disabled = false
+	sentiment_button.disabled = false
 	loading.texture = bad_status
 
 
 
 var wait_thread:Thread = Thread.new()
 func wait_blink():
-	while bot_thinking:
+	while bot_thinking && !globals.EXIT_THREAD:
 		loading.texture = wait_status
 		await globals.delay(0.5)
-		if(!bot_thinking):
-			return
+		if(!bot_thinking || globals.EXIT_THREAD):
+			print("[WAIT BLINK] EXIT")
+			globals.EXIT_THREAD = false
+			return OK
 		loading.texture = nil_status
 		await globals.delay(0.5)
 
@@ -240,3 +355,17 @@ func _files_dropped(files):
 		else:
 			printerr("Invalid file type dropped: " + file)
 	token_estimation.text = "Token Estimation: " + str((globals.token_estimate(text_input.text)*2)+200) + " | "
+
+
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		# destructor logic
+		globals.EXIT_THREAD = true
+		globals.EXIT_HTTP = true
+		if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+			var _err = send_msg_thread.wait_to_finish()
+		
+		if(wait_thread.is_started() || wait_thread.is_alive()):
+			var _err = wait_thread.wait_to_finish()
+		globals.EXIT_THREAD = false
+		globals.EXIT_HTTP = false

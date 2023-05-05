@@ -58,6 +58,7 @@ func _ready():
 	model_options_button.add_item("GPT 4 - 32k")
 	model_options_button.set_item_disabled(2, true)
 	model_options_button.item_selected.connect(ai_model_select)
+	status_icon.gui_input.connect(recheck_status)
 	
 	elevenlabs_voice_options.item_selected.connect(elevenlabs_voice_select)
 	
@@ -85,6 +86,12 @@ func _ready():
 	await get_tree().process_frame
 	await connect_openai()
 
+
+func recheck_status(event:InputEvent):
+	if event is InputEventMouseButton and event.pressed:
+		if(status_icon.texture != preload("res://images/icons/wait_status.png")):
+			connect_openai()
+		
 
 func connect_openai():
 	openai_status.text = "Checking OpenAI Status..."

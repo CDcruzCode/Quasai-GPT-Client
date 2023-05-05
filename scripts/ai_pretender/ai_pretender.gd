@@ -281,7 +281,7 @@ func _on_guess_return(data):
 	if(guesses_left <= 0):
 		var new_msg = message_box.instantiate()
 		new_msg.get_node("message_box").size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		new_msg.get_node("message_box/vbox/msg").text = "You are incorrect. That was your final guess, so game over! The correct answer was "+chosen_character
+		new_msg.get_node("message_box/vbox/msg").text = "You are incorrect. That was your final guess, so game over! The correct answer was "+chosen_character.replace("(","").replace(")","")
 		new_msg.get_node("message_box").message_list = chat_scroll
 		new_msg.get_node("message_box").chat_screen = self
 		new_msg.get_node("message_box").theme_type_variation = StringName("error_bubble")

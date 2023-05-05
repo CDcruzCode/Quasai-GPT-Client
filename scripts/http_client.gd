@@ -3,8 +3,9 @@ extends Node
 # HTTPClient demo
 # This simple class can do HTTP requests; it will not block, but it needs to be polled.
 
-func http_req(host:String, page:String)->String:
+func http_req(host:String, page:String, timeout:float = 20.0)->String:
 	var err = 0
+	var timeout_count:float = 0.0
 	var http = HTTPClient.new() # Create the Client.
 
 	err = http.connect_to_host(host, -1) # Connect to host/port.
@@ -12,6 +13,11 @@ func http_req(host:String, page:String)->String:
 
 	# Wait until resolved and connected.
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
+		timeout_count += 0.05
+		if(timeout_count >= timeout):
+			http.close()
+			return ""
+		
 		if(globals.EXIT_HTTP):
 			http.close()
 			globals.EXIT_HTTP = false
@@ -25,6 +31,7 @@ func http_req(host:String, page:String)->String:
 
 	assert(http.get_status() == HTTPClient.STATUS_CONNECTED) # Check if the connection was made successfully.
 
+	timeout_count = 0.0
 	# Some headers
 	var headers = [
 		"User-Agent: Pirulo/1.0 (Godot)",
@@ -33,8 +40,13 @@ func http_req(host:String, page:String)->String:
 
 	err = http.request(HTTPClient.METHOD_GET, page, headers) # Request a page from the site (this one was chunked..)
 	assert(err == OK) # Make sure all is OK.
-
+	
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
+		timeout_count += 0.05
+		if(timeout_count >= timeout):
+			http.close()
+			return ""
+		
 		if(globals.EXIT_HTTP):
 			http.close()
 			globals.EXIT_HTTP = false

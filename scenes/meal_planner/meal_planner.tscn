@@ -214,3 +214,22 @@ size = Vector2i(721, 361)
 always_on_top = true
 dialog_hide_on_ok = true
 access = 2
+
+[node name="stream_status" type="Window" parent="."]
+initial_position = 2
+size = Vector2i(300, 100)
+wrap_controls = true
+unresizable = true
+borderless = true
+always_on_top = true
+
+[node name="ccon" type="CenterContainer" parent="stream_status"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="stream_text" type="Label" parent="stream_status/ccon"]
+layout_mode = 2
+text = "Tokens Downloaded: "

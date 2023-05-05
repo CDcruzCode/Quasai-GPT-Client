@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\scripts",
+    "\\scripts\\onyx_runtime",
     "\\scripts\\tokenizer"
   ],
-  "SelectedNode": "\\scripts",
+  "SelectedNode": "\\scripts\\onyx_runtime",
   "PreviewInSolutionExplorer": false
 }

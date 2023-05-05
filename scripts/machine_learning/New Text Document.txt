@@ -1,0 +1,105 @@
+javascript
+import * as Activator from '/modules/activation_functions.js';
+import * as Tools from '/modules/tool_functions.js';
+import * as Cost from '/modules/cost_functions.js';
+import * as Backprop from '/modules/backpropagation.js';
+
+import { read_mnist } from '/training_sets/mnist/load_mnist.js';
+
+// Create a 2D array with 10 rows
+let multiplied = new Array(10).fill(null).map(() => []);
+
+console.log(multiplied);
+
+const LEARN_RATE = -0.01; // Learning rate must be a negative number
+let correct_count = 0;
+const EPOCHS = 1;
+
+const training_data = [
+  [0.3, 0.4, 1, 0.3, 0.1],
+  [0.1, 1, 0.2, 0.4, 0.9],
+  [1, 0.2, 0.4, 0.5, 0.2]
+];
+
+const training_labels = [
+  [1, 0, 0],
+  [0, 1, 0],
+  [0, 0, 1]
+];
+
+// Validate data and labels
+if (training_data.length != training_labels.length) {
+  console.error("ERROR: Training data/labels mismatch. Both arrays must be of same size.");
+}
+if (training_labels[0] == undefined || training_data[0] == undefined) {
+  console.error("ERROR: Training Labels and Training Data must be in a 2D array!");
+}
+
+const input_node_size = training_data[0].length;
+const hidden_node_size = [10];
+const output_node_size = training_labels[0].length;
+const layer_types = ["sigmoid", "sigmoid", "sigmoid"];
+
+// Validate layer types and node sizes
+if (layer_types.length != hidden_node_size.length + 2) {
+  console.error("ERROR: Node size and layer types array do not match!");
+}
+
+let weights_matrix = [];
+let bias_matrix = [];
+let node_matrix = [];
+
+const init_bias_size = function (input_size, hidden_size, output_size) {
+  bias_matrix = hidden_size.map((size) => Tools.init_bias(size));
+  bias_matrix.push(Tools.init_bias(output_size));
+  return bias_matrix;
+};
+
+const init_weights_size = function (input_size, hidden_size, output_size) {
+  weights_matrix = hidden_size.map((size, idx) =>
+    idx === 0 ? Tools.init_weights(size, input_size) : Tools.init_weights(size, hidden_size[idx - 1])
+  );
+  weights_matrix.push(Tools.init_weights(output_size, hidden_size[hidden_size.length - 1]));
+  return weights_matrix;
+};
+
+weights_matrix = init_weights_size(input_node_size, hidden_node_size, output_node_size);
+bias_matrix = init_bias_size(input_node_size, hidden_node_size, output_node_size);
+
+console.log(weights_matrix);
+console.log(bias_matrix);
+
+let loop_count = 0;
+for (let i = 0; i < EPOCHS; i++) {
+  console.log(`EPOCH: ${i + 1}`);
+  for (let a = 0; a < training_data.length; a++) {
+    loop_count++;
+    node_matrix = [];
+
+    // Hidden Node Calculations
+    for (let b = 0; b < hidden_node_size.length; b++) {
+      node_matrix[b] = b === 0
+        ? Tools.matrix_multiply_to_node(weights_matrix[b], [training_data[a]])
+        : Tools.matrix_multiply_to_node(weights_matrix[b], [node_matrix[node_matrix.length - 1]]);
+  
+      node_matrix[b] = Tools.add_bias(node_matrix[b], bias_matrix[b]);
+      node_matrix[b] = Tools.process_activators(node_matrix[b], layer_types[b]);
+    }
+
+    // Output Node Calculations
+    let output_nodes = Tools.matrix_multiply_to_node(weights_matrix[hidden_node_size.length], [node_matrix[node_matrix.length - 1]]);
+    output_nodes = Tools.add_bias(output_nodes, bias_matrix[hidden_node_size.length]);
+    output_nodes = Tools.process_activators(output_nodes, layer_types[hidden_node_size.length]);
+    node_matrix.push(output_nodes);
+
+    if (Tools.approxeq(node_matrix[node_matrix.length - 1][0], training_data[a][0], 0.1)) {
+      correct_count++;
+    }
+  }
+}
+
+console.log(`Loop Total: ${loop_count}`);
+console.log(`Correct Guesses: ${correct_count}`);
+console.log(weights_matrix);
+console.log(bias_matrix);
+console.log(node_matrix);

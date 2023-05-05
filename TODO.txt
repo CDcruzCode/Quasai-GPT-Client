@@ -10,7 +10,7 @@ TODO
 
 [Voice Generation]
 
-- Remove text artifacts from a string before sending to voice generation. Like emojis, weird formatting, etc.
++ Remove text artifacts from a string before sending to voice generation. Like emojis, weird formatting, etc.
 
 [General Chatting]
 
@@ -23,7 +23,7 @@ TODO
 
 [Tokenizer]
 
-- Fix tokenizer to work for GPT 3.5 & GPT 4 as current tokenizer only works for GPT 3, 2 and older models.
++ Fix tokenizer to work for GPT 3.5 & GPT 4 as current tokenizer only works for GPT 3, 2 and older models.
 
 [Your Companion]
 

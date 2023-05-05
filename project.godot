@@ -25,6 +25,10 @@ config/windows_native_icon="res://images/logo/icon.ico"
 globals="*res://scripts/globals.gd"
 httprequest="*res://scripts/http_client.gd"
 
+[debug]
+
+settings/stdout/verbose_stdout=true
+
 [display]
 
 window/stretch/aspect="expand"

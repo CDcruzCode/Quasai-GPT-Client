@@ -4,6 +4,12 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="BERTTokenizers" Version="1.1.0" />
+    <PackageReference Include="Microsoft.ML" Version="2.0.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.12.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.12.0" />
     <PackageReference Include="SharpToken" Version="1.0.27" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+    <PackageReference Include="System.Numerics.Tensors" Version="0.1.0" />
   </ItemGroup>
 </Project>

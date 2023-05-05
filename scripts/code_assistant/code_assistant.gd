@@ -95,16 +95,30 @@ func copy_output():
 func connect_openai():
 	await get_tree().process_frame
 	openai = OpenAIAPI.new(get_tree(), "https://api.openai.com/v1/chat/", globals.API_KEY)
-	openai.connect("request_success", _on_openai_request_success)
+	openai.connect("request_success_stream", _on_openai_request_success_stream)
 	openai.connect("request_error", _on_openai_request_error)
 
-
+var send_msg_thread:Thread = Thread.new()
 func generate_code():
 	if(bot_thinking || text_input.text.strip_edges().is_empty()):
 		return
 	
+	var input_tokens:int = globals.token_estimate(text_input.text)
+	if(input_tokens >= globals.max_model_tokens()):
+		text_display.text = "Your text is too long! It is "+str(input_tokens)+" Tokens. The current model can only accept a total of "+str(globals.max_model_tokens())+" Tokens."
+		return
+	
 	bot_thinking = true
-	wait_blink()
+	if(wait_thread.is_started() || wait_thread.is_alive()):
+		globals.EXIT_THREAD = true
+		var _err = wait_thread.wait_to_finish()
+	globals.EXIT_THREAD = false
+	wait_thread = Thread.new()
+	wait_thread.start(wait_blink)
+	
+	if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+		var _err = send_msg_thread.wait_to_finish()
+	
 	text_display.text = "Awaiting response..."
 	
 	var chat_array:Array = []
@@ -130,22 +144,58 @@ func generate_code():
 	"temperature": 0.3,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"stream": false,
 	"logit_bias": logit_bias
 	}
 	
-	openai.make_request("completions", HTTPClient.METHOD_POST, data)
+	await get_tree().process_frame
+	send_msg_thread = Thread.new()
+	send_msg_thread.start(openai.make_stream_request.bind("completions", HTTPClient.METHOD_POST, data))
 
-
-func _on_openai_request_success(data):
-	print(data)
-	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
-	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
+var response_msg:String = ""
+func _on_openai_request_success_stream(data):
+	#print("START CHUNK PARSE")
+	var res_arr:PackedStringArray = data.split("data: ", false)
+	var json_parse:JSON = JSON.new()
 	
-	text_display.text = data.choices[0].message.content
+	for item in res_arr:
+		var json_err = json_parse.parse(item.strip_edges())
+#		print(json_err)
+		var res_json = json_parse.data
+		if(json_err == ERR_PARSE_ERROR):
+			if(item.strip_edges() == "[DONE]"):
+				await get_tree().process_frame
+				parse_streamed_message()
+				print("FINISH")
+				return
+		
+		if(res_json.has("choices") && res_json.choices[0].has("delta")):
+			
+			if(res_json.choices[0].delta.has("role")):
+				#Role stated, this means its the start of the AI response
+				response_msg = ""
+#				print("Role is: "+str(res_json.choices[0].delta.role))
+				continue
+			
+			if(res_json.choices[0].delta.has("content")):
+				#print("Content: "+str(res_json.choices[0].delta.content))
+				await get_tree().process_frame
+				response_msg += str(res_json.choices[0].delta.content)
+				text_display.text = response_msg
+				continue
+
+func parse_streamed_message():
+	#print(response_msg)
+	
+	var output_tokens:int = globals.token_estimate(response_msg)
+	globals.TOTAL_TOKENS_USED += output_tokens
+	globals.TOTAL_TOKENS_COST += (output_tokens*globals.INPUT_TOKENS_COST)
+#	session_tokens_display.text = "Session Tokens: "+str(session_token_total)+" | Est. Cost: $"+str(session_cost)
 	
 	bot_thinking = false
+	generate_button.disabled = false
 	loading.texture = good_status
+
+
 
 func _on_openai_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
@@ -179,3 +229,18 @@ func _files_dropped(files):
 		else:
 			printerr("Invalid file type dropped: " + file)
 	#token_estimation.text = "Token Estimation: " + str((globals.token_estimate(text_input.text)*2)+200) + " | "
+
+
+
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		# destructor logic
+		globals.EXIT_THREAD = true
+		globals.EXIT_HTTP = true
+		if(send_msg_thread.is_started() || send_msg_thread.is_alive()):
+			var _err = send_msg_thread.wait_to_finish()
+		
+		if(wait_thread.is_started() || wait_thread.is_alive()):
+			var _err = wait_thread.wait_to_finish()
+		globals.EXIT_THREAD = false
+		globals.EXIT_HTTP = false

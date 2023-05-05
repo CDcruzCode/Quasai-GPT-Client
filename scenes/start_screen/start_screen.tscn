@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://du0h6f2shbkhm"]
+[gd_scene load_steps=35 format=3 uid="uid://du0h6f2shbkhm"]
 
 [ext_resource type="Script" path="res://scripts/start_screen/start_screen.gd" id="2_ey057"]
 [ext_resource type="Texture2D" uid="uid://p73un2ksmoxy" path="res://images/icons/nil_status.png" id="3_fpw51"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://by5ya06djwpgs" path="res://images/icons/translator_icon.png" id="14_aeaj1"]
 [ext_resource type="PackedScene" uid="uid://bc1rprbqsorou" path="res://scenes/ai_pretender/ai_pretender.tscn" id="14_g7y1y"]
 [ext_resource type="PackedScene" uid="uid://ck0es86q1b1o6" path="res://scenes/translator/translator.tscn" id="14_qg75j"]
+[ext_resource type="Texture2D" uid="uid://8hjd7r4fyy3x" path="res://images/icons/ai_pretender_icon.png" id="15_sknma"]
 [ext_resource type="PackedScene" uid="uid://cs7wihb7vvkkn" path="res://scenes/wiki_search/wiki_search.tscn" id="17_d26w1"]
 [ext_resource type="PackedScene" uid="uid://cedxbpboadjeg" path="res://scenes/code_assistant/code_assistant.tscn" id="18_4txjr"]
 [ext_resource type="Texture2D" uid="uid://cyldiqo6n6nwj" path="res://images/icons/code_assistant.png" id="18_6tdaq"]
@@ -94,6 +95,7 @@ custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture = ExtResource("3_fpw51")
 expand_mode = 1
 stretch_mode = 4
@@ -168,7 +170,7 @@ scene = ExtResource("12_rq4hm")
 
 [node name="ai_pretender" parent="mcon/vbox/scon/VBoxContainer/entertainment_modes" instance=ExtResource("3_w1g0p")]
 layout_mode = 2
-mode_icon = ExtResource("12_dqhkn")
+mode_icon = ExtResource("15_sknma")
 mode_display_name = "AI Pretender"
 scene = ExtResource("14_g7y1y")
 
@@ -245,9 +247,6 @@ mode_display_name = "Document Summarizer"
 visible = false
 layout_mode = 2
 mode_display_name = "Prompt Engineer"
-
-[node name="hbox" type="HBoxContainer" parent="mcon/vbox"]
-layout_mode = 2
 
 [node name="notifications" type="ScrollContainer" parent="."]
 layout_mode = 2

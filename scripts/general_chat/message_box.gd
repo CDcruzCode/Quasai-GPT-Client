@@ -2,7 +2,7 @@ extends PanelContainer
 
 var disable_options:bool = false
 
-var msg_id:int = 0
+var msg_id:String = "0"
 @onready var msg:RichTextLabel = $vbox/msg
 @onready var options_hbox = $vbox/options_hbox
 @onready var play_audio = $vbox/options_hbox/play_audio
@@ -18,6 +18,7 @@ var chat_screen = null
 var MAX_SIZE:int = 700
 
 func _ready():
+	print("[Msg Box] ID: " + msg_id)
 	options_hbox.hide()
 	max_size()
 	
@@ -50,10 +51,11 @@ func copy_text():
 	DisplayServer.clipboard_set(msg.text)
 
 func delete_message():
-	print(msg_id)
-	chat_screen.chat_memory.remove_at(msg_id)
-	print(chat_screen.chat_memory)
-	self.get_parent().queue_free()
+#	print(msg_id)
+#	chat_screen.chat_memory.remove_at(msg_id)
+#	print(chat_screen.chat_memory)
+#	self.get_parent().queue_free()
+	pass
 
 
 func max_size() -> void:

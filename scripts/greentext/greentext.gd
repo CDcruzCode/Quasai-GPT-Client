@@ -121,7 +121,8 @@ func generate_greentext():
 	"temperature": 1.1,
 	"presence_penalty": 0.0,
 	"frequency_penalty": 0.0,
-	"logit_bias": logit_bias
+	"logit_bias": logit_bias,
+	"max_tokens": globals.max_model_tokens() - globals.token_estimate(JSON.stringify(chat_array))
 	}
 	
 #	openai.make_stream_request("completions", HTTPClient.METHOD_POST, data)
@@ -216,11 +217,13 @@ func _on_openai_request_error(error_code):
 
 var wait_thread:Thread = Thread.new()
 func wait_blink():
-	while bot_thinking:
+	while bot_thinking && !globals.EXIT_THREAD:
 		loading.texture = wait_status
 		await globals.delay(0.5)
-		if(!bot_thinking):
-			return
+		if(!bot_thinking || globals.EXIT_THREAD):
+			print("[WAIT BLINK] EXIT")
+			globals.EXIT_THREAD = false
+			return OK
 		loading.texture = nil_status
 		await globals.delay(0.5)
 
