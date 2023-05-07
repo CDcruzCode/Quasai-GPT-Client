@@ -216,9 +216,13 @@ dialog_hide_on_ok = true
 access = 2
 
 [node name="stream_status" type="Window" parent="."]
+gui_disable_input = true
 initial_position = 2
 size = Vector2i(300, 100)
+visible = false
 wrap_controls = true
+transient = true
+exclusive = true
 unresizable = true
 borderless = true
 always_on_top = true

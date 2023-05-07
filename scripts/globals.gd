@@ -35,6 +35,10 @@ const SCRIPT_EXTENSIONS:PackedStringArray = [
 	"rlib"
 ]
 
+var DEFAULT_LOGIT_BIAS:Dictionary = {
+	15836:-100
+}
+
 
 #########################
 #CODE SNIPPETS

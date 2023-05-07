@@ -167,7 +167,7 @@ func generate_mealplan():
 
 var response_msg:String = ""
 func _on_openai_request_success_stream(data):
-	print("START CHUNK PARSE")
+#	print("START CHUNK PARSE")
 	var res_arr:PackedStringArray = data.split("data: ", false)
 	var json_parse:JSON = JSON.new()
 	
@@ -192,7 +192,7 @@ func _on_openai_request_success_stream(data):
 			
 			if(res_json.choices[0].delta.has("content")):
 				#print("Content: "+str(res_json.choices[0].delta.content))
-				await get_tree().process_frame
+#				await get_tree().process_frame
 				response_msg += str(res_json.choices[0].delta.content)
 				tokens_downloaded += globals.token_estimate(res_json.choices[0].delta.content)
 				stream_text.text = "Tokens Downloaded: "+str(tokens_downloaded)
@@ -378,7 +378,7 @@ func refresh_meal(item:Node):
 	wait_blink()
 	current_item = item
 	current_item.get_node("mcon/vbox/meal_text").text = "Generating a new meal..."
-	current_item.self_modulate = Color("#26282B")
+	current_item.self_modulate = Color("#c3c3c3")
 	
 	var chat_array:Array = []
 	
@@ -409,7 +409,7 @@ func _item_request_success(data):
 	globals.TOTAL_TOKENS_USED += data.usage.total_tokens
 	globals.TOTAL_TOKENS_COST += (data.usage.prompt_tokens*globals.INPUT_TOKENS_COST) + (data.usage.completion_tokens*globals.TOKENS_COST)
 	
-	current_item.self_modulate = Color("#4D5057")
+	current_item.self_modulate = Color("#ffffff")
 	current_item.get_node("mcon/vbox/meal_text").text = data.choices[0].message.content.strip_edges()
 	bot_thinking = false
 	generate_button.disabled = false
@@ -417,7 +417,7 @@ func _item_request_success(data):
 
 func _item_request_error(error_code):
 	printerr("Request failed with error code:", error_code)
-	current_item.self_modulate = Color("#4D5057")
+	current_item.self_modulate = Color("#ffffff")
 	current_item.get_node("mcon/vbox/meal_text").text = globals.parse_api_error(error_code)
 	bot_thinking = false
 	generate_button.disabled = false
